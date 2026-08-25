@@ -33,7 +33,7 @@ export default function Settings({ onNav }) {
         { label: 'Notificaciones push', Icon: Bell, type: 'toggle', key: 'pushNotifications' },
         { label: 'Alertas por email', Icon: Mail, type: 'toggle', key: 'emailAlerts' },
         { label: 'Tema oscuro', Icon: Moon, type: 'toggle', key: 'darkMode' },
-        { label: 'Idioma', Icon: Globe, type: 'link', value: settings.language },
+        { label: 'Idioma', Icon: Globe, type: 'select', key: 'language' },
       ],
     },
     {
@@ -74,7 +74,7 @@ export default function Settings({ onNav }) {
                     <span className="text-sm text-gray-900 dark:text-gray-100 flex-1 text-left font-medium">{label}</span>
                     {type === 'toggle' ? (
                       <Toggle value={settings[key]} onChange={(v) => updateSetting(key, v)} />
-                    ) : (
+                    ) : type === 'select' ? null : (
                       <div className="flex items-center gap-1">
                         {value && <span className="text-xs text-gray-400">{value}</span>}
                         <ChevronRight size={14} className="text-gray-300 dark:text-gray-600" />
@@ -85,6 +85,19 @@ export default function Settings({ onNav }) {
                 return type === 'toggle' ? (
                   <div key={label} className={rowCls}>
                     {inner}
+                  </div>
+                ) : type === 'select' ? (
+                  <div key={label} className={rowCls}>
+                    {inner}
+                    <select
+                      value={settings[key]}
+                      onChange={(e) => updateSetting(key, e.target.value)}
+                      className="bg-transparent text-xs text-gray-400 focus:outline-none"
+                      aria-label="Seleccionar idioma"
+                    >
+                      <option>Español</option>
+                      <option>English</option>
+                    </select>
                   </div>
                 ) : (
                   <button key={label} onClick={() => onPress?.()} className={rowCls}>
