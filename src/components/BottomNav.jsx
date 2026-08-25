@@ -12,7 +12,7 @@ const ITEMS = [
 
 export default function BottomNav({ active, onNav }) {
   const { products } = usePantry()
-  const alertCount = products.filter((p) => daysLeft(p.expiryDate) <= 3).length
+  const alertCount = products.filter((p) => daysLeft(p.expiryDate) <= 7).length
 
   return (
     <nav className="h-[68px] border-t border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800 flex shrink-0">
