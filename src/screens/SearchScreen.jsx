@@ -125,10 +125,11 @@ export default function SearchScreen({ onNav }) {
                   <button
                     type="button"
                     onClick={() => removeRecentSearch(t)}
-                    className="p-1 shrink-0"
+                    className="p-1.5 rounded-full shrink-0 hover:bg-red-50 active:bg-red-100 dark:hover:bg-red-950/40 dark:active:bg-red-950/60"
                     aria-label={`Eliminar búsqueda ${t}`}
+                    title="Eliminar búsqueda"
                   >
-                    <X size={13} className="text-gray-400 hover:text-red-500" />
+                    <X size={15} className="text-gray-500 hover:text-red-500" strokeWidth={2} />
                   </button>
                 </div>
               ))}
