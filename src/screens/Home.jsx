@@ -9,8 +9,11 @@ import logoSrc from '../assets/freshbox-logo.jpeg'
 export default function Home({ onNav }) {
   const { products, user } = usePantry()
   const [showAll, setShowAll] = useState(false)
+  const [sortBy, setSortBy] = useState('expiry')
 
-  const sorted = [...products].sort((a, b) => daysLeft(a.expiryDate) - daysLeft(b.expiryDate))
+  const sorted = [...products].sort((a, b) =>
+    sortBy === 'name' ? a.name.localeCompare(b.name, 'es') : daysLeft(a.expiryDate) - daysLeft(b.expiryDate)
+  )
   const expiringThisWeek = sorted.filter((p) => daysLeft(p.expiryDate) <= 7)
   const visible = showAll ? sorted : expiringThisWeek
 
@@ -51,11 +54,22 @@ export default function Home({ onNav }) {
         <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">
           {showAll ? 'Toda la despensa' : 'Próximos a vencer'}
         </span>
-        <button onClick={() => setShowAll(!showAll)} aria-label={showAll ? 'Ver productos próximos a vencer' : 'Ver todos los productos'}>
-          <span className="text-[10px] text-fresh-600 dark:text-fresh-400 font-semibold underline underline-offset-2">
-            {showAll ? 'Ver próximos' : `Ver todos (${products.length})`}
-          </span>
-        </button>
+        <div className="flex items-center gap-3">
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="bg-transparent text-[10px] text-gray-500 dark:text-gray-400 focus:outline-none"
+            aria-label="Ordenar productos"
+          >
+            <option value="expiry">Por vencimiento</option>
+            <option value="name">Por nombre</option>
+          </select>
+          <button onClick={() => setShowAll(!showAll)} aria-label={showAll ? 'Ver productos próximos a vencer' : 'Ver todos los productos'}>
+            <span className="text-[10px] text-fresh-600 dark:text-fresh-400 font-semibold underline underline-offset-2">
+              {showAll ? 'Ver próximos' : `Ver todos (${products.length})`}
+            </span>
+          </button>
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-3 pb-3 flex flex-col gap-2">
