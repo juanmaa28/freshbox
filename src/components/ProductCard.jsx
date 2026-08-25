@@ -8,7 +8,7 @@ export default function ProductCard({ product, onClick }) {
   const meta = URGENCY_META[urgency]
 
   return (
-    <button onClick={onClick} className="w-full text-left shrink-0">
+    <button onClick={onClick} className="w-full text-left shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-500 focus-visible:ring-offset-2 rounded-lg">
       <div className="border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800 rounded-lg px-3 py-2.5 flex items-center gap-3 active:bg-gray-50 dark:active:bg-gray-800 transition-colors">
         {product.photo ? (
           <img src={product.photo} alt={product.name} className="w-10 h-10 rounded-md object-cover shrink-0" />
