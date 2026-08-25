@@ -54,7 +54,8 @@ export function PantryProvider({ children }) {
   }, [settings.darkMode])
 
   const addProduct = (data) => {
-    const product = { ...data, id: `p-${Date.now()}` }
+    const id = globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`
+    const product = { ...data, id: `p-${id}` }
     setProducts((prev) => [...prev, product])
     return product
   }
