@@ -68,6 +68,8 @@ export function PantryProvider({ children }) {
     setProducts((prev) => prev.filter((p) => p.id !== id))
   }
 
+  const clearProducts = () => setProducts([])
+
   const updateSetting = (key, value) => {
     setSettings((prev) => ({ ...prev, [key]: value }))
   }
@@ -109,6 +111,7 @@ export function PantryProvider({ children }) {
     addProduct,
     updateProduct,
     deleteProduct,
+    clearProducts,
     user,
     login,
     logout,

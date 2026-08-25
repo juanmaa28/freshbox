@@ -4,6 +4,7 @@ import { usePantry } from '../context/PantryContext'
 import AppHeader from '../components/AppHeader'
 import BottomNav from '../components/BottomNav'
 import { Toggle } from '../components/FormFields'
+import ConfirmDialog from '../components/ConfirmDialog'
 
 function InfoModal({ open, title, children, onClose }) {
   if (!open) return null
@@ -23,8 +24,9 @@ function InfoModal({ open, title, children, onClose }) {
 }
 
 export default function Settings({ onNav }) {
-  const { settings, updateSetting, logout } = usePantry()
+  const { products, settings, updateSetting, logout, clearProducts } = usePantry()
   const [modal, setModal] = useState(null)
+  const [clearOpen, setClearOpen] = useState(false)
 
   const sections = [
     {
@@ -111,6 +113,14 @@ export default function Settings({ onNav }) {
 
         <div className="px-4 pb-2">
           <button
+            onClick={() => setClearOpen(true)}
+            disabled={products.length === 0}
+            className="w-full h-11 mb-3 border-2 border-orange-200 dark:border-orange-900 rounded-lg flex items-center justify-center gap-2 text-orange-600 disabled:opacity-40"
+          >
+            <Package size={15} />
+            <span className="text-sm font-semibold">Limpiar despensa</span>
+          </button>
+          <button
             onClick={() => {
               logout()
               onNav('login')
@@ -140,6 +150,17 @@ export default function Settings({ onNav }) {
           navegador.
         </p>
       </InfoModal>
+
+      <ConfirmDialog
+        open={clearOpen}
+        title="¿Limpiar la despensa?"
+        message={`Se eliminarán ${products.length} productos. Esta acción no se puede deshacer.`}
+        onCancel={() => setClearOpen(false)}
+        onConfirm={() => {
+          clearProducts()
+          setClearOpen(false)
+        }}
+      />
 
       <BottomNav active="settings" onNav={onNav} />
     </div>
