@@ -91,7 +91,7 @@ export default function Home({ onNav }) {
 
       <button
         onClick={() => onNav('add')}
-        className="absolute w-13 h-13 bg-fresh-600 hover:bg-fresh-700 rounded-full flex items-center justify-center shadow-lg shadow-fresh-600/30 bottom-[84px] right-4 z-10"
+        className="absolute w-13 h-13 bg-fresh-600 hover:bg-fresh-700 hover:scale-105 active:scale-95 rounded-full flex items-center justify-center shadow-lg shadow-fresh-600/30 transition-transform duration-150 bottom-[84px] right-4 z-10"
         aria-label="Agregar producto"
       >
         <Plus size={24} className="text-white" strokeWidth={2.5} />
