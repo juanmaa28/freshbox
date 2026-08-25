@@ -33,7 +33,7 @@ export default function Notifications({ onNav }) {
     <div className="w-full h-full flex flex-col bg-gray-50 dark:bg-gray-950">
       <AppHeader title="Notificaciones" />
 
-      <div className="flex border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shrink-0">
+      <div className="flex border-b border-orange-100 dark:border-orange-950/50 bg-orange-50/60 dark:bg-orange-950/20 shrink-0">
         {stats.map(({ label, val }, i) => (
           <div
             key={label}
