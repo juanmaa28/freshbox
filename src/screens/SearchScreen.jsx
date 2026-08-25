@@ -78,7 +78,7 @@ export default function SearchScreen({ onNav }) {
         </span>
       </div>
 
-      <div className="flex-1 overflow-y-auto no-scrollbar px-3 flex flex-col gap-2">
+      <div className="flex-1 overflow-y-auto no-scrollbar px-3 pb-4 flex flex-col gap-2">
         {results.length === 0 ? (
           <p className="text-sm text-gray-400 text-center mt-8">No se encontraron productos.</p>
         ) : (
@@ -107,26 +107,25 @@ export default function SearchScreen({ onNav }) {
             )
           })
         )}
-      </div>
-
-      {recentSearches.length > 0 && (
-        <div className="px-3 pt-2 pb-4 shrink-0 border-t border-gray-100 dark:border-gray-800">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Búsquedas recientes</span>
-            <button type="button" onClick={clearRecentSearches} className="text-[10px] text-fresh-600 dark:text-fresh-400 font-medium">
-              Limpiar
-            </button>
-          </div>
-          <div className="mt-2 flex flex-col gap-1.5">
-            {recentSearches.map((t) => (
-              <button key={t} onClick={() => setQuery(t)} className="flex items-center gap-2 text-left">
-                <Clock size={11} className="text-gray-300 dark:text-gray-600" />
-                <span className="text-xs text-gray-500 dark:text-gray-400">{t}</span>
+        {recentSearches.length > 0 && (
+          <div className="mt-2 pt-2 border-t border-gray-100 dark:border-gray-800 shrink-0">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Búsquedas recientes</span>
+              <button type="button" onClick={clearRecentSearches} className="text-[10px] text-fresh-600 dark:text-fresh-400 font-medium">
+                Limpiar
               </button>
-            ))}
+            </div>
+            <div className="mt-2 flex flex-col gap-1.5">
+              {recentSearches.map((t) => (
+                <button key={t} onClick={() => setQuery(t)} className="flex items-center gap-2 text-left">
+                  <Clock size={11} className="text-gray-300 dark:text-gray-600" />
+                  <span className="text-xs text-gray-500 dark:text-gray-400">{t}</span>
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }
