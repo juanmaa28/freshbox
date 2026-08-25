@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Trash2, AlertCircle, CheckCircle2, Pencil, Check } from 'lucide-react'
+import { Trash2, AlertCircle, CheckCircle2, Pencil, Check, ShoppingBag } from 'lucide-react'
 import { usePantry } from '../context/PantryContext'
 import { categoryById } from '../data/categories'
 import { daysLeft, urgencyOf, URGENCY_META, expiryText, formatDate } from '../utils/dates'
@@ -10,6 +10,7 @@ import { BtnOutline } from '../components/FormFields'
 export default function Detail({ onNav, params }) {
   const { products, deleteProduct } = usePantry()
   const [confirmOpen, setConfirmOpen] = useState(false)
+  const [consumeOpen, setConsumeOpen] = useState(false)
   const product = products.find((p) => p.id === params?.productId)
 
   if (!product) {
@@ -108,7 +109,13 @@ export default function Detail({ onNav, params }) {
           </span>
         </div>
 
-        <div className="flex gap-3 mt-auto pb-2">
+        <div className="flex flex-col gap-2 mt-auto pb-2">
+          <BtnOutline
+            label="Marcar como consumido"
+            icon={<ShoppingBag size={14} />}
+            onClick={() => setConsumeOpen(true)}
+          />
+          <div className="flex gap-3">
           <div className="flex-1">
             <BtnOutline
               label="Editar"
@@ -119,8 +126,20 @@ export default function Detail({ onNav, params }) {
           <div className="flex-1">
             <BtnOutline label="Eliminar" danger icon={<Trash2 size={14} />} onClick={() => setConfirmOpen(true)} />
           </div>
+          </div>
         </div>
       </div>
+
+      <ConfirmDialog
+        open={consumeOpen}
+        title="¿Marcar como consumido?"
+        message={`"${product.name}" se retirará de tu despensa.`}
+        onCancel={() => setConsumeOpen(false)}
+        onConfirm={() => {
+          deleteProduct(product.id)
+          onNav('home')
+        }}
+      />
 
       <ConfirmDialog
         open={confirmOpen}
