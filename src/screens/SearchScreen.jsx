@@ -6,7 +6,7 @@ import { daysLeft, expiryText } from '../utils/dates'
 import logoSrc from '../assets/freshbox-logo.jpeg'
 
 export default function SearchScreen({ onNav }) {
-  const { products, recentSearches, addRecentSearch, clearRecentSearches } = usePantry()
+  const { products, recentSearches, addRecentSearch, clearRecentSearches, removeRecentSearch } = usePantry()
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState('all')
 
@@ -117,10 +117,20 @@ export default function SearchScreen({ onNav }) {
             </div>
             <div className="mt-2 flex flex-col gap-1.5">
               {recentSearches.map((t) => (
-                <button key={t} onClick={() => setQuery(t)} className="flex items-center gap-2 text-left">
-                  <Clock size={11} className="text-gray-300 dark:text-gray-600" />
-                  <span className="text-xs text-gray-500 dark:text-gray-400">{t}</span>
-                </button>
+                <div key={t} className="flex items-center gap-2">
+                  <button type="button" onClick={() => setQuery(t)} className="flex-1 flex items-center gap-2 text-left min-w-0">
+                    <Clock size={11} className="text-gray-300 dark:text-gray-600 shrink-0" />
+                    <span className="text-xs text-gray-500 dark:text-gray-400 truncate">{t}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => removeRecentSearch(t)}
+                    className="p-1 shrink-0"
+                    aria-label={`Eliminar búsqueda ${t}`}
+                  >
+                    <X size={13} className="text-gray-400 hover:text-red-500" />
+                  </button>
+                </div>
               ))}
             </div>
           </div>

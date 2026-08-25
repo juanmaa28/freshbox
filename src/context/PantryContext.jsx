@@ -100,6 +100,10 @@ export function PantryProvider({ children }) {
     localStorage.removeItem(LS_KEYS.searches)
   }
 
+  const removeRecentSearch = (term) => {
+    setRecentSearches((prev) => prev.filter((item) => item !== term))
+  }
+
   const value = {
     products,
     addProduct,
@@ -114,6 +118,7 @@ export function PantryProvider({ children }) {
     recentSearches,
     addRecentSearch,
     clearRecentSearches,
+    removeRecentSearch,
   }
 
   return <PantryContext.Provider value={value}>{children}</PantryContext.Provider>
