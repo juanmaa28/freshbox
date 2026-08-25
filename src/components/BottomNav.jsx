@@ -22,7 +22,7 @@ export default function BottomNav({ active, onNav }) {
           <button
             key={id}
             onClick={() => onNav(id)}
-            className="flex-1 flex flex-col items-center justify-center gap-0.5 relative"
+            className="flex-1 flex flex-col items-center justify-center gap-0.5 relative focus:outline-none focus-visible:bg-fresh-50 dark:focus-visible:bg-fresh-950/40"
           >
             {isActive && (
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-fresh-600 rounded-b" />
