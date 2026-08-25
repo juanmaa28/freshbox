@@ -16,6 +16,12 @@ export default function Home({ onNav }) {
   )
   const expiringThisWeek = sorted.filter((p) => daysLeft(p.expiryDate) <= 7)
   const visible = showAll ? sorted : expiringThisWeek
+  const groups = [
+    { label: 'Vencidos', products: visible.filter((p) => daysLeft(p.expiryDate) < 0) },
+    { label: 'Próximos a vencer', products: visible.filter((p) => daysLeft(p.expiryDate) >= 0 && daysLeft(p.expiryDate) <= 3) },
+    { label: 'Esta semana', products: visible.filter((p) => daysLeft(p.expiryDate) > 3 && daysLeft(p.expiryDate) <= 7) },
+    { label: 'Más adelante', products: visible.filter((p) => daysLeft(p.expiryDate) > 7) },
+  ].filter((group) => group.products.length > 0)
 
   return (
     <div className="w-full h-full flex flex-col bg-gray-50 dark:bg-gray-950 relative">
@@ -83,8 +89,13 @@ export default function Home({ onNav }) {
             </p>
           </div>
         ) : (
-          visible.map((p) => (
-            <ProductCard key={p.id} product={p} onClick={() => onNav('detail', { productId: p.id })} />
+          groups.map((group) => (
+            <div key={group.label} className="flex flex-col gap-2">
+              <span className="pt-1 text-[10px] font-bold text-gray-400 uppercase tracking-widest">{group.label}</span>
+              {group.products.map((p) => (
+                <ProductCard key={p.id} product={p} onClick={() => onNav('detail', { productId: p.id })} />
+              ))}
+            </div>
           ))
         )}
       </div>
