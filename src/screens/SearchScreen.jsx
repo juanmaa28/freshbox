@@ -6,7 +6,7 @@ import { daysLeft, expiryText } from '../utils/dates'
 import logoSrc from '../assets/freshbox-logo.jpeg'
 
 export default function SearchScreen({ onNav }) {
-  const { products, recentSearches, addRecentSearch } = usePantry()
+  const { products, recentSearches, addRecentSearch, clearRecentSearches } = usePantry()
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState('all')
 
@@ -111,7 +111,12 @@ export default function SearchScreen({ onNav }) {
 
       {recentSearches.length > 0 && (
         <div className="px-3 pt-2 pb-4 shrink-0 border-t border-gray-100 dark:border-gray-800">
-          <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Búsquedas recientes</span>
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Búsquedas recientes</span>
+            <button onClick={clearRecentSearches} className="text-[10px] text-fresh-600 dark:text-fresh-400 font-medium">
+              Limpiar
+            </button>
+          </div>
           <div className="mt-2 flex flex-col gap-1.5">
             {recentSearches.map((t) => (
               <button key={t} onClick={() => setQuery(t)} className="flex items-center gap-2 text-left">

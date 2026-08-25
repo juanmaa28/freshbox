@@ -94,6 +94,8 @@ export function PantryProvider({ children }) {
     setRecentSearches((prev) => [clean, ...prev.filter((t) => t.toLowerCase() !== clean.toLowerCase())].slice(0, 5))
   }
 
+  const clearRecentSearches = () => setRecentSearches([])
+
   const value = {
     products,
     addProduct,
@@ -107,6 +109,7 @@ export function PantryProvider({ children }) {
     updateSetting,
     recentSearches,
     addRecentSearch,
+    clearRecentSearches,
   }
 
   return <PantryContext.Provider value={value}>{children}</PantryContext.Provider>
