@@ -95,7 +95,10 @@ export function PantryProvider({ children }) {
     setRecentSearches((prev) => [clean, ...prev.filter((t) => t.toLowerCase() !== clean.toLowerCase())].slice(0, 5))
   }
 
-  const clearRecentSearches = () => setRecentSearches([])
+  const clearRecentSearches = () => {
+    setRecentSearches([])
+    localStorage.removeItem(LS_KEYS.searches)
+  }
 
   const value = {
     products,

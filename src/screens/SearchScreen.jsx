@@ -113,7 +113,7 @@ export default function SearchScreen({ onNav }) {
         <div className="px-3 pt-2 pb-4 shrink-0 border-t border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Búsquedas recientes</span>
-            <button onClick={clearRecentSearches} className="text-[10px] text-fresh-600 dark:text-fresh-400 font-medium">
+            <button type="button" onClick={clearRecentSearches} className="text-[10px] text-fresh-600 dark:text-fresh-400 font-medium">
               Limpiar
             </button>
           </div>
