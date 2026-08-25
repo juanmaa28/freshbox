@@ -58,7 +58,7 @@ export default function AddItem({ onNav, params }) {
       onNav('detail', { productId: editing.id })
     } else {
       const saved = addProduct(data)
-      onNav('detail', { productId: saved.id })
+      onNav('detail', { productId: saved.id, notice: 'Producto agregado correctamente' })
     }
   }
 

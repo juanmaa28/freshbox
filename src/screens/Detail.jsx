@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Trash2, AlertCircle, CheckCircle2, Pencil } from 'lucide-react'
+import { Trash2, AlertCircle, CheckCircle2, Pencil, Check } from 'lucide-react'
 import { usePantry } from '../context/PantryContext'
 import { categoryById } from '../data/categories'
 import { daysLeft, urgencyOf, URGENCY_META, expiryText, formatDate } from '../utils/dates'
@@ -40,6 +40,13 @@ export default function Detail({ onNav, params }) {
   return (
     <div className="w-full h-full flex flex-col bg-white dark:bg-gray-950 relative">
       <AppHeader title="Detalle" showBack onBack={() => onNav('home')} />
+
+      {params?.notice && (
+        <div className="mx-4 mt-3 flex items-center gap-2 rounded-lg border border-fresh-200 bg-fresh-50 px-3 py-2 text-xs text-fresh-700 dark:border-fresh-900 dark:bg-fresh-900/20 dark:text-fresh-300">
+          <Check size={14} className="shrink-0" />
+          <span>{params.notice}</span>
+        </div>
+      )}
 
       {product.photo ? (
         <img src={product.photo} alt={product.name} className="w-full h-40 object-cover shrink-0" />
