@@ -41,6 +41,7 @@ export default function AddItem({ onNav, params }) {
     const errs = {}
     if (!form.name.trim()) errs.name = 'Ingresa el nombre del producto'
     if (!form.category) errs.category = 'Selecciona una categoría'
+    if (!form.purchaseDate) errs.purchaseDate = 'Ingresa la fecha de compra'
     if (!form.expiryDate) errs.expiryDate = 'Ingresa la fecha de vencimiento'
     if (form.expiryDate && form.purchaseDate && form.expiryDate < form.purchaseDate)
       errs.expiryDate = 'Debe ser posterior a la compra'
@@ -51,11 +52,12 @@ export default function AddItem({ onNav, params }) {
   const handleSave = (e) => {
     e.preventDefault()
     if (!validate()) return
+    const data = { ...form, name: form.name.trim() }
     if (editing) {
-      updateProduct(editing.id, form)
+      updateProduct(editing.id, data)
       onNav('detail', { productId: editing.id })
     } else {
-      const saved = addProduct(form)
+      const saved = addProduct(data)
       onNav('detail', { productId: saved.id })
     }
   }
@@ -127,6 +129,7 @@ export default function AddItem({ onNav, params }) {
               type="date"
               value={form.purchaseDate}
               onChange={(e) => set('purchaseDate', e.target.value)}
+              error={errors.purchaseDate}
             />
           </div>
           <div className="flex-1">
