@@ -11,12 +11,15 @@ export default function SearchScreen({ onNav }) {
   const [filter, setFilter] = useState('all')
 
   const filters = [{ id: 'all', label: 'Todos' }, ...CATEGORIES.map((c) => ({ id: c.id, label: c.label }))]
+  const searchTerm = query.trim().toLowerCase()
 
-  const results = products.filter((p) => {
-    const matchesQuery = query.trim() === '' || p.name.toLowerCase().includes(query.trim().toLowerCase())
-    const matchesFilter = filter === 'all' || p.category === filter
-    return matchesQuery && matchesFilter
-  })
+  const results = searchTerm
+    ? products.filter((p) => {
+        const matchesQuery = p.name.toLowerCase().includes(searchTerm)
+        const matchesFilter = filter === 'all' || p.category === filter
+        return matchesQuery && matchesFilter
+      })
+    : []
 
   const openProduct = (p) => {
     if (query.trim()) addRecentSearch(query)
@@ -71,15 +74,18 @@ export default function SearchScreen({ onNav }) {
         ))}
       </div>
 
-      <div className="px-3 py-2 shrink-0">
-        <span className="text-[11px] text-gray-400">
-          {results.length} {results.length === 1 ? 'resultado' : 'resultados'}
-          {query.trim() && ` para "${query.trim()}"`}
-        </span>
-      </div>
+      {searchTerm && (
+        <div className="px-3 py-2 shrink-0">
+          <span className="text-[11px] text-gray-400">
+            {results.length} {results.length === 1 ? 'resultado' : 'resultados'} para "{query.trim()}"
+          </span>
+        </div>
+      )}
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-3 pb-4 flex flex-col gap-2">
-        {results.length === 0 ? (
+        {!searchTerm ? (
+          <p className="text-sm text-gray-400 text-center mt-8">Escribe el nombre de un producto para buscar.</p>
+        ) : results.length === 0 ? (
           <p className="text-sm text-gray-400 text-center mt-8">No se encontraron productos.</p>
         ) : (
           results.map((p) => {
