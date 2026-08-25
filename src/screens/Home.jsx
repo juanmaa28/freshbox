@@ -51,7 +51,7 @@ export default function Home({ onNav }) {
         <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">
           {showAll ? 'Toda la despensa' : 'Próximos a vencer'}
         </span>
-        <button onClick={() => setShowAll(!showAll)}>
+        <button onClick={() => setShowAll(!showAll)} aria-label={showAll ? 'Ver productos próximos a vencer' : 'Ver todos los productos'}>
           <span className="text-[10px] text-fresh-600 dark:text-fresh-400 font-semibold underline underline-offset-2">
             {showAll ? 'Ver próximos' : `Ver todos (${products.length})`}
           </span>
