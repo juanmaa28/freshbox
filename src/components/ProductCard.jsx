@@ -1,8 +1,11 @@
 import { categoryById } from '../data/categories'
 import { daysLeft, urgencyOf, URGENCY_META, expiryText } from '../utils/dates'
+import { usePantry } from '../context/PantryContext'
+import { translateCategory } from '../utils/i18n'
 
 export default function ProductCard({ product, onClick }) {
   const cat = categoryById(product.category)
+  const { settings } = usePantry()
   const days = daysLeft(product.expiryDate)
   const urgency = urgencyOf(days)
   const meta = URGENCY_META[urgency]
@@ -22,7 +25,7 @@ export default function ProductCard({ product, onClick }) {
           <div className="flex items-center gap-1.5">
             <div className={`w-1.5 h-1.5 rounded-full ${meta.dot}`} />
             <span className="text-[10px] text-gray-500 dark:text-gray-400">
-              {cat.label} · {expiryText(days)}
+              {translateCategory(product.category, settings.language)} · {expiryText(days, settings.language)}
             </span>
           </div>
         </div>

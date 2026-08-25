@@ -7,7 +7,7 @@ import ProductCard from '../components/ProductCard'
 import logoSrc from '../assets/freshbox-logo.jpeg'
 
 export default function Home({ onNav }) {
-  const { products, user } = usePantry()
+  const { products, user, t } = usePantry()
   const [showAll, setShowAll] = useState(false)
   const [sortBy, setSortBy] = useState('expiry')
 
@@ -17,10 +17,10 @@ export default function Home({ onNav }) {
   const expiringThisWeek = sorted.filter((p) => daysLeft(p.expiryDate) <= 7)
   const visible = showAll ? sorted : expiringThisWeek
   const groups = [
-    { label: 'Vencidos', products: visible.filter((p) => daysLeft(p.expiryDate) < 0) },
-    { label: 'Próximos a vencer', products: visible.filter((p) => daysLeft(p.expiryDate) >= 0 && daysLeft(p.expiryDate) <= 3) },
-    { label: 'Esta semana', products: visible.filter((p) => daysLeft(p.expiryDate) > 3 && daysLeft(p.expiryDate) <= 7) },
-    { label: 'Más adelante', products: visible.filter((p) => daysLeft(p.expiryDate) > 7) },
+    { label: t('home.expired'), products: visible.filter((p) => daysLeft(p.expiryDate) < 0) },
+    { label: t('home.urgent'), products: visible.filter((p) => daysLeft(p.expiryDate) >= 0 && daysLeft(p.expiryDate) <= 3) },
+    { label: t('home.week'), products: visible.filter((p) => daysLeft(p.expiryDate) > 3 && daysLeft(p.expiryDate) <= 7) },
+    { label: t('home.later'), products: visible.filter((p) => daysLeft(p.expiryDate) > 7) },
   ].filter((group) => group.products.length > 0)
 
   return (
@@ -34,7 +34,7 @@ export default function Home({ onNav }) {
           />
           <div className="flex flex-col leading-tight">
             <span className="text-base font-bold text-fresh-800 dark:text-fresh-300">FreshBox</span>
-            {user && <span className="text-[10px] text-gray-400 -mt-0.5">Hola, {user.name}</span>}
+            {user && <span className="text-[10px] text-gray-400 -mt-0.5">{t('home.greeting', { name: user.name })}</span>}
           </div>
         </div>
         <button onClick={() => onNav('search')} className="p-1" aria-label="Buscar">
@@ -46,33 +46,33 @@ export default function Home({ onNav }) {
         <button onClick={() => onNav('notifications')} className="text-left shrink-0">
           <div className="mx-3 mt-3 border border-orange-200 bg-orange-50 dark:bg-orange-950/40 dark:border-orange-900 rounded-lg px-3 py-2.5 flex items-center gap-2">
             <AlertCircle size={14} className="text-orange-500 shrink-0" strokeWidth={2} />
-            <span className="text-xs font-medium text-orange-700 dark:text-orange-300">
-              <span className="font-bold">
-                {expiringThisWeek.length} {expiringThisWeek.length === 1 ? 'producto' : 'productos'}
-              </span>{' '}
-              por vencer esta semana
-            </span>
+              <span className="text-xs font-medium text-orange-700 dark:text-orange-300">
+                {t('home.expiring', {
+                  count: expiringThisWeek.length,
+                  item: expiringThisWeek.length === 1 ? t('home.product') : t('home.products'),
+                })}
+              </span>
           </div>
         </button>
       )}
 
       <div className="flex items-center justify-between px-3 mt-4 mb-2 shrink-0">
         <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">
-          {showAll ? 'Toda la despensa' : 'Próximos a vencer'}
+          {showAll ? t('home.allPantry') : t('home.upcoming')}
         </span>
         <div className="flex items-center gap-3">
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
             className="bg-transparent text-[10px] text-gray-500 dark:text-gray-400 focus:outline-none"
-            aria-label="Ordenar productos"
+            aria-label={t('home.order')}
           >
-            <option value="expiry">Por vencimiento</option>
-            <option value="name">Por nombre</option>
+            <option value="expiry">{t('home.expiry')}</option>
+            <option value="name">{t('home.name')}</option>
           </select>
           <button onClick={() => setShowAll(!showAll)} aria-label={showAll ? 'Ver productos próximos a vencer' : 'Ver todos los productos'}>
             <span className="text-[10px] text-fresh-600 dark:text-fresh-400 font-semibold underline underline-offset-2">
-              {showAll ? 'Ver próximos' : `Ver todos (${products.length})`}
+              {showAll ? t('home.seeUpcoming') : t('home.seeAll', { count: products.length })}
             </span>
           </button>
         </div>
@@ -84,8 +84,8 @@ export default function Home({ onNav }) {
             <PackageOpen size={40} className="text-gray-300 dark:text-gray-700" strokeWidth={1.2} />
             <p className="text-sm text-gray-400">
               {products.length === 0
-                ? 'Tu despensa está vacía. Agrega tu primer producto con el botón +'
-                : 'Nada por vencer esta semana. ¡Todo fresco! 🎉'}
+                ? t('home.empty')
+                : t('home.fresh')}
             </p>
           </div>
         ) : (
@@ -103,7 +103,7 @@ export default function Home({ onNav }) {
       <button
         onClick={() => onNav('add')}
         className="absolute w-13 h-13 bg-fresh-600 hover:bg-fresh-700 hover:scale-105 active:scale-95 rounded-full flex items-center justify-center shadow-lg shadow-fresh-600/30 transition-transform duration-150 bottom-[84px] right-4 z-10"
-        aria-label="Agregar producto"
+        aria-label={t('home.add')}
       >
         <Plus size={24} className="text-white" strokeWidth={2.5} />
       </button>

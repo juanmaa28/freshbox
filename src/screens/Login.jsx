@@ -4,7 +4,7 @@ import { Field, BtnPrimary, BtnOutline } from '../components/FormFields'
 import logoSrc from '../assets/freshbox-logo.jpeg'
 
 export default function Login({ onNav }) {
-  const { login } = usePantry()
+  const { login, t } = usePantry()
   const [mode, setMode] = useState('login') // 'login' | 'register'
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -13,9 +13,9 @@ export default function Login({ onNav }) {
 
   const validate = () => {
     const errs = {}
-    if (!/^\S+@\S+\.\S+$/.test(email)) errs.email = 'Ingresa un correo válido'
-    if (password.length < 4) errs.password = 'Mínimo 4 caracteres'
-    if (mode === 'register' && !name.trim()) errs.name = 'Ingresa tu nombre'
+    if (!/^\S+@\S+\.\S+$/.test(email)) errs.email = t('login.emailError')
+    if (password.length < 4) errs.password = t('login.passwordError')
+    if (mode === 'register' && !name.trim()) errs.name = t('login.nameError')
     setErrors(errs)
     return Object.keys(errs).length === 0
   }
@@ -38,22 +38,22 @@ export default function Login({ onNav }) {
           />
           <h2 className="text-xl font-bold text-gray-900 dark:text-gray-50">FreshBox</h2>
           <p className="text-xs text-gray-400 text-center">
-            {mode === 'login' ? 'Inicia sesión para gestionar tu despensa' : 'Crea tu cuenta y empieza a ahorrar'}
+            {mode === 'login' ? t('login.subtitle') : t('login.registerSubtitle')}
           </p>
         </div>
 
         <div className="flex flex-col gap-4">
           {mode === 'register' && (
             <Field
-              label="Nombre"
-              placeholder="Tu nombre"
+              label={t('login.name')}
+              placeholder={t('login.namePlaceholder')}
               value={name}
               onChange={(e) => setName(e.target.value)}
               error={errors.name}
             />
           )}
           <Field
-            label="Correo electrónico"
+            label={t('login.email')}
             type="email"
             placeholder="nombre@correo.com"
             value={email}
@@ -61,7 +61,7 @@ export default function Login({ onNav }) {
             error={errors.email}
           />
           <Field
-            label="Contraseña"
+            label={t('login.password')}
             type="password"
             placeholder="••••••••"
             value={password}
@@ -71,14 +71,14 @@ export default function Login({ onNav }) {
           {mode === 'login' && (
             <div className="flex justify-end -mt-1">
               <span className="text-xs text-gray-500 dark:text-gray-400 underline underline-offset-2">
-                ¿Olvidaste tu contraseña?
+                {t('login.forgot')}
               </span>
             </div>
           )}
         </div>
 
         <div className="flex flex-col gap-3">
-          <BtnPrimary type="submit" label={mode === 'login' ? 'Iniciar sesión' : 'Crear cuenta'} />
+          <BtnPrimary type="submit" label={mode === 'login' ? t('login.submit') : t('login.register')} />
           <div className="flex items-center gap-3">
             <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800" />
             <span className="text-xs text-gray-400">o</span>
@@ -86,7 +86,7 @@ export default function Login({ onNav }) {
           </div>
           <BtnOutline
             type="button"
-            label={mode === 'login' ? 'Crear cuenta nueva' : 'Ya tengo cuenta'}
+            label={mode === 'login' ? t('login.newAccount') : t('login.haveAccount')}
             onClick={() => {
               setMode(mode === 'login' ? 'register' : 'login')
               setErrors({})
@@ -95,10 +95,8 @@ export default function Login({ onNav }) {
         </div>
 
         <div className="flex justify-center gap-1">
-          <span className="text-[10px] text-gray-400">Al continuar aceptas los</span>
-          <span className="text-[10px] text-gray-600 dark:text-gray-300 underline underline-offset-1">
-            Términos de uso
-          </span>
+          <span className="text-[10px] text-gray-400">{t('login.accept')}</span>
+          <span className="text-[10px] text-gray-600 dark:text-gray-300 underline underline-offset-1">{t('settings.terms')}</span>
         </div>
       </form>
     </div>

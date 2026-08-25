@@ -24,39 +24,39 @@ function InfoModal({ open, title, children, onClose }) {
 }
 
 export default function Settings({ onNav }) {
-  const { products, settings, updateSetting, logout, clearProducts } = usePantry()
+  const { products, settings, updateSetting, logout, clearProducts, t } = usePantry()
   const [modal, setModal] = useState(null)
   const [clearOpen, setClearOpen] = useState(false)
 
   const sections = [
     {
-      title: 'Preferencias',
+      title: t('settings.preferences'),
       items: [
-        { label: 'Notificaciones push', Icon: Bell, type: 'toggle', key: 'pushNotifications' },
-        { label: 'Alertas por email', Icon: Mail, type: 'toggle', key: 'emailAlerts' },
-        { label: 'Tema oscuro', Icon: Moon, type: 'toggle', key: 'darkMode' },
-        { label: 'Idioma', Icon: Globe, type: 'select', key: 'language' },
+        { label: t('settings.push'), Icon: Bell, type: 'toggle', key: 'pushNotifications' },
+        { label: t('settings.email'), Icon: Mail, type: 'toggle', key: 'emailAlerts' },
+        { label: t('settings.dark'), Icon: Moon, type: 'toggle', key: 'darkMode' },
+        { label: t('settings.language'), Icon: Globe, type: 'select', key: 'language' },
       ],
     },
     {
-      title: 'Cuenta',
+      title: t('settings.account'),
       items: [
-        { label: 'Mi perfil', Icon: User, type: 'link', onPress: () => onNav('profile') },
-        { label: 'Privacidad', Icon: Shield, type: 'link', onPress: () => setModal('privacy') },
+        { label: t('settings.profile'), Icon: User, type: 'link', onPress: () => onNav('profile') },
+        { label: t('settings.privacy'), Icon: Shield, type: 'link', onPress: () => setModal('privacy') },
       ],
     },
     {
-      title: 'Información',
+      title: t('settings.information'),
       items: [
-        { label: 'Acerca de FreshBox', Icon: Package, type: 'link', onPress: () => setModal('about') },
-        { label: 'Términos de uso', Icon: FileText, type: 'link', onPress: () => setModal('terms') },
+        { label: t('settings.about'), Icon: Package, type: 'link', onPress: () => setModal('about') },
+        { label: t('settings.terms'), Icon: FileText, type: 'link', onPress: () => setModal('terms') },
       ],
     },
   ]
 
   return (
     <div className="w-full h-full flex flex-col bg-gray-50 dark:bg-gray-950 relative">
-      <AppHeader title="Ajustes" />
+      <AppHeader title={t('settings.title')} />
       <div className="flex-1 overflow-y-auto no-scrollbar py-4 flex flex-col gap-5">
         {sections.map(({ title, items }) => (
           <div key={title}>
@@ -95,7 +95,7 @@ export default function Settings({ onNav }) {
                       value={settings[key]}
                       onChange={(e) => updateSetting(key, e.target.value)}
                       className="bg-transparent text-xs text-gray-400 focus:outline-none"
-                      aria-label="Seleccionar idioma"
+                      aria-label={t('settings.language')}
                     >
                       <option>Español</option>
                       <option>English</option>
@@ -118,7 +118,7 @@ export default function Settings({ onNav }) {
             className="w-full h-11 mb-3 border-2 border-orange-200 dark:border-orange-900 rounded-lg flex items-center justify-center gap-2 text-orange-600 disabled:opacity-40"
           >
             <Package size={15} />
-            <span className="text-sm font-semibold">Limpiar despensa</span>
+            <span className="text-sm font-semibold">{t('settings.clearPantry')}</span>
           </button>
           <button
             onClick={() => {
@@ -128,33 +128,30 @@ export default function Settings({ onNav }) {
             className="w-full h-11 border-2 border-red-200 dark:border-red-900 rounded-lg flex items-center justify-center gap-2 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors"
           >
             <LogOut size={15} className="text-red-500" />
-            <span className="text-sm font-semibold text-red-500">Cerrar sesión</span>
+            <span className="text-sm font-semibold text-red-500">{t('settings.logout')}</span>
           </button>
         </div>
       </div>
 
-      <InfoModal open={modal === 'about'} title="Acerca de FreshBox" onClose={() => setModal(null)}>
-        <p>FreshBox v1.0.0 — Frescura que no se te olvida.</p>
+      <InfoModal open={modal === 'about'} title={t('settings.about')} onClose={() => setModal(null)}>
+        <p>{t('settings.aboutText')}</p>
         <p>
           App para el control de vencimientos en la despensa: registra tus compras, mira qué vence pronto y recibe
           alertas antes de que se dañe la comida.
         </p>
         <p>Desarrollada por David De La Cuesta y Juan Manuel Arias · Curso Aplicaciones Móviles.</p>
       </InfoModal>
-      <InfoModal open={modal === 'terms'} title="Términos de uso" onClose={() => setModal(null)}>
-        <p>Proyecto académico sin fines comerciales. Los datos se guardan únicamente en tu dispositivo.</p>
+      <InfoModal open={modal === 'terms'} title={t('settings.terms')} onClose={() => setModal(null)}>
+        <p>{t('settings.termsText')}</p>
       </InfoModal>
-      <InfoModal open={modal === 'privacy'} title="Privacidad" onClose={() => setModal(null)}>
-        <p>
-          FreshBox no envía tu información a ningún servidor: productos, fotos y ajustes se almacenan localmente en tu
-          navegador.
-        </p>
+      <InfoModal open={modal === 'privacy'} title={t('settings.privacy')} onClose={() => setModal(null)}>
+        <p>{t('settings.privacyText')}</p>
       </InfoModal>
 
       <ConfirmDialog
         open={clearOpen}
-        title="¿Limpiar la despensa?"
-        message={`Se eliminarán ${products.length} productos. Esta acción no se puede deshacer.`}
+        title={t('settings.clearTitle')}
+        message={t('settings.clearMessage', { count: products.length })}
         onCancel={() => setClearOpen(false)}
         onConfirm={() => {
           clearProducts()

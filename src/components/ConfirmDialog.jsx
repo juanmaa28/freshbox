@@ -1,4 +1,7 @@
-export default function ConfirmDialog({ open, title, message, confirmLabel = 'Eliminar', onConfirm, onCancel }) {
+import { usePantry } from '../context/PantryContext'
+
+export default function ConfirmDialog({ open, title, message, confirmLabel, onConfirm, onCancel }) {
+  const { t } = usePantry()
   if (!open) return null
   return (
     <div className="absolute inset-0 z-50 flex items-center justify-center px-8 bg-black/40">
@@ -10,13 +13,13 @@ export default function ConfirmDialog({ open, title, message, confirmLabel = 'El
             onClick={onCancel}
             className="flex-1 h-10 rounded-lg border border-gray-300 dark:border-gray-700 text-sm font-semibold text-gray-600 dark:text-gray-300"
           >
-            Cancelar
+            {t('add.cancel')}
           </button>
           <button
             onClick={onConfirm}
             className="flex-1 h-10 rounded-lg bg-red-500 hover:bg-red-600 text-sm font-semibold text-white"
           >
-            {confirmLabel}
+            {confirmLabel ?? t('detail.delete')}
           </button>
         </div>
       </div>

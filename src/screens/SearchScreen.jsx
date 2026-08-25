@@ -4,13 +4,14 @@ import { usePantry } from '../context/PantryContext'
 import { CATEGORIES, categoryById } from '../data/categories'
 import { daysLeft, expiryText } from '../utils/dates'
 import logoSrc from '../assets/freshbox-logo.jpeg'
+import { translateCategory } from '../utils/i18n'
 
 export default function SearchScreen({ onNav }) {
-  const { products, recentSearches, addRecentSearch, clearRecentSearches, removeRecentSearch } = usePantry()
+  const { products, recentSearches, addRecentSearch, clearRecentSearches, removeRecentSearch, t, settings } = usePantry()
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState('all')
 
-  const filters = [{ id: 'all', label: 'Todos' }, ...CATEGORIES.map((c) => ({ id: c.id, label: c.label }))]
+  const filters = [{ id: 'all', label: t('search.all') }, ...CATEGORIES.map((c) => ({ id: c.id, label: translateCategory(c.id, settings.language) }))]
   const searchTerm = query.trim().toLowerCase()
 
   const results = searchTerm
@@ -44,17 +45,17 @@ export default function SearchScreen({ onNav }) {
             autoFocus
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar producto..."
+            placeholder={t('search.placeholder')}
             className="flex-1 bg-transparent text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none min-w-0"
           />
           {query && (
-            <button onClick={() => setQuery('')} aria-label="Limpiar">
+            <button onClick={() => setQuery('')} aria-label={t('search.clearInput')}>
               <X size={14} className="text-gray-400" />
             </button>
           )}
         </div>
         <button onClick={() => onNav('home')}>
-          <span className="text-sm text-fresh-600 dark:text-fresh-400 font-medium">Cancelar</span>
+          <span className="text-sm text-fresh-600 dark:text-fresh-400 font-medium">{t('search.cancel')}</span>
         </button>
       </div>
 
@@ -77,14 +78,14 @@ export default function SearchScreen({ onNav }) {
       {searchTerm && (
         <div className="px-3 py-2 shrink-0">
           <span className="text-[11px] text-gray-400">
-            {results.length} {results.length === 1 ? 'resultado' : 'resultados'} para "{query.trim()}"
+            {results.length} {results.length === 1 ? t('search.result') : t('search.results')} para "{query.trim()}"
           </span>
         </div>
       )}
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-3 pb-4 flex flex-col gap-2">
         {!searchTerm ? (
-          <p className="text-sm text-gray-400 text-center mt-8">Escribe el nombre de un producto para buscar.</p>
+          <p className="text-sm text-gray-400 text-center mt-8">{t('search.type')}</p>
         ) : results.length === 0 ? (
           <p className="text-sm text-gray-400 text-center mt-8">No se encontraron productos.</p>
         ) : (
@@ -104,7 +105,7 @@ export default function SearchScreen({ onNav }) {
                   <div className="flex-1 flex flex-col gap-1 min-w-0">
                     <span className="text-sm font-semibold text-gray-900 dark:text-gray-50 truncate">{p.name}</span>
                     <span className="text-xs text-gray-500 dark:text-gray-400">
-                      {cat.label} · {expiryText(days)}
+                      {translateCategory(p.category, settings.language)} · {expiryText(days, settings.language)}
                     </span>
                   </div>
                   <ChevronRight size={14} className="text-gray-300 dark:text-gray-600 shrink-0" />
@@ -116,23 +117,23 @@ export default function SearchScreen({ onNav }) {
         {recentSearches.length > 0 && (
           <div className="mt-2 pt-2 border-t border-gray-100 dark:border-gray-800 shrink-0">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Búsquedas recientes</span>
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{t('search.recent')}</span>
               <button type="button" onClick={clearRecentSearches} className="text-[10px] text-fresh-600 dark:text-fresh-400 font-medium">
-                Limpiar
+                {t('search.clear')}
               </button>
             </div>
             <div className="mt-2 flex flex-col gap-1.5">
-              {recentSearches.map((t) => (
-                <div key={t} className="flex items-center gap-2">
-                  <button type="button" onClick={() => setQuery(t)} className="flex-1 flex items-center gap-2 text-left min-w-0">
+              {recentSearches.map((term) => (
+                <div key={term} className="flex items-center gap-2">
+                  <button type="button" onClick={() => setQuery(term)} className="flex-1 flex items-center gap-2 text-left min-w-0">
                     <Clock size={11} className="text-gray-300 dark:text-gray-600 shrink-0" />
-                    <span className="text-xs text-gray-500 dark:text-gray-400 truncate">{t}</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400 truncate">{term}</span>
                   </button>
                   <button
                     type="button"
-                    onClick={() => removeRecentSearch(t)}
+                    onClick={() => removeRecentSearch(term)}
                     className="p-1.5 rounded-full shrink-0 hover:bg-red-50 active:bg-red-100 dark:hover:bg-red-950/40 dark:active:bg-red-950/60"
-                    aria-label={`Eliminar búsqueda ${t}`}
+                    aria-label={t('search.remove', { term })}
                     title="Eliminar búsqueda"
                   >
                     <X size={15} className="text-gray-500 hover:text-red-500" strokeWidth={2} />

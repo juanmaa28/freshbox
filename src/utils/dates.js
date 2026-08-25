@@ -26,7 +26,14 @@ export const URGENCY_META = {
 }
 
 /** Texto corto tipo "Vence hoy", "Vence mañana", "Vence en 4 días", "Venció hace 2 días". */
-export function expiryText(days) {
+export function expiryText(days, language = 'Español') {
+  if (language === 'English') {
+    if (days < -1) return `Expired ${-days} days ago`
+    if (days === -1) return 'Expired yesterday'
+    if (days === 0) return 'Expires today'
+    if (days === 1) return 'Expires tomorrow'
+    return `Expires in ${days} days`
+  }
   if (days < -1) return `Venció hace ${-days} días`
   if (days === -1) return 'Venció ayer'
   if (days === 0) return 'Vence hoy'
@@ -37,9 +44,10 @@ export function expiryText(days) {
 const MONTHS_ES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic']
 
 /** "2026-08-19" → "19 ago 2026" */
-export function formatDate(isoDate) {
+export function formatDate(isoDate, language = 'Español') {
   if (!isoDate) return '—'
   const d = new Date(isoDate + 'T00:00:00')
+  if (language === 'English') return d.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
   return `${d.getDate()} ${MONTHS_ES[d.getMonth()]} ${d.getFullYear()}`
 }
 

@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { seedProducts } from '../data/seed'
+import { createTranslator } from '../utils/i18n'
 
 const PantryContext = createContext(null)
 
@@ -31,6 +32,7 @@ export function PantryProvider({ children }) {
   const [user, setUser] = useState(() => load(LS_KEYS.user, null))
   const [settings, setSettings] = useState(() => ({ ...DEFAULT_SETTINGS, ...load(LS_KEYS.settings, {}) }))
   const [recentSearches, setRecentSearches] = useState(() => load(LS_KEYS.searches, []))
+  const t = createTranslator(settings.language)
 
   useEffect(() => {
     localStorage.setItem(LS_KEYS.products, JSON.stringify(products))
@@ -118,6 +120,7 @@ export function PantryProvider({ children }) {
     updateUser,
     settings,
     updateSetting,
+    t,
     recentSearches,
     addRecentSearch,
     clearRecentSearches,

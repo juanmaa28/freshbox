@@ -2,13 +2,14 @@ import { useState } from 'react'
 import { Trash2, AlertCircle, CheckCircle2, Pencil, Check, ShoppingBag } from 'lucide-react'
 import { usePantry } from '../context/PantryContext'
 import { categoryById } from '../data/categories'
+import { translateCategory } from '../utils/i18n'
 import { daysLeft, urgencyOf, URGENCY_META, expiryText, formatDate } from '../utils/dates'
 import AppHeader from '../components/AppHeader'
 import ConfirmDialog from '../components/ConfirmDialog'
 import { BtnOutline } from '../components/FormFields'
 
 export default function Detail({ onNav, params }) {
-  const { products, deleteProduct } = usePantry()
+  const { products, deleteProduct, settings, t } = usePantry()
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [consumeOpen, setConsumeOpen] = useState(false)
   const product = products.find((p) => p.id === params?.productId)
@@ -16,9 +17,9 @@ export default function Detail({ onNav, params }) {
   if (!product) {
     return (
       <div className="w-full h-full flex flex-col bg-white dark:bg-gray-950">
-        <AppHeader title="Detalle" showBack onBack={() => onNav('home')} />
+        <AppHeader title={t('detail.title')} showBack onBack={() => onNav('home')} />
         <div className="flex-1 flex items-center justify-center px-8 text-center">
-          <p className="text-sm text-gray-400">Este producto ya no existe.</p>
+          <p className="text-sm text-gray-400">{t('detail.missing')}</p>
         </div>
       </div>
     )
@@ -29,18 +30,19 @@ export default function Detail({ onNav, params }) {
   const urgency = urgencyOf(days)
   const meta = URGENCY_META[urgency]
   const isOk = urgency === 'low'
+  const urgencyLabel = { expired: t('alerts.critical'), critical: t('alerts.critical'), high: t('alerts.urgent'), mid: t('alerts.medium'), low: t('alerts.low') }[urgency]
 
   const rows = [
-    { label: 'Fecha de compra', value: formatDate(product.purchaseDate) },
-    { label: 'Fecha de vencimiento', value: formatDate(product.expiryDate) },
-    { label: 'Días restantes', value: days < 0 ? 'Vencido' : `${days} ${days === 1 ? 'día' : 'días'}` },
-    { label: 'Cantidad', value: product.quantity || '—' },
-    { label: 'Ubicación', value: product.location || '—' },
+    { label: t('detail.purchase'), value: formatDate(product.purchaseDate, settings.language) },
+    { label: t('detail.expiryDate'), value: formatDate(product.expiryDate, settings.language) },
+    { label: t('detail.remaining'), value: days < 0 ? t('common.expired') : `${days} ${days === 1 ? t('common.day') : t('common.days')}` },
+    { label: t('detail.quantity'), value: product.quantity || t('common.dash') },
+    { label: t('detail.location'), value: product.location || t('common.dash') },
   ]
 
   return (
     <div className="w-full h-full flex flex-col bg-white dark:bg-gray-950 relative">
-      <AppHeader title="Detalle" showBack onBack={() => onNav('home')} />
+      <AppHeader title={t('detail.title')} showBack onBack={() => onNav('home')} />
 
       {params?.notice && (
         <div className="mx-4 mt-3 flex items-center gap-2 rounded-lg border border-fresh-200 bg-fresh-50 px-3 py-2 text-xs text-fresh-700 dark:border-fresh-900 dark:bg-fresh-900/20 dark:text-fresh-300">
@@ -62,11 +64,11 @@ export default function Detail({ onNav, params }) {
           <h2 className="text-xl font-bold text-gray-900 dark:text-gray-50">{product.name}</h2>
           <div className="flex items-center gap-2">
             <div className={`rounded-full px-2.5 py-0.5 ${cat.color}`}>
-              <span className="text-[10px] font-semibold">{cat.label}</span>
+                <span className="text-[10px] font-semibold">{translateCategory(product.category, settings.language)}</span>
             </div>
             <div className="flex items-center gap-1">
               <div className={`w-2 h-2 rounded-full ${meta.dot}`} />
-              <span className={`text-[10px] font-semibold ${meta.text}`}>{meta.label}</span>
+              <span className={`text-[10px] font-semibold ${meta.text}`}>{urgencyLabel}</span>
             </div>
           </div>
         </div>
@@ -87,7 +89,7 @@ export default function Detail({ onNav, params }) {
 
         {product.notes && (
           <div className="border border-gray-200 dark:border-gray-800 rounded-lg px-3 py-2.5 bg-gray-50 dark:bg-gray-900">
-            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide block mb-1">Notas</span>
+            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide block mb-1">{t('detail.notes')}</span>
             <p className="text-sm text-gray-700 dark:text-gray-300">{product.notes}</p>
           </div>
         )}
@@ -105,26 +107,26 @@ export default function Detail({ onNav, params }) {
             <AlertCircle size={14} className="text-orange-500 shrink-0" />
           )}
           <span className={`text-xs ${isOk ? 'text-fresh-700 dark:text-fresh-300' : 'text-orange-700 dark:text-orange-300'}`}>
-            {isOk ? 'Este producto está fresco' : expiryText(days)}
+            {isOk ? t('detail.fresh') : expiryText(days, settings.language)}
           </span>
         </div>
 
         <div className="flex flex-col gap-2 mt-auto pb-2">
           <BtnOutline
-            label="Marcar como consumido"
+            label={t('detail.consumed')}
             icon={<ShoppingBag size={14} />}
             onClick={() => setConsumeOpen(true)}
           />
           <div className="flex gap-3">
           <div className="flex-1">
             <BtnOutline
-              label="Editar"
+              label={t('detail.edit')}
               icon={<Pencil size={14} />}
               onClick={() => onNav('add', { productId: product.id })}
             />
           </div>
           <div className="flex-1">
-            <BtnOutline label="Eliminar" danger icon={<Trash2 size={14} />} onClick={() => setConfirmOpen(true)} />
+            <BtnOutline label={t('detail.delete')} danger icon={<Trash2 size={14} />} onClick={() => setConfirmOpen(true)} />
           </div>
           </div>
         </div>
@@ -132,8 +134,8 @@ export default function Detail({ onNav, params }) {
 
       <ConfirmDialog
         open={consumeOpen}
-        title="¿Marcar como consumido?"
-        message={`"${product.name}" se retirará de tu despensa.`}
+        title={t('detail.consumeTitle')}
+        message={t('detail.consumeMessage', { name: product.name })}
         onCancel={() => setConsumeOpen(false)}
         onConfirm={() => {
           deleteProduct(product.id)
@@ -143,8 +145,8 @@ export default function Detail({ onNav, params }) {
 
       <ConfirmDialog
         open={confirmOpen}
-        title="¿Eliminar producto?"
-        message={`"${product.name}" se eliminará de tu despensa. Esta acción no se puede deshacer.`}
+        title={t('detail.deleteTitle')}
+        message={t('detail.deleteMessage', { name: product.name })}
         onCancel={() => setConfirmOpen(false)}
         onConfirm={() => {
           deleteProduct(product.id)

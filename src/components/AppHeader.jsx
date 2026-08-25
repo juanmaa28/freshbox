@@ -1,11 +1,13 @@
 import { ChevronLeft } from 'lucide-react'
 import logoSrc from '../assets/freshbox-logo.jpeg'
+import { usePantry } from '../context/PantryContext'
 
 export default function AppHeader({ title = 'FreshBox', showBack = false, onBack, right }) {
+  const { t } = usePantry()
   return (
     <header className="h-12 flex items-center px-4 border-b border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800 shrink-0 gap-2">
       {showBack && (
-        <button onClick={onBack} className="-ml-1 p-1 shrink-0" aria-label="Volver">
+        <button onClick={onBack} className="-ml-1 p-1 shrink-0" aria-label={t('common.back')}>
           <ChevronLeft size={20} className="text-gray-700 dark:text-gray-300" />
         </button>
       )}

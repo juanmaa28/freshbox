@@ -2,12 +2,13 @@ import { useRef, useState } from 'react'
 import { Plus, X } from 'lucide-react'
 import { usePantry } from '../context/PantryContext'
 import { CATEGORIES } from '../data/categories'
+import { translateCategory } from '../utils/i18n'
 import { todayISO } from '../utils/dates'
 import AppHeader from '../components/AppHeader'
 import { Field, SelectField, TextArea, BtnPrimary } from '../components/FormFields'
 
 export default function AddItem({ onNav, params }) {
-  const { products, addProduct, updateProduct } = usePantry()
+  const { products, addProduct, updateProduct, settings, t } = usePantry()
   const editing = params?.productId ? products.find((p) => p.id === params.productId) : null
 
   const [form, setForm] = useState(() =>
@@ -39,12 +40,12 @@ export default function AddItem({ onNav, params }) {
 
   const validate = () => {
     const errs = {}
-    if (!form.name.trim()) errs.name = 'Ingresa el nombre del producto'
-    if (!form.category) errs.category = 'Selecciona una categoría'
-    if (!form.purchaseDate) errs.purchaseDate = 'Ingresa la fecha de compra'
-    if (!form.expiryDate) errs.expiryDate = 'Ingresa la fecha de vencimiento'
+    if (!form.name.trim()) errs.name = t('add.requiredName')
+    if (!form.category) errs.category = t('add.requiredCategory')
+    if (!form.purchaseDate) errs.purchaseDate = t('add.requiredPurchase')
+    if (!form.expiryDate) errs.expiryDate = t('add.requiredExpiry')
     if (form.expiryDate && form.purchaseDate && form.expiryDate < form.purchaseDate)
-      errs.expiryDate = 'Debe ser posterior a la compra'
+      errs.expiryDate = t('add.dateOrder')
     setErrors(errs)
     return Object.keys(errs).length === 0
   }
@@ -58,7 +59,7 @@ export default function AddItem({ onNav, params }) {
       onNav('detail', { productId: editing.id })
     } else {
       const saved = addProduct(data)
-      onNav('detail', { productId: saved.id, notice: 'Producto agregado correctamente' })
+      onNav('detail', { productId: saved.id, notice: t('detail.added') })
     }
   }
 
@@ -67,19 +68,19 @@ export default function AddItem({ onNav, params }) {
   return (
     <div className="w-full h-full flex flex-col bg-white dark:bg-gray-950">
       <AppHeader
-        title={editing ? 'Editar producto' : 'Agregar producto'}
+        title={editing ? t('add.editTitle') : t('add.addTitle')}
         showBack
         onBack={() => onNav(...backTarget)}
       />
       <form onSubmit={handleSave} className="flex-1 overflow-y-auto no-scrollbar px-5 py-4 flex flex-col gap-4">
         {form.photo ? (
           <div className="relative w-full h-32">
-            <img src={form.photo} alt="Foto del producto" className="w-full h-32 object-cover rounded-xl" />
+            <img src={form.photo} alt={t('add.photo')} className="w-full h-32 object-cover rounded-xl" />
             <button
               type="button"
               onClick={() => set('photo', null)}
               className="absolute top-2 right-2 w-7 h-7 bg-black/60 rounded-full flex items-center justify-center"
-              aria-label="Quitar foto"
+              aria-label={t('add.removePhoto')}
             >
               <X size={14} className="text-white" />
             </button>
@@ -93,31 +94,31 @@ export default function AddItem({ onNav, params }) {
             <div className="w-7 h-7 border border-fresh-400 rounded-lg flex items-center justify-center">
               <Plus size={14} className="text-fresh-500" />
             </div>
-            <span className="text-[11px] text-fresh-600 dark:text-fresh-400">Agregar foto del producto</span>
+            <span className="text-[11px] text-fresh-600 dark:text-fresh-400">{t('add.photo')}</span>
           </button>
         )}
         <input ref={fileRef} type="file" accept="image/*" capture="environment" onChange={handlePhoto} className="hidden" />
 
         <Field
-          label="Nombre del producto"
-          placeholder="Ej: Leche entera 1L"
+          label={t('add.name')}
+          placeholder={t('add.namePlaceholder')}
           value={form.name}
           onChange={(e) => set('name', e.target.value)}
           error={errors.name}
         />
 
         <SelectField
-          label="Categoría"
+          label={t('add.category')}
           value={form.category}
           onChange={(e) => set('category', e.target.value)}
           error={errors.category}
         >
           <option value="" disabled>
-            Seleccionar categoría...
+            {t('add.chooseCategory')}
           </option>
           {CATEGORIES.map((c) => (
             <option key={c.id} value={c.id}>
-              {c.label}
+              {translateCategory(c.id, settings.language)}
             </option>
           ))}
         </SelectField>
@@ -125,7 +126,7 @@ export default function AddItem({ onNav, params }) {
         <div className="flex gap-3">
           <div className="flex-1">
             <Field
-              label="Fecha de compra"
+              label={t('add.purchase')}
               type="date"
               value={form.purchaseDate}
               onChange={(e) => set('purchaseDate', e.target.value)}
@@ -134,7 +135,7 @@ export default function AddItem({ onNav, params }) {
           </div>
           <div className="flex-1">
             <Field
-              label="Fecha de vencimiento"
+              label={t('add.expiry')}
               type="date"
               value={form.expiryDate}
               onChange={(e) => set('expiryDate', e.target.value)}
@@ -144,30 +145,30 @@ export default function AddItem({ onNav, params }) {
         </div>
 
         <Field
-          label="Cantidad"
-          placeholder="Ej: 1 litro / 500 g"
+          label={t('add.quantity')}
+          placeholder={t('add.quantityPlaceholder')}
           value={form.quantity}
           onChange={(e) => set('quantity', e.target.value)}
         />
 
         <Field
-          label="Ubicación (opcional)"
-          placeholder="Ej: Nevera · Estante 2"
+          label={t('add.location')}
+          placeholder={t('add.locationPlaceholder')}
           value={form.location}
           onChange={(e) => set('location', e.target.value)}
         />
 
         <TextArea
-          label="Notas opcionales"
-          placeholder="Ej: abrir antes del fin de semana"
+          label={t('add.notes')}
+          placeholder={t('add.notesPlaceholder')}
           value={form.notes}
           onChange={(e) => set('notes', e.target.value)}
         />
 
         <div className="flex flex-col gap-2 mt-auto pt-2 pb-2">
-          <BtnPrimary type="submit" label={editing ? 'Guardar cambios' : 'Guardar producto'} />
+          <BtnPrimary type="submit" label={editing ? t('add.saveChanges') : t('add.save')} />
           <button type="button" onClick={() => onNav(...backTarget)} className="h-10 flex items-center justify-center">
-            <span className="text-sm text-gray-400">Cancelar</span>
+            <span className="text-sm text-gray-400">{t('add.cancel')}</span>
           </button>
         </div>
       </form>

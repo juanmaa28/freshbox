@@ -11,12 +11,14 @@ const ITEMS = [
 ]
 
 export default function BottomNav({ active, onNav }) {
-  const { products } = usePantry()
+  const { products, t } = usePantry()
   const alertCount = products.filter((p) => daysLeft(p.expiryDate) <= 7).length
+
+  const labels = { home: t('nav.home'), categories: t('nav.categories'), search: t('nav.search'), notifications: t('nav.alerts'), settings: t('nav.settings') }
 
   return (
     <nav className="h-[68px] border-t border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800 flex shrink-0">
-      {ITEMS.map(({ id, Icon, label }) => {
+      {ITEMS.map(({ id, Icon }) => {
         const isActive = active === id
         return (
           <button
@@ -44,7 +46,7 @@ export default function BottomNav({ active, onNav }) {
                 isActive ? 'text-fresh-600' : 'text-gray-400 dark:text-gray-500'
               }`}
             >
-              {label}
+              {labels[id]}
             </span>
           </button>
         )

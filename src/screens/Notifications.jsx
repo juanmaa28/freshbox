@@ -6,14 +6,14 @@ import AppHeader from '../components/AppHeader'
 import BottomNav from '../components/BottomNav'
 
 const LEGEND = [
-  { key: 'critical', label: 'Crítico' },
-  { key: 'high', label: 'Urgente' },
-  { key: 'mid', label: 'Medio' },
-  { key: 'low', label: 'Bajo' },
+  { key: 'critical', es: 'Crítico', en: 'Critical' },
+  { key: 'high', es: 'Urgente', en: 'Urgent' },
+  { key: 'mid', es: 'Medio', en: 'Medium' },
+  { key: 'low', es: 'Bajo', en: 'Low' },
 ]
 
 export default function Notifications({ onNav }) {
-  const { products } = usePantry()
+  const { products, settings, t } = usePantry()
 
   const alerts = products
     .map((p) => ({ ...p, days: daysLeft(p.expiryDate) }))
@@ -24,14 +24,14 @@ export default function Notifications({ onNav }) {
   const thisWeek = alerts.filter((p) => p.days > 0 && p.days <= 7).length
 
   const stats = [
-    { label: 'Urgentes hoy', val: urgentToday },
-    { label: 'Esta semana', val: thisWeek },
-    { label: 'Total activas', val: alerts.length },
+    { label: t('alerts.today'), val: urgentToday },
+    { label: t('alerts.week'), val: thisWeek },
+    { label: t('alerts.total'), val: alerts.length },
   ]
 
   return (
     <div className="w-full h-full flex flex-col bg-gray-50 dark:bg-gray-950">
-      <AppHeader title="Notificaciones" />
+      <AppHeader title={t('alerts.title')} />
 
       <div className="flex border-b border-orange-100 dark:border-orange-950/50 bg-orange-50/60 dark:bg-orange-950/20 shrink-0">
         {stats.map(({ label, val }, i) => (
@@ -51,7 +51,7 @@ export default function Notifications({ onNav }) {
         {LEGEND.map(({ key, label }) => (
           <div key={key} className="flex items-center gap-1">
             <div className={`w-2 h-2 rounded-full ${URGENCY_META[key].dot}`} />
-            <span className="text-[9px] text-gray-500 dark:text-gray-400">{label}</span>
+            <span className="text-[9px] text-gray-500 dark:text-gray-400">{settings.language === 'English' ? LEGEND.find((item) => item.key === key).en : label}</span>
           </div>
         ))}
       </div>
@@ -60,7 +60,7 @@ export default function Notifications({ onNav }) {
         {alerts.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center gap-3 text-center px-8">
             <BellOff size={40} className="text-gray-300 dark:text-gray-700" strokeWidth={1.2} />
-            <p className="text-sm text-gray-400">Sin alertas activas. Tu despensa está bajo control. 🥦</p>
+            <p className="text-sm text-gray-400">{t('alerts.none')}</p>
           </div>
         ) : (
           alerts.map((p) => {
@@ -81,7 +81,7 @@ export default function Notifications({ onNav }) {
                   )}
                   <div className="flex-1 flex flex-col gap-0.5 min-w-0">
                     <span className="text-sm font-semibold text-gray-900 dark:text-gray-50 truncate">{p.name}</span>
-                    <span className={`text-xs font-medium ${meta.text}`}>{expiryText(p.days)}</span>
+                    <span className={`text-xs font-medium ${meta.text}`}>{expiryText(p.days, settings.language)}</span>
                   </div>
                   <Bell size={13} className="text-gray-300 dark:text-gray-600 shrink-0" />
                 </div>
