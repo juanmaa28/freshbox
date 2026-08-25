@@ -45,7 +45,7 @@ function AppShell() {
   return (
     <div className="min-h-dvh w-full flex items-center justify-center bg-gray-200 dark:bg-[#0a0f0d] md:py-8">
       {/* Móvil: pantalla completa · Escritorio: marco de teléfono 375×812 */}
-      <div className="relative w-full h-dvh md:w-[375px] md:h-[812px] md:max-h-[92dvh] bg-white dark:bg-gray-950 overflow-hidden md:rounded-[40px] md:border-[3px] md:border-gray-900 dark:md:border-gray-700 md:shadow-2xl">
+      <div className="relative w-full h-dvh md:w-[375px] md:h-[812px] md:max-h-[92dvh] bg-white dark:bg-gray-950 overflow-hidden md:rounded-[40px] md:border-[3px] md:border-fresh-800 dark:md:border-fresh-900 md:shadow-2xl">
         <div key={route.id} className="w-full h-full animate-screen-in">
           <Screen onNav={navigate} params={route.params} />
         </div>
