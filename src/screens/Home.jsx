@@ -24,7 +24,7 @@ export default function Home({ onNav }) {
             className="object-contain w-10 h-10 mix-blend-multiply dark:mix-blend-normal dark:rounded-full dark:bg-white/90"
           />
           <div className="flex flex-col leading-tight">
-            <span className="text-base font-bold text-gray-900 dark:text-gray-50">FreshBox</span>
+            <span className="text-base font-bold text-fresh-800 dark:text-fresh-300">FreshBox</span>
             {user && <span className="text-[10px] text-gray-400 -mt-0.5">Hola, {user.name}</span>}
           </div>
         </div>
