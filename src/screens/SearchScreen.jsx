@@ -32,14 +32,17 @@ export default function SearchScreen({ onNav }) {
 
   return (
     <div className="w-full h-full flex flex-col bg-white dark:bg-gray-950">
-      <div className="h-10 flex items-center justify-center border-b border-gray-100 dark:border-gray-800 shrink-0 gap-1.5">
-        <img
-          src={logoSrc}
-          alt="FreshBox"
-          className="object-contain w-7 h-7 mix-blend-multiply dark:mix-blend-normal dark:rounded-full dark:bg-white/90"
-        />
-        <span className="text-sm font-bold text-gray-800 dark:text-gray-100">FreshBox</span>
-      </div>
+      <header className="h-16 flex items-center justify-center border-b border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800 shrink-0">
+        {/* El texto queda centrado y el logo cuelga a su izquierda sin desplazarlo. */}
+        <span className="relative text-base font-bold text-gray-900 dark:text-gray-50">
+          <img
+            src={logoSrc}
+            alt="FreshBox"
+            className="absolute right-full mr-2 top-1/2 -translate-y-1/2 object-contain w-10 h-10 rounded-full mix-blend-multiply dark:mix-blend-normal dark:rounded-full dark:bg-white/90"
+          />
+          FreshBox
+        </span>
+      </header>
 
       <div className="px-3 py-3 border-b border-gray-200 dark:border-gray-800 flex items-center gap-2 shrink-0">
         <div className="flex-1 h-10 border border-gray-300 dark:border-gray-700 rounded-full flex items-center gap-2.5 px-3.5 bg-gray-50 dark:bg-gray-900 focus-within:border-fresh-500 focus-within:ring-1 focus-within:ring-fresh-500">

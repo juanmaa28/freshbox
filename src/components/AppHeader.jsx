@@ -6,7 +6,7 @@ import { usePantry } from '../context/PantryContext'
 export default function AppHeader({ title = 'FreshBox', showBack = false, onBack, right }) {
   const { t } = usePantry()
   return (
-    <header className="h-12 flex items-center px-4 border-b border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800 shrink-0 gap-2">
+    <header className="h-16 flex items-center px-4 border-b border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800 shrink-0 gap-2">
       {showBack && (
         <button onClick={onBack} className="-ml-1 p-1 shrink-0" aria-label={t('common.back')}>
           <ChevronLeft size={20} className="text-gray-700 dark:text-gray-300" />
@@ -16,7 +16,7 @@ export default function AppHeader({ title = 'FreshBox', showBack = false, onBack
       <img
         src={logoSrc}
         alt="FreshBox"
-        className="object-contain shrink-0 w-9 h-9 rounded-full mix-blend-multiply dark:mix-blend-normal dark:rounded-full dark:bg-white/90"
+        className="object-contain shrink-0 w-10 h-10 rounded-full mix-blend-multiply dark:mix-blend-normal dark:rounded-full dark:bg-white/90"
       />
       {right}
     </header>

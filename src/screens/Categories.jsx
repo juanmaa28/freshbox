@@ -22,7 +22,7 @@ export default function Categories({ onNav }) {
       .sort((a, b) => daysLeft(a.expiryDate) - daysLeft(b.expiryDate))
     return (
       <div className="w-full h-full flex flex-col bg-gray-50 dark:bg-gray-950">
-        <header className="h-12 flex items-center px-4 border-b border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800 shrink-0 gap-2">
+        <header className="h-16 flex items-center px-4 border-b border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800 shrink-0 gap-2">
           <button onClick={() => setSelected(null)} className="-ml-1 p-1" aria-label={t('categories.back')}>
             <ChevronLeft size={20} className="text-gray-700 dark:text-gray-300" />
           </button>
