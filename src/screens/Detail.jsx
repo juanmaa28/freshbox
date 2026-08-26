@@ -138,6 +138,7 @@ export default function Detail({ onNav, params }) {
         open={consumeOpen}
         title={t('detail.consumeTitle')}
         message={t('detail.consumeMessage', { name: product.name })}
+        confirmLabel={t('detail.consumed')}
         onCancel={() => setConsumeOpen(false)}
         onConfirm={() => {
           deleteProduct(product.id)
