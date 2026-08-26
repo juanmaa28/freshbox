@@ -19,10 +19,10 @@ export default function Detail({ onNav, params }) {
   // La ruta puede apuntar a un producto eliminado; se muestra un estado seguro.
   if (!product) {
     return (
-      <div className="w-full h-full flex flex-col bg-white dark:bg-gray-950">
+      <div className="flex h-full w-full flex-col bg-white dark:bg-gray-950">
         <AppHeader title={t('detail.title')} showBack onBack={() => onNav('home')} />
-        <div className="flex-1 flex items-center justify-center px-8 text-center">
-          <p className="text-sm text-gray-400">{t('detail.missing')}</p>
+        <div className="flex flex-1 items-center justify-center px-8 text-center">
+          <p className="text-[13.5px] text-gray-500 dark:text-gray-400">{t('detail.missing')}</p>
         </div>
       </div>
     )
@@ -48,47 +48,79 @@ export default function Detail({ onNav, params }) {
   ]
 
   return (
-    <div className="w-full h-full flex flex-col bg-white dark:bg-gray-950 relative">
+    <div className="relative flex h-full w-full flex-col bg-gray-50 dark:bg-gray-950">
       <AppHeader title={t('detail.title')} showBack onBack={() => onNav('home')} />
 
       {params?.notice && (
-        <div className="mx-4 mt-3 flex items-center gap-2 rounded-lg border border-fresh-200 bg-fresh-50 px-3 py-2 text-xs text-fresh-700 dark:border-fresh-900 dark:bg-fresh-900/20 dark:text-fresh-300">
-          <Check size={14} className="shrink-0" />
+        <div className="mx-4 mt-3 flex shrink-0 items-center gap-2 rounded-xl bg-fresh-50 px-3.5 py-2.5 text-[12.5px] font-medium text-fresh-800 ring-1 ring-fresh-100 dark:bg-fresh-900/25 dark:text-fresh-300 dark:ring-fresh-900/50">
+          <Check size={15} strokeWidth={2.4} className="shrink-0" />
           <span>{params.notice}</span>
         </div>
       )}
 
-      {product.photo ? (
-        <img src={product.photo} alt={product.name} className="w-full h-40 object-cover shrink-0" />
-      ) : (
-        <div className={`w-full h-40 shrink-0 flex items-center justify-center ${cat.color}`}>
-          <cat.Icon size={56} strokeWidth={1.2} />
-        </div>
-      )}
+      <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-4 py-4 no-scrollbar">
+        {/* Media embutida y redondeada: no toca los bordes ni la cabecera, así
+            la pantalla se lee como una ficha y no como una web. */}
+        {product.photo ? (
+          <img
+            src={product.photo}
+            alt={product.name}
+            className="h-44 w-full shrink-0 rounded-2xl object-cover shadow-card ring-1 ring-gray-900/5"
+          />
+        ) : (
+          <div
+            className={`relative flex h-44 shrink-0 items-center justify-center overflow-hidden rounded-2xl ${cat.color}`}
+          >
+            {/* Icono al agua: llena el espacio sin convertirse en el asunto. */}
+            <cat.Icon
+              size={190}
+              strokeWidth={0.7}
+              className="absolute -right-10 -bottom-12 opacity-[0.13]"
+              aria-hidden="true"
+            />
+            <cat.Icon size={54} strokeWidth={1.2} className="relative" aria-hidden="true" />
+          </div>
+        )}
 
-      <div className="flex-1 px-5 py-4 flex flex-col gap-4 overflow-y-auto no-scrollbar">
-        <div className="flex flex-col gap-1.5">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-50">{product.name}</h2>
+        <div className="flex shrink-0 flex-col gap-2.5">
+          <h2 className="font-display text-[26px] font-semibold leading-[1.1] tracking-[-0.03em] text-gray-900 dark:text-gray-50">
+            {product.name}
+          </h2>
           {/* La categoría es metadato (neutro) y la urgencia es la señal (con color). */}
-          <div className="flex items-center gap-2">
-            <span className="rounded-md border border-gray-200 bg-gray-50 px-2 py-0.5 text-[10px] font-semibold text-gray-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="rounded-lg bg-gray-100 px-2.5 py-1 text-[10.5px] font-semibold text-gray-600 dark:bg-gray-800 dark:text-gray-300">
               {translateCategory(product.category, settings.language)}
             </span>
-            <span className={`rounded-md border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${meta.chip}`}>
+            <span
+              className={`rounded-lg px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-[0.08em] ${meta.chip}`}
+            >
               {urgencyLabel}
             </span>
           </div>
         </div>
 
-        <div>
+        {/* El aviso reutiliza el chip del nivel de urgencia para mantener coherencia. */}
+        <div className={`flex shrink-0 items-center gap-2.5 rounded-2xl px-4 py-3.5 ${meta.chip}`}>
+          {isOk ? (
+            <CheckCircle2 size={17} className="shrink-0" strokeWidth={2} />
+          ) : (
+            <AlertCircle size={17} className="shrink-0" strokeWidth={2} />
+          )}
+          <span className="text-[13px] font-semibold">
+            {isOk ? t('detail.fresh') : expiryText(days, settings.language)}
+          </span>
+        </div>
+
+        {/* Ficha técnica: una sola tarjeta con filas separadas por un filo. */}
+        <div className="shrink-0 overflow-hidden rounded-2xl bg-white px-4 shadow-card ring-1 ring-gray-900/5 dark:bg-gray-900 dark:ring-white/5">
           {rows.map(({ id, label, value }, i) => (
             <div
               key={id}
-              className={`flex items-center justify-between gap-3 py-3 ${
-                i < rows.length - 1 ? 'border-b border-gray-100 dark:border-gray-800' : ''
+              className={`flex min-h-[52px] items-center justify-between gap-3 py-2.5 ${
+                i < rows.length - 1 ? 'border-b border-gray-900/[0.06] dark:border-white/[0.06]' : ''
               }`}
             >
-              <span className="text-sm text-gray-500 dark:text-gray-400">{label}</span>
+              <span className="text-[13px] text-gray-500 dark:text-gray-400">{label}</span>
               {id === 'quantity' && quantity ? (
                 <QuantityStepper
                   amount={quantity.amount}
@@ -99,48 +131,47 @@ export default function Detail({ onNav, params }) {
                   increaseLabel={t('detail.increase')}
                 />
               ) : (
-                <span className="text-sm font-semibold text-gray-900 dark:text-gray-100 text-right">{value}</span>
+                <span
+                  className={`text-right text-[13.5px] font-semibold text-gray-900 dark:text-gray-100 ${
+                    id === 'remaining' ? 'tabular' : ''
+                  }`}
+                >
+                  {value}
+                </span>
               )}
             </div>
           ))}
         </div>
 
         {product.notes && (
-          <div className="border border-gray-200 dark:border-gray-800 rounded-lg px-3 py-2.5 bg-gray-50 dark:bg-gray-900">
-            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide block mb-1">{t('detail.notes')}</span>
-            <p className="text-sm text-gray-700 dark:text-gray-300">{product.notes}</p>
+          <div className="shrink-0 rounded-2xl bg-white px-4 py-3.5 shadow-card ring-1 ring-gray-900/5 dark:bg-gray-900 dark:ring-white/5">
+            <span className="eyebrow mb-2 block">{t('detail.notes')}</span>
+            <p className="text-[13.5px] leading-relaxed text-gray-700 dark:text-gray-300">{product.notes}</p>
           </div>
         )}
 
-        {/* El aviso reutiliza el chip del nivel de urgencia para mantener coherencia. */}
-        <div className={`flex items-center gap-2.5 rounded-xl border px-3.5 py-3 ${meta.chip}`}>
-          {isOk ? (
-            <CheckCircle2 size={16} className="shrink-0" strokeWidth={2} />
-          ) : (
-            <AlertCircle size={16} className="shrink-0" strokeWidth={2} />
-          )}
-          <span className="text-xs font-medium">
-            {isOk ? t('detail.fresh') : expiryText(days, settings.language)}
-          </span>
-        </div>
-
-        <div className="flex flex-col gap-2 mt-auto pb-2">
+        <div className="mt-auto flex shrink-0 flex-col gap-2.5 pt-2">
           <BtnOutline
             label={t('detail.consumed')}
-            icon={<ShoppingBag size={14} />}
+            icon={<ShoppingBag size={15} strokeWidth={2} />}
             onClick={() => setConsumeOpen(true)}
           />
-          <div className="flex gap-3">
-          <div className="flex-1">
-            <BtnOutline
-              label={t('detail.edit')}
-              icon={<Pencil size={14} />}
-              onClick={() => onNav('add', { productId: product.id })}
-            />
-          </div>
-          <div className="flex-1">
-            <BtnOutline label={t('detail.delete')} danger icon={<Trash2 size={14} />} onClick={() => setConfirmOpen(true)} />
-          </div>
+          <div className="flex gap-2.5">
+            <div className="flex-1">
+              <BtnOutline
+                label={t('detail.edit')}
+                icon={<Pencil size={15} strokeWidth={2} />}
+                onClick={() => onNav('add', { productId: product.id })}
+              />
+            </div>
+            <div className="flex-1">
+              <BtnOutline
+                label={t('detail.delete')}
+                danger
+                icon={<Trash2 size={15} strokeWidth={2} />}
+                onClick={() => setConfirmOpen(true)}
+              />
+            </div>
           </div>
         </div>
       </div>

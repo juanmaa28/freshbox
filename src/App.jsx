@@ -45,11 +45,25 @@ function AppShell() {
   const Screen = SCREENS[route.id] ?? Home
 
   return (
-    <div className="min-h-dvh w-full flex items-center justify-center bg-[#eef1f5] dark:bg-[#080b0a] md:py-8">
-      {/* Móvil: pantalla completa · Escritorio: marco de teléfono 375×812 */}
-      <div className="relative w-full h-dvh md:w-[375px] md:h-[812px] md:max-h-[92dvh] bg-white dark:bg-gray-950 overflow-hidden md:rounded-[44px] md:border-[6px] md:border-gray-900 dark:md:border-gray-800 md:shadow-frame">
-        <div key={route.id} className="w-full h-full animate-screen-in">
-          <Screen onNav={navigate} params={route.params} />
+    <div className="relative min-h-dvh w-full flex items-center justify-center overflow-hidden md:py-10">
+      {/* Ambiente de escritorio: dos halos verdes muy tenues sobre el lienzo hueso.
+          En móvil queda oculto detrás de la pantalla, así que no cuesta nada. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 hidden md:block bg-[radial-gradient(60%_50%_at_50%_-5%,rgba(29,107,76,0.16),transparent_65%),radial-gradient(45%_45%_at_85%_100%,rgba(29,107,76,0.10),transparent_70%)] dark:bg-[radial-gradient(60%_50%_at_50%_-5%,rgba(46,133,97,0.16),transparent_65%),radial-gradient(45%_45%_at_85%_100%,rgba(21,86,62,0.18),transparent_70%)]"
+      />
+
+      {/* Móvil: pantalla completa · Escritorio: chasis de teléfono 375×812 */}
+      <div className="relative w-full h-dvh md:w-[375px] md:h-[812px] md:max-h-[92dvh] md:rounded-[52px] md:bg-gray-900 md:p-[9px] md:shadow-frame md:ring-1 md:ring-white/10 dark:md:bg-gray-800">
+        <div className="relative w-full h-full bg-white dark:bg-gray-950 overflow-hidden md:rounded-[44px]">
+          {/* Isla dinámica: solo un detalle de realismo en el marco de escritorio. */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute top-2 left-1/2 z-50 hidden h-[26px] w-[96px] -translate-x-1/2 rounded-full bg-gray-900 md:block dark:bg-black"
+          />
+          <main key={route.id} className="w-full h-full animate-screen-in">
+            <Screen onNav={navigate} params={route.params} />
+          </main>
         </div>
       </div>
     </div>

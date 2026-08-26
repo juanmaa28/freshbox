@@ -2,48 +2,91 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ============================================================================
+   FreshBox · Sistema visual "Fresh Cellar"
+   ---------------------------------------------------------------------------
+   Dirección: despensa editorial. Neutros cálidos (no el gris azulado genérico),
+   un único acento verde bosque, tipografía con voz (Fraunces para las cifras y
+   títulos, Inter para la interfaz) y superficies con textura en lugar de planas.
+   ========================================================================== */
+
 @theme {
-  /* Tipografía: Inter, usada por su legibilidad en tamaños pequeños. */
+  /* --- Tipografía -------------------------------------------------------- */
+  /* Inter sostiene la interfaz: es la mejor opción entre 11 y 15 px. */
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
+  /* Fraunces aporta la voz de marca: cifras, títulos y momentos editoriales. */
+  --font-display: "Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
 
-  /* Verde de marca: tonos profundos para un tono sobrio y profesional. */
-  --color-fresh-50: #eefbf3;
-  --color-fresh-100: #d6f5e3;
-  --color-fresh-200: #b0e9c9;
-  --color-fresh-300: #7dd7a8;
-  --color-fresh-400: #45bd83;
-  --color-fresh-500: #1fa066;
-  --color-fresh-600: #0f7a43;
-  --color-fresh-700: #0c6237;
-  --color-fresh-800: #0d4e2e;
-  --color-fresh-900: #0b4028;
+  /* --- Neutros cálidos ---------------------------------------------------
+     Se reemplaza el gris azulado de fábrica por una familia templada con una
+     pizca de oliva. Toda la app usa `gray-*`, así que cambiar la escala aquí
+     recalienta la interfaz completa sin tocar cada clase. */
+  --color-gray-50: #f8f8f6;
+  --color-gray-100: #f0f0ec;
+  --color-gray-200: #e4e4dd;
+  --color-gray-300: #cbccc3;
+  --color-gray-400: #9b9e93;
+  --color-gray-500: #74776c;
+  --color-gray-600: #585b51;
+  --color-gray-700: #434640;
+  --color-gray-800: #272c26;
+  --color-gray-900: #171b16;
+  --color-gray-950: #0c100c;
 
-  /* Urgencia como gradiente térmico: rojo → naranja → ámbar → verde.
-     Tonos calibrados y menos saturados que los colores por defecto. */
-  --color-danger-50: #fef3f2;
-  --color-danger-100: #fee4e2;
-  --color-danger-300: #fda29b;
-  --color-danger-500: #d92d20;
-  --color-danger-700: #912018;
+  /* --- Verde de marca ----------------------------------------------------
+     Bosque profundo y desaturado: un solo acento para toda la app. */
+  --color-fresh-50: #f1f7f3;
+  --color-fresh-100: #dcede2;
+  --color-fresh-200: #b9dcc6;
+  --color-fresh-300: #8bc4a3;
+  --color-fresh-400: #55a37e;
+  --color-fresh-500: #2e8561;
+  --color-fresh-600: #1d6b4c;
+  --color-fresh-700: #15563e;
+  --color-fresh-800: #124533;
+  --color-fresh-900: #0f382a;
+  --color-fresh-950: #071f18;
 
-  --color-warn-50: #fff4ed;
-  --color-warn-100: #ffe6d5;
-  --color-warn-300: #ff9c66;
-  --color-warn-500: #e04f16;
-  --color-warn-700: #9c2a10;
+  /* --- Urgencia: gradiente térmico rojo → naranja → ámbar ----------------
+     Saturación contenida para que convivan con los neutros cálidos. */
+  --color-danger-50: #fdf3f1;
+  --color-danger-100: #fbe2de;
+  --color-danger-300: #f0a99f;
+  --color-danger-500: #c8402c;
+  --color-danger-600: #ad3524;
+  --color-danger-700: #8a2b1e;
 
-  --color-caution-50: #fffaeb;
-  --color-caution-100: #fef0c7;
-  --color-caution-300: #fec84b;
-  --color-caution-500: #dc6803;
-  --color-caution-700: #93370d;
+  --color-warn-50: #fdf5ee;
+  --color-warn-100: #fbe7d5;
+  --color-warn-300: #f0ab74;
+  --color-warn-500: #c8641f;
+  --color-warn-700: #8d4415;
 
-  /* Sombras suaves y escalonadas en lugar de bordes duros. */
-  --shadow-card: 0 1px 2px rgb(15 23 42 / 0.04), 0 1px 3px rgb(15 23 42 / 0.06);
-  --shadow-raised: 0 2px 4px rgb(15 23 42 / 0.04), 0 4px 12px rgb(15 23 42 / 0.08);
-  --shadow-float: 0 4px 10px rgb(12 98 55 / 0.18), 0 10px 24px rgb(12 98 55 / 0.22);
-  --shadow-frame: 0 12px 32px rgb(15 23 42 / 0.12), 0 32px 64px rgb(15 23 42 / 0.14);
+  --color-caution-50: #fdf9ec;
+  --color-caution-100: #f9efcc;
+  --color-caution-300: #e8c164;
+  --color-caution-500: #b3841a;
+  --color-caution-700: #7d5c13;
+
+  /* --- Sombras teñidas ---------------------------------------------------
+     Nunca negro puro: cada sombra lleva el matiz verde-oliva del fondo, con
+     una única dirección de luz (cenital). */
+  --shadow-card: 0 1px 2px rgb(23 33 26 / 0.04), 0 2px 6px rgb(23 33 26 / 0.05);
+  --shadow-raised: 0 2px 6px rgb(23 33 26 / 0.05), 0 12px 28px rgb(23 33 26 / 0.09);
+  --shadow-float: 0 6px 14px rgb(13 60 40 / 0.26), 0 16px 36px rgb(13 60 40 / 0.22);
+  --shadow-frame: 0 30px 60px -14px rgb(12 22 16 / 0.30), 0 64px 120px -40px rgb(12 22 16 / 0.32);
+  --shadow-hero: 0 10px 24px -6px rgb(7 31 24 / 0.32), 0 28px 60px -20px rgb(7 31 24 / 0.42);
+  --shadow-nav: 0 -6px 24px -8px rgb(23 33 26 / 0.10);
+
+  /* --- Radios: más suaves en contenedores, más ceñidos dentro ------------ */
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1.125rem;
+  --radius-3xl: 1.5rem;
+
+  /* --- Movimiento: curvas con resorte, nunca lineal ---------------------- */
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.5, 1);
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 html,
@@ -52,25 +95,42 @@ body,
   height: 100%;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  /* Fondo neutro y frío: deja que el marco del teléfono sea el protagonista. */
-  background-color: #eef1f5;
+  /* Lienzo hueso: temperatura cálida que hace resaltar el marco del teléfono. */
+  background-color: #e9e7e0;
+  color: var(--color-gray-900);
 }
 
 .dark body {
-  background-color: #080b0a;
+  background-color: #080a08;
+}
+
+/* Fraunces se sirve con eje óptico: los tamaños grandes piden un corte más
+   estrecho y contrastado, los pequeños uno más abierto. */
+.font-display {
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 24, "WONK" 1;
 }
 
 /* Los títulos ganan cohesión con un tracking ligeramente cerrado. */
 h1,
 h2,
 h3 {
-  letter-spacing: -0.021em;
+  letter-spacing: -0.022em;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
 }
 
 /* Cifras alineadas verticalmente en estadísticas y contadores. */
@@ -79,7 +139,40 @@ h3 {
   font-feature-settings: "tnum";
 }
 
-/* Splash loading bar */
+/* --- Etiqueta de sección --------------------------------------------------
+   Reemplaza las mayúsculas apretadas repetidas por toda la app por una sola
+   clase con el tracking y el peso ya calibrados. */
+.eyebrow {
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-gray-400);
+}
+
+/* --- Textura --------------------------------------------------------------
+   Grano fino sobre las superficies de marca: rompe la planitud digital sin
+   leerse como un patrón. Va como overlay, nunca captura el puntero. */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.42;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+}
+
+/* Halo radial cálido para las superficies de marca. */
+.glow-hero {
+  background-image:
+    radial-gradient(120% 90% at 12% 0%, rgb(85 163 126 / 0.38) 0%, transparent 58%),
+    radial-gradient(90% 70% at 100% 100%, rgb(46 133 97 / 0.30) 0%, transparent 60%);
+}
+
+/* --- Movimiento ----------------------------------------------------------- */
+
 @keyframes loading-slide {
   0% {
     transform: translateX(-100%);
@@ -90,14 +183,13 @@ h3 {
 }
 
 .animate-loading-bar {
-  animation: loading-slide 1.2s ease-in-out infinite;
+  animation: loading-slide 1.35s var(--ease-out-soft) infinite;
 }
 
-/* Screen transition */
 @keyframes screen-in {
   from {
     opacity: 0;
-    transform: translateY(10px) scale(0.99);
+    transform: translateY(10px) scale(0.994);
   }
   to {
     opacity: 1;
@@ -106,14 +198,112 @@ h3 {
 }
 
 .animate-screen-in {
-  animation: screen-in 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: screen-in 0.34s var(--ease-out-soft) both;
 }
 
-/* Hide scrollbars inside the phone frame but keep scrolling */
+/* Entrada escalonada: las listas nunca aparecen todas de golpe. */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stagger > * {
+  animation: rise-in 0.42s var(--ease-out-soft) both;
+}
+
+.stagger > *:nth-child(1) {
+  animation-delay: 0.02s;
+}
+.stagger > *:nth-child(2) {
+  animation-delay: 0.055s;
+}
+.stagger > *:nth-child(3) {
+  animation-delay: 0.09s;
+}
+.stagger > *:nth-child(4) {
+  animation-delay: 0.125s;
+}
+.stagger > *:nth-child(5) {
+  animation-delay: 0.16s;
+}
+.stagger > *:nth-child(6) {
+  animation-delay: 0.195s;
+}
+.stagger > *:nth-child(7) {
+  animation-delay: 0.23s;
+}
+.stagger > *:nth-child(n + 8) {
+  animation-delay: 0.26s;
+}
+
+/* Barra que se llena al entrar en pantalla. */
+@keyframes fill-bar {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+.animate-fill {
+  transform-origin: left;
+  animation: fill-bar 0.75s var(--ease-out-soft) both;
+}
+
+/* Respuesta física al pulsar: todo lo tocable se hunde un poco. */
+.press {
+  transition:
+    transform 0.18s var(--ease-spring),
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    color 0.18s ease;
+}
+
+.press:active {
+  transform: scale(0.975);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* --- Utilidades ----------------------------------------------------------- */
+
+/* Se ocultan las barras de scroll dentro del marco del teléfono sin perder el
+   desplazamiento. */
 .no-scrollbar {
   scrollbar-width: none;
 }
 
 .no-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+/* Los selects nativos pierden la flecha del sistema y reciben una propia. */
+.select-clean {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1.5 1.75 6 6.25l4.5-4.5' stroke='%2374776c' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.875rem center;
+  padding-right: 2.25rem;
+}
+
+.dark .select-clean {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1.5 1.75 6 6.25l4.5-4.5' stroke='%239b9e93' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* Los date pickers nativos heredan el color del texto en modo oscuro. */
+.dark input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.7);
 }

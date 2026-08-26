@@ -33,42 +33,52 @@ export default function Notifications({ onNav }) {
   ]
 
   return (
-    <div className="w-full h-full flex flex-col bg-gray-50 dark:bg-gray-950">
+    <div className="relative flex h-full w-full flex-col bg-gray-50 dark:bg-gray-950">
       <AppHeader title={t('alerts.title')} />
 
-      <div className="flex shrink-0 border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
-        {stats.map(({ label, val, tone }, i) => (
-          <div
-            key={label}
-            className={`flex flex-1 flex-col items-center py-3.5 ${
-              i < stats.length - 1 ? 'border-r border-gray-100 dark:border-gray-800' : ''
-            }`}
-          >
-            <span className={`tabular text-2xl font-bold ${tone}`}>{val}</span>
-            <span className="mt-0.5 text-[9px] font-semibold uppercase tracking-[0.07em] text-gray-400 dark:text-gray-500">
-              {label}
-            </span>
-          </div>
-        ))}
+      {/* Resumen en una sola tarjeta: sin líneas divisorias duras, el espacio
+          separa las tres cifras. */}
+      <div className="shrink-0 px-4 pt-4">
+        <div className="grid grid-cols-3 rounded-2xl bg-white p-4 shadow-card ring-1 ring-gray-900/5 dark:bg-gray-900 dark:ring-white/5">
+          {stats.map(({ label, val, tone }, i) => (
+            <div
+              key={label}
+              className={`flex flex-col items-center gap-1.5 ${
+                i > 0 ? 'border-l border-gray-900/[0.06] dark:border-white/[0.06]' : ''
+              }`}
+            >
+              <span className={`tabular font-display text-[26px] font-semibold leading-none ${tone}`}>
+                {val}
+              </span>
+              <span className="text-center text-[9.5px] font-semibold uppercase leading-tight tracking-[0.08em] text-gray-400 dark:text-gray-500">
+                {label}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* La leyenda usa las mismas franjas que las tarjetas, no puntos sueltos. */}
-      <div className="flex shrink-0 items-center gap-3.5 px-3 py-2.5">
+      <div className="flex shrink-0 items-center gap-4 px-5 pb-1 pt-4">
         {LEGEND.map(({ key, i18nKey }) => (
           <div key={key} className="flex items-center gap-1.5">
             <span className={`h-2.5 w-1 rounded-full ${URGENCY_META[key].rail}`} />
-            <span className="text-[9px] font-medium uppercase tracking-[0.05em] text-gray-400 dark:text-gray-500">
+            <span className="text-[9px] font-semibold uppercase tracking-[0.08em] text-gray-400 dark:text-gray-500">
               {t(i18nKey)}
             </span>
           </div>
         ))}
       </div>
 
-      <div className="flex-1 overflow-y-auto no-scrollbar px-3 pb-3 flex flex-col gap-2">
+      <div className="stagger flex flex-1 flex-col gap-2.5 overflow-y-auto px-4 pb-[104px] pt-2 no-scrollbar">
         {alerts.length === 0 ? (
-          <div className="flex-1 flex flex-col items-center justify-center gap-3 text-center px-8">
-            <BellOff size={40} className="text-gray-300 dark:text-gray-700" strokeWidth={1.2} />
-            <p className="text-sm text-gray-400">{t('alerts.none')}</p>
+          <div className="flex flex-1 flex-col items-center justify-center gap-4 px-8 text-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-fresh-50 text-fresh-600 ring-1 ring-fresh-100 dark:bg-fresh-900/25 dark:text-fresh-400 dark:ring-fresh-900/50">
+              <BellOff size={28} strokeWidth={1.4} />
+            </div>
+            <p className="max-w-[15rem] text-[13.5px] leading-relaxed text-gray-500 dark:text-gray-400">
+              {t('alerts.none')}
+            </p>
           </div>
         ) : (
           // Se reutiliza ProductCard para que la lista sea idéntica a la de Inicio.

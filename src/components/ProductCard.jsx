@@ -16,46 +16,67 @@ export default function ProductCard({ product, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="w-full text-left shrink-0 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-500 focus-visible:ring-offset-2"
+      className="press group w-full shrink-0 text-left rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-600 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-50 dark:focus-visible:ring-offset-gray-950"
     >
-      <div className="flex items-stretch overflow-hidden rounded-xl border border-gray-100 bg-white shadow-card transition-colors hover:border-gray-200 active:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:active:bg-gray-800">
-        {/* Franja de acento: comunica la urgencia sin añadir elementos sueltos. */}
-        <div className={`w-1 shrink-0 ${meta.rail}`} />
+      {/* Sin borde duro: la tarjeta se apoya en una sombra teñida y un filo de
+          1px casi invisible. El borde vuelve solo cuando el producto ya venció. */}
+      <div
+        className={`relative flex items-stretch overflow-hidden rounded-2xl shadow-card ring-1 transition-shadow group-hover:shadow-raised ${
+          isExpired
+            ? 'bg-danger-50 ring-danger-100 dark:bg-danger-700/10 dark:ring-danger-700/30'
+            : 'bg-white ring-gray-900/5 dark:bg-gray-900 dark:ring-white/5'
+        }`}
+      >
+        {/* Franja de acento: una pastilla embutida, no un bloque a sangre. */}
+        <span aria-hidden="true" className="w-1.5 shrink-0 py-2.5 pl-1.5">
+          <span className={`block h-full w-1 rounded-full ${meta.rail}`} />
+        </span>
 
-        <div className="flex min-w-0 flex-1 items-center gap-3 px-3 py-3">
+        <div className="flex min-w-0 flex-1 items-center gap-3 py-3 pl-2.5 pr-3.5">
           {product.photo ? (
-            <img src={product.photo} alt={product.name} className="h-11 w-11 shrink-0 rounded-lg object-cover" />
+            <img
+              src={product.photo}
+              alt={product.name}
+              className="h-12 w-12 shrink-0 rounded-[14px] object-cover ring-1 ring-gray-900/5"
+            />
           ) : (
-            <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ${cat.color}`}>
-              <cat.Icon size={19} strokeWidth={1.75} />
+            <div
+              className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] ${cat.color}`}
+            >
+              <cat.Icon size={20} strokeWidth={1.75} />
             </div>
           )}
 
           <div className="flex min-w-0 flex-1 flex-col gap-1">
-            <span className="truncate text-[15px] font-semibold tracking-[-0.01em] text-gray-900 dark:text-gray-50">
+            <span className="truncate text-[15px] font-semibold leading-tight tracking-[-0.015em] text-gray-900 dark:text-gray-50">
               {product.name}
             </span>
             {/* La categoría queda en un tono neutro para que resalte el vencimiento. */}
             <div className="flex min-w-0 items-center gap-1.5">
-              <span className="truncate text-[11px] text-gray-400 dark:text-gray-500">
+              <span className="truncate text-[11.5px] text-gray-400 dark:text-gray-500">
                 {translateCategory(product.category, settings.language)}
               </span>
               <span className="text-gray-300 dark:text-gray-700">·</span>
-              <span className={`shrink-0 text-[11px] font-medium ${meta.text}`}>
+              <span className={`shrink-0 text-[11.5px] font-medium ${meta.text}`}>
                 {expiryText(days, settings.language)}
               </span>
             </div>
           </div>
 
-          {/* Los vencidos usan una etiqueta sólida; el resto, la cuenta regresiva. */}
+          {/* Los vencidos usan una etiqueta sólida; el resto, la cuenta regresiva
+              en la tipografía de marca, que le da peso editorial a la cifra. */}
           {isExpired ? (
-            <span className={`shrink-0 rounded-md border px-2 py-1 text-[10px] font-bold uppercase tracking-wide ${meta.chip}`}>
+            <span
+              className={`shrink-0 rounded-lg px-2 py-1 text-[10px] font-bold uppercase tracking-[0.08em] ${meta.chip}`}
+            >
               {t('common.overdueBadge')}
             </span>
           ) : (
             <div className="flex shrink-0 flex-col items-center leading-none">
-              <span className={`tabular text-xl font-bold ${meta.text}`}>{days}</span>
-              <span className="mt-0.5 text-[9px] font-semibold uppercase tracking-[0.08em] text-gray-400 dark:text-gray-500">
+              <span className={`tabular font-display text-[26px] font-semibold leading-none ${meta.text}`}>
+                {days}
+              </span>
+              <span className="mt-1 text-[8.5px] font-semibold uppercase tracking-[0.12em] text-gray-400 dark:text-gray-500">
                 {days === 1 ? t('common.day') : t('common.days')}
               </span>
             </div>

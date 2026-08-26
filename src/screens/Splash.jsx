@@ -3,32 +3,40 @@ import logoSrc from '../assets/freshbox-logo.jpeg'
 import { usePantry } from '../context/PantryContext'
 
 // Pantalla breve que presenta la marca mientras se carga la sesión local.
+// Es el único momento a pantalla completa en el verde de marca: el logo va
+// sobre un azulejo blanco, como el icono de la app sobre el fondo del sistema.
 export default function Splash() {
   const { t } = usePantry()
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center bg-white dark:bg-gray-950 gap-6 relative">
-      <div className="flex flex-col items-center gap-3">
-        <img
-          src={logoSrc}
-          alt="FreshBox"
-          className="object-contain w-[170px] h-[170px] mix-blend-multiply dark:mix-blend-normal dark:rounded-3xl dark:bg-white/90"
-        />
-        <div className="flex flex-col items-center gap-0.5">
-          <h1 className="text-[28px] font-bold text-gray-900 dark:text-gray-50 tracking-tight">FreshBox</h1>
-          <p className="text-xs text-fresh-600 dark:text-fresh-400 tracking-widest uppercase">
+    <div className="grain glow-hero relative flex h-full w-full flex-col items-center justify-center gap-8 bg-fresh-900">
+      <div className="relative z-10 flex flex-col items-center gap-6">
+        <div className="flex h-[124px] w-[124px] items-center justify-center rounded-[34px] bg-white shadow-hero ring-1 ring-white/20">
+          <img
+            src={logoSrc}
+            alt="FreshBox"
+            className="h-[104px] w-[104px] object-contain mix-blend-multiply"
+          />
+        </div>
+        <div className="flex flex-col items-center gap-2.5">
+          <h1 className="font-display text-[34px] font-semibold leading-none tracking-[-0.03em] text-white">
+            FreshBox
+          </h1>
+          <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-fresh-300/90">
             Frescura que no se te olvida
           </p>
         </div>
       </div>
-      <div className="flex flex-col items-center gap-2 mt-6">
-        <div className="w-36 h-[5px] bg-fresh-100 dark:bg-gray-800 rounded-full overflow-hidden">
-          <div className="w-2/5 h-full bg-fresh-600 rounded-full animate-loading-bar" />
+
+      <div className="relative z-10 mt-4 flex flex-col items-center gap-3">
+        <div className="h-[3px] w-32 overflow-hidden rounded-full bg-white/15">
+          <div className="animate-loading-bar h-full w-2/5 rounded-full bg-fresh-300" />
         </div>
-        <span className="text-xs text-gray-400">{t('splash.loading')}</span>
+        <span className="text-[11px] font-medium text-fresh-100/50">{t('splash.loading')}</span>
       </div>
-      <div className="absolute bottom-10">
-        <span className="text-[10px] text-gray-300 dark:text-gray-600 tracking-widest">VERSIÓN 1.0.0</span>
-      </div>
+
+      <span className="absolute bottom-10 z-10 text-[9.5px] font-medium uppercase tracking-[0.2em] text-fresh-100/30">
+        Versión 1.0.0
+      </span>
     </div>
   )
 }

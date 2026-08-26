@@ -21,7 +21,7 @@ export default function Profile({ onNav }) {
   const stats = [
     { label: t('stats.total'), val: counts.total, tone: 'text-gray-900 dark:text-gray-50' },
     { label: t('stats.expired'), val: counts.expired, tone: 'text-danger-500 dark:text-danger-300' },
-    { label: t('stats.soon'), val: counts.soon, tone: 'text-warn-500 dark:text-warn-300' },
+    { label: t('stats.soon'), val: counts.soon, tone: 'text-caution-500 dark:text-caution-300' },
     { label: t('stats.fresh'), val: counts.fresh, tone: 'text-fresh-600 dark:text-fresh-400' },
   ]
 
@@ -50,98 +50,119 @@ export default function Profile({ onNav }) {
   }
 
   return (
-    <div className="w-full h-full flex flex-col bg-gray-50 dark:bg-gray-950">
+    <div className="flex h-full w-full flex-col bg-gray-50 dark:bg-gray-950">
       <AppHeader title={t('profile.title')} showBack onBack={() => onNav('settings')} />
 
-      <div className="flex flex-col items-center py-6 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 gap-3 shrink-0">
-        <div className="relative">
-          {user.avatar ? (
-            <img src={user.avatar} alt="Avatar" className="w-20 h-20 rounded-full object-cover" />
-          ) : (
-            <div className="w-20 h-20 rounded-full bg-fresh-100 dark:bg-fresh-900/40 flex items-center justify-center">
-              <User size={34} className="text-fresh-600 dark:text-fresh-400" strokeWidth={1.5} />
-            </div>
-          )}
-          <button
-            onClick={() => fileRef.current?.click()}
-            className="absolute bottom-0 right-0 w-6 h-6 bg-fresh-600 rounded-full flex items-center justify-center border-2 border-white dark:border-gray-900"
-            aria-label={t('profile.changePhoto')}
-          >
-            <Pencil size={10} className="text-white" />
-          </button>
-          <input ref={fileRef} type="file" accept="image/*" onChange={handleAvatar} className="hidden" />
-        </div>
-        <div className="flex flex-col items-center gap-0.5">
-          <span className="text-base font-bold text-gray-900 dark:text-gray-50">{user.name}</span>
-          <span className="text-sm text-gray-500 dark:text-gray-400">{user.email}</span>
-        </div>
-        <div className="flex divide-x divide-gray-200 dark:divide-gray-700 mt-1">
-          {stats.map(({ label, val, tone }) => (
-            <div key={label} className="flex flex-col items-center px-3.5">
-              <span className={`tabular text-base font-bold ${tone}`}>{val}</span>
-              <span className="text-[10px] font-medium text-gray-400 dark:text-gray-500">{label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="px-4 py-4 flex flex-col gap-4 flex-1 overflow-y-auto no-scrollbar">
-        <div className="flex items-center justify-between">
-          <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">
-            {t('profile.personal')}
-          </span>
-          {!editing && (
-            <button onClick={() => setEditing(true)}>
-              <span className="text-[11px] text-fresh-600 dark:text-fresh-400 font-semibold underline underline-offset-2">
-                {t('profile.edit')}
-              </span>
-            </button>
-          )}
-        </div>
-
-        {editing ? (
-          <form onSubmit={saveEdit} className="flex flex-col gap-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-4">
-            <Field label={t('profile.fullName')} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-            <Field label={t('profile.email')} type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-            <Field label={t('profile.phone')} placeholder="+57 300 000 0000" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-            <div className="flex gap-2 mt-1">
-              <button
-                type="button"
-                onClick={() => setEditing(false)}
-                className="flex-1 h-10 rounded-lg border border-gray-300 dark:border-gray-700 text-sm font-semibold text-gray-600 dark:text-gray-300"
-              >
-                {t('profile.cancel')}
-              </button>
-              <div className="flex-1">
-                <BtnPrimary type="submit" label={t('profile.save')} />
+      <div className="flex flex-1 flex-col gap-5 overflow-y-auto px-4 pb-6 pt-4 no-scrollbar">
+        {/* Tarjeta de identidad: avatar cuadrado redondeado (no el círculo de
+            siempre), nombre en la tipografía de marca y las cifras dentro. */}
+        <div className="flex flex-col items-center gap-4 rounded-3xl bg-white px-5 py-6 shadow-card ring-1 ring-gray-900/5 dark:bg-gray-900 dark:ring-white/5">
+          <div className="relative">
+            {user.avatar ? (
+              <img
+                src={user.avatar}
+                alt={user.name}
+                className="h-[76px] w-[76px] rounded-[24px] object-cover ring-1 ring-gray-900/5"
+              />
+            ) : (
+              <div className="flex h-[76px] w-[76px] items-center justify-center rounded-[24px] bg-fresh-50 text-fresh-600 ring-1 ring-fresh-100 dark:bg-fresh-900/30 dark:text-fresh-400 dark:ring-fresh-900/50">
+                <User size={32} strokeWidth={1.5} />
               </div>
-            </div>
-          </form>
-        ) : (
-          <div className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 rounded-lg overflow-hidden">
-            {infoRows.map(({ label, value }, i) => (
-              <div
-                key={label}
-                className={`flex justify-between items-center px-4 py-3 ${
-                  i < infoRows.length - 1 ? 'border-b border-gray-100 dark:border-gray-800' : ''
-                }`}
-              >
-                <span className="text-sm text-gray-500 dark:text-gray-400">{label}</span>
-                <span className="text-sm font-semibold text-gray-900 dark:text-gray-100 text-right">{value}</span>
+            )}
+            <button
+              onClick={() => fileRef.current?.click()}
+              className="press absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-fresh-700 text-white ring-[3px] ring-white hover:bg-fresh-600 dark:ring-gray-900"
+              aria-label={t('profile.changePhoto')}
+            >
+              <Pencil size={11} strokeWidth={2.4} />
+            </button>
+            <input ref={fileRef} type="file" accept="image/*" onChange={handleAvatar} className="hidden" />
+          </div>
+
+          <div className="flex flex-col items-center gap-1 text-center">
+            <h2 className="font-display text-[21px] font-semibold leading-tight tracking-[-0.025em] text-gray-900 dark:text-gray-50">
+              {user.name}
+            </h2>
+            <span className="text-[13px] text-gray-500 dark:text-gray-400">{user.email}</span>
+          </div>
+
+          <div className="grid w-full grid-cols-4 gap-1 rounded-2xl bg-gray-50 p-2.5 dark:bg-gray-950/60">
+            {stats.map(({ label, val, tone }) => (
+              <div key={label} className="flex flex-col items-center gap-1.5">
+                <span className={`tabular font-display text-[19px] font-semibold leading-none ${tone}`}>
+                  {val}
+                </span>
+                <span className="text-center text-[9px] font-semibold uppercase leading-none tracking-[0.07em] text-gray-400 dark:text-gray-500">
+                  {label}
+                </span>
               </div>
             ))}
           </div>
-        )}
+        </div>
+
+        <section className="flex flex-col gap-2.5">
+          <div className="flex items-center justify-between px-1">
+            <span className="eyebrow">{t('profile.personal')}</span>
+            {!editing && (
+              <button
+                onClick={() => setEditing(true)}
+                className="press rounded-md px-1.5 py-0.5 text-[11.5px] font-semibold text-fresh-700 hover:bg-fresh-50 dark:text-fresh-400 dark:hover:bg-fresh-900/25"
+              >
+                {t('profile.edit')}
+              </button>
+            )}
+          </div>
+
+          {editing ? (
+            // Edición en línea, en el mismo sitio que la ficha: sin modal.
+            <form
+              onSubmit={saveEdit}
+              className="flex flex-col gap-3.5 rounded-2xl bg-white p-4 shadow-card ring-1 ring-gray-900/5 dark:bg-gray-900 dark:ring-white/5"
+            >
+              <Field label={t('profile.fullName')} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+              <Field label={t('profile.email')} type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+              <Field label={t('profile.phone')} placeholder="+57 300 000 0000" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+              <div className="mt-1 flex gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => setEditing(false)}
+                  className="press h-12 flex-1 rounded-xl bg-gray-50 text-[14.5px] font-semibold text-gray-600 ring-1 ring-gray-900/[0.07] hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:ring-white/[0.07]"
+                >
+                  {t('profile.cancel')}
+                </button>
+                <div className="flex-1">
+                  <BtnPrimary type="submit" label={t('profile.save')} />
+                </div>
+              </div>
+            </form>
+          ) : (
+            <div className="overflow-hidden rounded-2xl bg-white px-4 shadow-card ring-1 ring-gray-900/5 dark:bg-gray-900 dark:ring-white/5">
+              {infoRows.map(({ label, value }, i) => (
+                <div
+                  key={label}
+                  className={`flex min-h-[50px] items-center justify-between gap-3 py-2.5 ${
+                    i < infoRows.length - 1 ? 'border-b border-gray-900/[0.055] dark:border-white/[0.055]' : ''
+                  }`}
+                >
+                  <span className="text-[13px] text-gray-500 dark:text-gray-400">{label}</span>
+                  <span className="text-right text-[13.5px] font-semibold text-gray-900 first-letter:uppercase dark:text-gray-100">
+                    {value}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
 
         <button
           onClick={() => {
             logout()
             onNav('login')
           }}
-          className="mt-auto w-full h-11 border-2 border-red-200 dark:border-red-900 rounded-lg flex items-center justify-center gap-2 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors"
+          className="press mt-auto flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-danger-50 text-danger-600 ring-1 ring-danger-100 hover:bg-danger-100 dark:bg-danger-700/10 dark:text-danger-300 dark:ring-danger-700/30 dark:hover:bg-danger-700/20"
         >
-          <LogOut size={15} className="text-red-500" />
-          <span className="text-sm font-semibold text-red-500">{t('profile.logout')}</span>
+          <LogOut size={15} strokeWidth={2} />
+          <span className="text-[14.5px] font-semibold">{t('profile.logout')}</span>
         </button>
       </div>
     </div>

@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { usePantry } from '../context/PantryContext'
-import { Field, BtnPrimary, BtnOutline } from '../components/FormFields'
+import { Field, BtnPrimary } from '../components/FormFields'
 import logoSrc from '../assets/freshbox-logo.jpeg'
+
+const MODES = ['login', 'register']
 
 export default function Login({ onNav }) {
   const { login, t } = usePantry()
@@ -31,21 +33,50 @@ export default function Login({ onNav }) {
   }
 
   return (
-    <div className="w-full h-full flex flex-col bg-white dark:bg-gray-950 overflow-y-auto no-scrollbar">
-      <form onSubmit={handleSubmit} className="flex-1 flex flex-col justify-center px-7 gap-7 py-8">
-        <div className="flex flex-col items-center gap-2">
+    <div className="flex h-full w-full flex-col overflow-y-auto bg-white no-scrollbar dark:bg-gray-950">
+      <form onSubmit={handleSubmit} className="flex flex-1 flex-col px-7 pb-8 pt-11">
+        {/* Encabezado editorial: la marca es un azulejo discreto y el titular
+            lleva el peso. Nada centrado, nada de logo gigante. */}
+        <div className="flex flex-col gap-5">
           <img
             src={logoSrc}
             alt="FreshBox"
-            className="object-contain w-[110px] h-[110px] mix-blend-multiply dark:mix-blend-normal dark:rounded-2xl dark:bg-white/90"
+            className="h-12 w-12 rounded-[15px] object-contain mix-blend-multiply dark:bg-white/90 dark:mix-blend-normal"
           />
-          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-50">FreshBox</h2>
-          <p className="text-xs text-gray-400 text-center">
-            {mode === 'login' ? t('login.subtitle') : t('login.registerSubtitle')}
-          </p>
+          <div className="flex flex-col gap-2">
+            <h1 className="font-display text-[30px] font-semibold leading-[1.08] tracking-[-0.03em] text-gray-900 dark:text-gray-50">
+              {mode === 'login' ? t('login.title') : t('login.registerTitle')}
+            </h1>
+            <p className="max-w-[17rem] text-[13.5px] leading-relaxed text-gray-500 dark:text-gray-400">
+              {mode === 'login' ? t('login.subtitle') : t('login.registerSubtitle')}
+            </p>
+          </div>
         </div>
 
-        <div className="flex flex-col gap-4">
+        {/* Control segmentado en vez del clásico "o · crear cuenta nueva":
+            los dos caminos se ven a la vez y el formulario no cambia de sitio. */}
+        <div className="mt-7 grid grid-cols-2 gap-1 rounded-2xl bg-gray-100 p-1 dark:bg-gray-900">
+          {MODES.map((m) => (
+            <button
+              key={m}
+              type="button"
+              onClick={() => {
+                setMode(m)
+                setErrors({})
+              }}
+              aria-pressed={mode === m}
+              className={`press h-10 rounded-xl text-[13.5px] font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-600 ${
+                mode === m
+                  ? 'bg-white text-gray-900 shadow-card dark:bg-gray-800 dark:text-gray-50'
+                  : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+              }`}
+            >
+              {m === 'login' ? t('login.submit') : t('login.register')}
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-6 flex flex-col gap-4">
           {mode === 'register' && (
             <Field
               label={t('login.name')}
@@ -58,6 +89,7 @@ export default function Login({ onNav }) {
           <Field
             label={t('login.email')}
             type="email"
+            autoComplete="email"
             placeholder="nombre@correo.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -66,40 +98,32 @@ export default function Login({ onNav }) {
           <Field
             label={t('login.password')}
             type="password"
+            autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
             placeholder="••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             error={errors.password}
           />
           {mode === 'login' && (
-            <div className="flex justify-end -mt-1">
-              <span className="text-xs text-gray-500 dark:text-gray-400 underline underline-offset-2">
+            <div className="-mt-1 flex justify-end">
+              <button
+                type="button"
+                className="text-[12.5px] font-medium text-fresh-700 underline-offset-4 hover:underline dark:text-fresh-400"
+              >
                 {t('login.forgot')}
-              </span>
+              </button>
             </div>
           )}
         </div>
 
-        <div className="flex flex-col gap-3">
+        <div className="mt-8 flex flex-col gap-5">
           <BtnPrimary type="submit" label={mode === 'login' ? t('login.submit') : t('login.register')} />
-          <div className="flex items-center gap-3">
-            <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800" />
-            <span className="text-xs text-gray-400">{t('login.or')}</span>
-            <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800" />
-          </div>
-          <BtnOutline
-            type="button"
-            label={mode === 'login' ? t('login.newAccount') : t('login.haveAccount')}
-            onClick={() => {
-              setMode(mode === 'login' ? 'register' : 'login')
-              setErrors({})
-            }}
-          />
-        </div>
-
-        <div className="flex justify-center gap-1">
-          <span className="text-[10px] text-gray-400">{t('login.accept')}</span>
-          <span className="text-[10px] text-gray-600 dark:text-gray-300 underline underline-offset-1">{t('settings.terms')}</span>
+          <p className="text-center text-[11px] leading-relaxed text-gray-400">
+            {t('login.accept')}{' '}
+            <span className="font-medium text-gray-600 underline underline-offset-2 dark:text-gray-300">
+              {t('settings.terms')}
+            </span>
+          </p>
         </div>
       </form>
     </div>

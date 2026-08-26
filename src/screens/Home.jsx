@@ -29,37 +29,44 @@ export default function Home({ onNav }) {
   ].filter((group) => group.products.length > 0)
 
   return (
-    <div className="w-full h-full flex flex-col bg-gray-50 dark:bg-gray-950 relative">
-      <header className="h-16 flex items-center justify-between px-4 border-b border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800 shrink-0">
-        <div className="flex items-center gap-2">
+    <div className="relative flex h-full w-full flex-col bg-gray-50 dark:bg-gray-950">
+      {/* Cabecera abierta, sin barra ni línea divisoria: el saludo es el título
+          de la pantalla y el hero de abajo aporta el contraste. */}
+      <header className="flex shrink-0 items-center justify-between gap-3 px-5 pb-3 pt-5">
+        <div className="flex min-w-0 items-center gap-3">
           <img
             src={logoSrc}
-            alt="FreshBox"
-            className="object-contain w-10 h-10 mix-blend-multiply dark:mix-blend-normal dark:rounded-full dark:bg-white/90"
+            alt=""
+            aria-hidden="true"
+            className="h-10 w-10 shrink-0 rounded-[13px] object-contain mix-blend-multiply dark:bg-white/90 dark:mix-blend-normal"
           />
-          <div className="flex flex-col leading-tight">
-            <span className="text-base font-bold text-fresh-800 dark:text-fresh-300">FreshBox</span>
-            {user && <span className="text-[10px] text-gray-400 -mt-0.5">{t('home.greeting', { name: user.name })}</span>}
+          <div className="flex min-w-0 flex-col gap-1">
+            <span className="eyebrow">FreshBox</span>
+            <h1 className="truncate font-display text-[21px] font-semibold leading-none tracking-[-0.025em] text-gray-900 dark:text-gray-50">
+              {user ? t('home.greeting', { name: user.name }) : t('home.heroTitle')}
+            </h1>
           </div>
         </div>
-        <button onClick={() => onNav('search')} className="p-1" aria-label="Buscar">
-          <Search size={18} className="text-gray-600 dark:text-gray-300" strokeWidth={1.75} />
+        <button
+          onClick={() => onNav('search')}
+          className="press flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-gray-600 shadow-card ring-1 ring-gray-900/5 hover:text-fresh-700 dark:bg-gray-900 dark:text-gray-300 dark:ring-white/5 dark:hover:text-fresh-400"
+          aria-label={t('nav.search')}
+        >
+          <Search size={17} strokeWidth={1.9} />
         </button>
       </header>
 
-      {/* Resumen de la despensa; cada casilla filtra la lista de abajo. */}
-      <div className="px-3 pt-3 shrink-0">
+      {/* Resumen de la despensa; el control segmentado filtra la lista de abajo. */}
+      <div className="shrink-0 px-4">
         <PantryStats stats={stats} selected={bucket} onSelect={setBucket} />
       </div>
 
-      <div className="flex items-center justify-between px-3 mt-4 mb-2 shrink-0">
-        <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-[0.09em]">
-          {bucket === 'all' ? t('home.allPantry') : t(`stats.${bucket}`)}
-        </span>
+      <div className="mb-2 mt-5 flex shrink-0 items-center justify-between px-5">
+        <span className="eyebrow">{bucket === 'all' ? t('home.allPantry') : t(`stats.${bucket}`)}</span>
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
-          className="bg-transparent text-[10px] text-gray-500 dark:text-gray-400 focus:outline-none"
+          className="select-clean -mr-1 cursor-pointer rounded-lg bg-transparent py-1 pl-2 text-[11.5px] font-medium text-gray-500 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-600 dark:text-gray-400 dark:hover:bg-gray-900"
           aria-label={t('home.order')}
         >
           <option value="expiry">{t('home.expiry')}</option>
@@ -67,36 +74,48 @@ export default function Home({ onNav }) {
         </select>
       </div>
 
-      <div className="flex-1 overflow-y-auto no-scrollbar px-3 pb-3 flex flex-col gap-2">
+      <div className="flex flex-1 flex-col gap-2.5 overflow-y-auto px-4 pb-[104px] no-scrollbar">
         {visible.length === 0 ? (
-          <div className="flex-1 flex flex-col items-center justify-center gap-3 text-center px-8">
-            <PackageOpen size={40} className="text-gray-300 dark:text-gray-700" strokeWidth={1.2} />
-            <p className="text-sm text-gray-400">
+          // Estado vacío compuesto: icono, mensaje y una salida clara.
+          <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-fresh-50 text-fresh-600 ring-1 ring-fresh-100 dark:bg-fresh-900/25 dark:text-fresh-400 dark:ring-fresh-900/50">
+              <PackageOpen size={28} strokeWidth={1.4} />
+            </div>
+            <p className="max-w-[15rem] text-[13.5px] leading-relaxed text-gray-500 dark:text-gray-400">
               {products.length === 0
                 ? t('home.empty')
                 : bucket === 'soon'
                   ? t('home.fresh')
                   : t('home.noneInGroup')}
             </p>
+            {products.length === 0 && (
+              <button
+                onClick={() => onNav('add')}
+                className="press rounded-full bg-fresh-700 px-5 py-2.5 text-[13px] font-semibold text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.16),0_2px_8px_rgb(13_60_40/0.24)] hover:bg-fresh-600"
+              >
+                {t('home.add')}
+              </button>
+            )}
           </div>
         ) : (
           groups.map((group) => (
-            <div key={group.label} className="flex flex-col gap-2">
-              <span className="pt-1 text-[10px] font-bold text-gray-400 uppercase tracking-widest">{group.label}</span>
+            <section key={group.label} className="stagger flex flex-col gap-2.5">
+              <span className="eyebrow pt-2">{group.label}</span>
               {group.products.map((p) => (
                 <ProductCard key={p.id} product={p} onClick={() => onNav('detail', { productId: p.id })} />
               ))}
-            </div>
+            </section>
           ))
         )}
       </div>
 
+      {/* El botón flota justo encima de la pastilla de navegación. */}
       <button
         onClick={() => onNav('add')}
-        className="absolute w-14 h-14 bg-fresh-600 hover:bg-fresh-700 hover:scale-105 active:scale-95 rounded-full flex items-center justify-center shadow-float transition-transform duration-150 bottom-[84px] right-4 z-10"
+        className="press absolute bottom-[92px] right-4 z-40 flex h-14 w-14 items-center justify-center rounded-2xl bg-fresh-700 text-white shadow-float ring-1 ring-white/15 hover:bg-fresh-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-300"
         aria-label={t('home.add')}
       >
-        <Plus size={24} className="text-white" strokeWidth={2.5} />
+        <Plus size={24} strokeWidth={2.4} />
       </button>
 
       <BottomNav active="home" onNav={onNav} />

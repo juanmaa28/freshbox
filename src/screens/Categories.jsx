@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ChevronLeft } from 'lucide-react'
+import { ChevronLeft, PackageOpen } from 'lucide-react'
 import { usePantry } from '../context/PantryContext'
 import { CATEGORIES, categoryById } from '../data/categories'
 import { daysLeft } from '../utils/dates'
@@ -21,17 +21,34 @@ export default function Categories({ onNav }) {
       .filter((p) => p.category === selected)
       .sort((a, b) => daysLeft(a.expiryDate) - daysLeft(b.expiryDate))
     return (
-      <div className="w-full h-full flex flex-col bg-gray-50 dark:bg-gray-950">
-        <header className="h-16 flex items-center px-4 border-b border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800 shrink-0 gap-2">
-          <button onClick={() => setSelected(null)} className="-ml-1 p-1" aria-label={t('categories.back')}>
-            <ChevronLeft size={20} className="text-gray-700 dark:text-gray-300" />
+      <div className="relative flex h-full w-full flex-col bg-gray-50 dark:bg-gray-950">
+        <header className="flex h-[60px] shrink-0 items-center gap-2.5 border-b border-gray-900/[0.07] bg-white/85 px-4 backdrop-blur-xl dark:border-white/[0.06] dark:bg-gray-900/85">
+          <button
+            onClick={() => setSelected(null)}
+            className="press -ml-1.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+            aria-label={t('categories.back')}
+          >
+            <ChevronLeft size={19} strokeWidth={2} />
           </button>
-          <span className="text-base font-bold text-gray-900 dark:text-gray-50 flex-1">{translateCategory(cat.id, settings.language)}</span>
-          <span className="text-xs text-gray-400">{items.length} {items.length === 1 ? t('categories.product') : t('categories.products')}</span>
+          <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] ${cat.color}`}>
+            <cat.Icon size={16} strokeWidth={1.9} />
+          </div>
+          <h1 className="flex-1 truncate font-display text-[19px] font-semibold tracking-[-0.02em] text-gray-900 dark:text-gray-50">
+            {translateCategory(cat.id, settings.language)}
+          </h1>
+          <span className="tabular shrink-0 text-[12px] font-medium text-gray-400">
+            {items.length} {items.length === 1 ? t('categories.product') : t('categories.products')}
+          </span>
         </header>
-        <div className="flex-1 overflow-y-auto no-scrollbar px-3 py-3 flex flex-col gap-2">
+
+        <div className="stagger flex flex-1 flex-col gap-2.5 overflow-y-auto px-4 pb-[104px] pt-4 no-scrollbar">
           {items.length === 0 ? (
-            <p className="text-sm text-gray-400 text-center mt-10">{t('categories.empty')}</p>
+            <div className="flex flex-1 flex-col items-center justify-center gap-4 px-8 text-center">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 text-gray-400 dark:bg-gray-900">
+                <PackageOpen size={28} strokeWidth={1.4} />
+              </div>
+              <p className="text-[13.5px] text-gray-500 dark:text-gray-400">{t('categories.empty')}</p>
+            </div>
           ) : (
             items.map((p) => (
               <ProductCard key={p.id} product={p} onClick={() => onNav('detail', { productId: p.id })} />
@@ -44,28 +61,49 @@ export default function Categories({ onNav }) {
   }
 
   return (
-    <div className="w-full h-full flex flex-col bg-gray-50 dark:bg-gray-950">
+    <div className="relative flex h-full w-full flex-col bg-gray-50 dark:bg-gray-950">
       <AppHeader title={t('categories.title')} />
-      <div className="flex-1 overflow-y-auto no-scrollbar px-3 py-3">
-        <div className="grid grid-cols-2 gap-2.5">
+      <div className="flex-1 overflow-y-auto px-4 pb-[104px] pt-4 no-scrollbar">
+        <div className="stagger grid grid-cols-2 gap-3">
           {CATEGORIES.map((cat) => {
             const count = products.filter((p) => p.category === cat.id).length
+            const isEmpty = count === 0
             return (
-              <button key={cat.id} onClick={() => setSelected(cat.id)} className="text-left">
-                <div className="border border-gray-100 bg-white dark:bg-gray-900 dark:border-gray-800 rounded-2xl shadow-card p-4 flex flex-col gap-3 hover:border-gray-200 active:bg-gray-50 dark:active:bg-gray-800 transition-colors">
-                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${cat.color}`}>
-                    <cat.Icon size={19} strokeWidth={1.75} />
-                  </div>
-                  <div className="flex flex-col gap-0.5">
-                    <span className="text-sm font-bold text-gray-900 dark:text-gray-50 tracking-[-0.01em]">{translateCategory(cat.id, settings.language)}</span>
-                    <span className="text-xs text-gray-500 dark:text-gray-400 tabular">
-                      {count} {count === 1 ? t('categories.product') : t('categories.products')}
+              <button
+                key={cat.id}
+                onClick={() => setSelected(cat.id)}
+                className="press group rounded-2xl text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-600 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-50 dark:focus-visible:ring-offset-gray-950"
+              >
+                <div className="flex h-full flex-col gap-3.5 rounded-2xl bg-white p-4 shadow-card ring-1 ring-gray-900/5 transition-shadow group-hover:shadow-raised dark:bg-gray-900 dark:ring-white/5">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className={`flex h-11 w-11 items-center justify-center rounded-[14px] ${cat.color}`}>
+                      <cat.Icon size={20} strokeWidth={1.75} />
+                    </div>
+                    {/* La cifra usa la tipografía de marca: da peso al dato sin
+                        necesidad de una etiqueta grande. */}
+                    <span
+                      className={`tabular font-display text-[24px] font-semibold leading-none ${
+                        isEmpty ? 'text-gray-300 dark:text-gray-700' : 'text-gray-900 dark:text-gray-50'
+                      }`}
+                    >
+                      {count}
                     </span>
                   </div>
-                  <div className="h-1 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-[14px] font-semibold tracking-[-0.015em] text-gray-900 dark:text-gray-50">
+                      {translateCategory(cat.id, settings.language)}
+                    </span>
+                    <span className="text-[11.5px] text-gray-400 dark:text-gray-500">
+                      {count === 1 ? t('categories.product') : t('categories.products')}
+                    </span>
+                  </div>
+
+                  {/* La barra se tiñe con el color propio de la categoría. */}
+                  <div className="mt-auto h-1 overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800">
                     <div
-                      className="h-full bg-fresh-500 rounded-full transition-all"
-                      style={{ width: `${(count / maxCount) * 100}%` }}
+                      className="animate-fill h-full rounded-full"
+                      style={{ width: `${(count / maxCount) * 100}%`, backgroundColor: cat.tint }}
                     />
                   </div>
                 </div>

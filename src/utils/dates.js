@@ -21,40 +21,43 @@ export function urgencyOf(days) {
 
 /**
  * Estilos por nivel de urgencia.
- * `rail` es la franja de acento del borde izquierdo de cada tarjeta: comunica
+ * `rail` es la pastilla de acento del borde izquierdo de cada tarjeta: comunica
  * el estado sin competir con el resto del contenido. `chip` agrupa fondo,
- * borde y texto para etiquetas y avisos.
+ * contorno y texto para etiquetas y avisos.
+ *
+ * El contorno va con `ring-1` en lugar de `border`: así el chip se puede
+ * aplicar a cualquier elemento sin que su tamaño cambie por el grosor del borde.
  */
 export const URGENCY_META = {
   expired: {
     rail: 'bg-danger-700',
     dot: 'bg-danger-700',
     text: 'text-danger-700 dark:text-danger-300',
-    chip: 'bg-danger-50 border-danger-100 text-danger-700 dark:bg-danger-700/15 dark:border-danger-700/40 dark:text-danger-300',
+    chip: 'bg-danger-50 ring-1 ring-danger-100 text-danger-700 dark:bg-danger-700/15 dark:ring-danger-700/40 dark:text-danger-300',
   },
   critical: {
     rail: 'bg-danger-500',
     dot: 'bg-danger-500',
     text: 'text-danger-500 dark:text-danger-300',
-    chip: 'bg-danger-50 border-danger-100 text-danger-700 dark:bg-danger-500/15 dark:border-danger-500/40 dark:text-danger-300',
+    chip: 'bg-danger-50 ring-1 ring-danger-100 text-danger-700 dark:bg-danger-500/15 dark:ring-danger-500/40 dark:text-danger-300',
   },
   high: {
     rail: 'bg-warn-500',
     dot: 'bg-warn-500',
     text: 'text-warn-500 dark:text-warn-300',
-    chip: 'bg-warn-50 border-warn-100 text-warn-700 dark:bg-warn-500/15 dark:border-warn-500/40 dark:text-warn-300',
+    chip: 'bg-warn-50 ring-1 ring-warn-100 text-warn-700 dark:bg-warn-500/15 dark:ring-warn-500/40 dark:text-warn-300',
   },
   mid: {
     rail: 'bg-caution-500',
     dot: 'bg-caution-500',
     text: 'text-caution-500 dark:text-caution-300',
-    chip: 'bg-caution-50 border-caution-100 text-caution-700 dark:bg-caution-500/15 dark:border-caution-500/40 dark:text-caution-300',
+    chip: 'bg-caution-50 ring-1 ring-caution-100 text-caution-700 dark:bg-caution-500/15 dark:ring-caution-500/40 dark:text-caution-300',
   },
   low: {
     rail: 'bg-fresh-500',
     dot: 'bg-fresh-500',
     text: 'text-fresh-600 dark:text-fresh-400',
-    chip: 'bg-fresh-50 border-fresh-100 text-fresh-700 dark:bg-fresh-500/15 dark:border-fresh-500/40 dark:text-fresh-300',
+    chip: 'bg-fresh-50 ring-1 ring-fresh-100 text-fresh-700 dark:bg-fresh-500/15 dark:ring-fresh-500/40 dark:text-fresh-300',
   },
 }
 

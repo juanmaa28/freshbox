@@ -1,8 +1,10 @@
 import { Minus, Plus } from 'lucide-react'
 import { formatQuantity } from '../utils/quantity'
 
+// Los botones viven dentro de la misma pastilla que la cifra: un solo objeto,
+// no tres controles sueltos.
 const btnCls =
-  'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-gray-200 text-gray-600 transition-colors hover:bg-gray-50 hover:border-gray-300 active:bg-gray-100 disabled:opacity-35 disabled:hover:bg-transparent disabled:hover:border-gray-200 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800'
+  'press flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-gray-600 shadow-card ring-1 ring-gray-900/5 hover:text-fresh-700 disabled:pointer-events-none disabled:opacity-30 disabled:shadow-none dark:bg-gray-800 dark:text-gray-300 dark:ring-white/10 dark:hover:text-fresh-400'
 
 /**
  * Control de cantidad con botones − y +.
@@ -10,7 +12,7 @@ const btnCls =
  */
 export default function QuantityStepper({ amount, unit, separator, onAdjust, decreaseLabel, increaseLabel }) {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1.5 rounded-xl bg-gray-100 p-1 dark:bg-gray-900">
       <button
         type="button"
         onClick={() => onAdjust(-1)}
@@ -22,16 +24,11 @@ export default function QuantityStepper({ amount, unit, separator, onAdjust, dec
       </button>
 
       {/* El ancho mínimo evita que los botones salten al cambiar de 9 a 10. */}
-      <span className="tabular min-w-[5rem] text-center text-sm font-semibold text-gray-900 dark:text-gray-100">
+      <span className="tabular min-w-[4.5rem] text-center text-[13.5px] font-semibold text-gray-900 dark:text-gray-100">
         {formatQuantity(amount, unit, separator)}
       </span>
 
-      <button
-        type="button"
-        onClick={() => onAdjust(1)}
-        aria-label={increaseLabel}
-        className={btnCls}
-      >
+      <button type="button" onClick={() => onAdjust(1)} aria-label={increaseLabel} className={btnCls}>
         <Plus size={14} strokeWidth={2.5} />
       </button>
     </div>
