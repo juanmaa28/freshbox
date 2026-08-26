@@ -22,6 +22,8 @@ const DEFAULT_SETTINGS = {
 
 // Lee datos guardados y usa un valor alternativo si no existen o están dañados.
 function load(key, fallback) {
+  // Intenta leer y convertir el JSON guardado; si falta o está corrupto,
+  // devuelve el valor inicial para que la aplicación pueda arrancar.
   try {
     const raw = localStorage.getItem(key)
     return raw ? JSON.parse(raw) : fallback
@@ -74,18 +76,22 @@ export function PantryProvider({ children }) {
 
   // Cada efecto sincroniza un estado con el almacenamiento local.
   useEffect(() => {
+    // Serializa todas las despensas por usuario cada vez que cambia el estado.
     localStorage.setItem(LS_KEYS.products, JSON.stringify(despensas))
   }, [despensas])
 
   useEffect(() => {
+    // Guarda idioma, tema y preferencias de alertas para restaurarlos al volver.
     localStorage.setItem(LS_KEYS.settings, JSON.stringify(settings))
   }, [settings])
 
   useEffect(() => {
+    // Persiste el historial completo para conservarlo entre sesiones.
     localStorage.setItem(LS_KEYS.searches, JSON.stringify(recentSearches))
   }, [recentSearches])
 
   useEffect(() => {
+    // Activa o retira la clase global que Tailwind usa para el tema oscuro.
     document.documentElement.classList.toggle('dark', settings.darkMode)
   }, [settings.darkMode])
 
@@ -98,10 +104,12 @@ export function PantryProvider({ children }) {
   }
 
   const updateProduct = (id, data) => {
+    // Recorre los productos de la cuenta y fusiona datos solo en el ID indicado.
     setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, ...data } : p)))
   }
 
   const deleteProduct = (id) => {
+    // Filtra el producto seleccionado y conserva todos los demás sin mutarlos.
     setProducts((prev) => prev.filter((p) => p.id !== id))
   }
 
@@ -122,6 +130,7 @@ export function PantryProvider({ children }) {
   const clearProducts = () => setProducts([])
 
   const updateSetting = (key, value) => {
+    // Copia las preferencias anteriores y reemplaza únicamente la opción editada.
     setSettings((prev) => ({ ...prev, [key]: value }))
   }
 
@@ -138,6 +147,8 @@ export function PantryProvider({ children }) {
   }
 
   const removeRecentSearch = (term) => {
+    // Recorre el historial y elimina únicamente la búsqueda que coincide
+    // exactamente con el término seleccionado.
     setRecentSearches((prev) => prev.filter((item) => item !== term))
   }
 

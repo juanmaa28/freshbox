@@ -19,6 +19,8 @@ export default function Home({ onNav }) {
   const scrollRef = useRef(null)
   const heroRef = useRef(null)
 
+  // Lee la posición vertical del contenedor y marca los filtros como "fijos"
+  // cuando el alto completo del hero ya quedó por encima del viewport.
   const handleScroll = () => {
     const top = scrollRef.current?.scrollTop ?? 0
     const heroHeight = heroRef.current?.offsetHeight ?? 0
@@ -26,6 +28,7 @@ export default function Home({ onNav }) {
   }
 
   // Se ordena sin modificar el arreglo original del contexto.
+  // Copia y ordena la despensa sin mutar el array que conserva el contexto.
   const sorted = [...products].sort((a, b) =>
     sortBy === 'name' ? a.name.localeCompare(b.name, 'es') : daysLeft(a.expiryDate) - daysLeft(b.expiryDate)
   )
@@ -33,6 +36,8 @@ export default function Home({ onNav }) {
   // Las casillas de estadísticas hacen de filtro de la lista.
   const visible = sorted.filter((p) => bucket === 'all' || bucketOf(daysLeft(p.expiryDate)) === bucket)
   // Los grupos ayudan a identificar rápidamente el nivel de urgencia.
+  // Construye cuatro grupos recorriendo la lista filtrada según días restantes;
+  // los grupos vacíos se eliminan para no mostrar encabezados sin productos.
   const groups = [
     { label: t('home.expired'), products: visible.filter((p) => daysLeft(p.expiryDate) < 0) },
     { label: t('home.urgent'), products: visible.filter((p) => daysLeft(p.expiryDate) >= 0 && daysLeft(p.expiryDate) <= 3) },
@@ -130,6 +135,8 @@ export default function Home({ onNav }) {
               )}
             </div>
           ) : (
+            // Cada grupo dibuja su título y luego recorre sus productos para
+            // reutilizar ProductCard en todas las tarjetas de la pantalla.
             groups.map((group) => (
               <section key={group.label} className="stagger flex flex-col gap-2.5">
                 <span className="eyebrow pt-1">{group.label}</span>

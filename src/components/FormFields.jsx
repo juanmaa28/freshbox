@@ -10,6 +10,8 @@ const errorCls = 'ring-danger-300 focus:ring-danger-500 dark:ring-danger-700'
 
 // Campo de texto controlado que muestra el error debajo del input.
 export function Field({ label, error, ...inputProps }) {
+  // Combina la configuración visual común con las props del input y agrega el
+  // mensaje de error únicamente cuando el padre envía uno.
   return (
     <div className="flex w-full flex-col gap-1.5">
       {label && <label className={labelCls}>{label}</label>}
@@ -20,6 +22,7 @@ export function Field({ label, error, ...inputProps }) {
 }
 
 export function TextArea({ label, ...props }) {
+  // Reutiliza la misma jerarquía de etiqueta de Field para entradas largas.
   return (
     <div className="flex w-full flex-col gap-1.5">
       {label && <label className={labelCls}>{label}</label>}
@@ -33,6 +36,8 @@ export function TextArea({ label, ...props }) {
 }
 
 export function BtnPrimary({ label, ...props }) {
+  // Renderiza una acción principal de ancho completo y pasa el resto de props
+  // al botón para permitir onClick, disabled y atributos de accesibilidad.
   return (
     <button
       // El filo blanco superior simula la luz cenital sobre un botón físico.
@@ -45,6 +50,8 @@ export function BtnPrimary({ label, ...props }) {
 }
 
 export function BtnOutline({ label, icon, danger, ...props }) {
+  // Selecciona la paleta normal o destructiva según `danger` y conserva el
+  // icono recibido junto al texto de la acción.
   return (
     <button
       className={`press flex h-12 w-full items-center justify-center gap-2 rounded-xl ring-1 focus:outline-none focus-visible:ring-2 ${

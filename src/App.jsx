@@ -37,7 +37,8 @@ function AppShell() {
   const user = useCurrentUser()
   const [route, setRoute] = useState({ id: 'splash', params: null })
 
-  // Después del Splash, una sesión guardada lleva al usuario a Home.
+  // Después de 2.2 segundos, el temporizador deja Splash y elige Home si
+  // Zustand encontró una sesión guardada; de lo contrario muestra Login.
   useEffect(() => {
     if (route.id !== 'splash') return
     const t = setTimeout(() => {
@@ -47,9 +48,12 @@ function AppShell() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route.id])
 
-  // params permite enviar datos entre pantallas, por ejemplo el ID de un producto.
+  // Cambia la ruta actual y conserva parámetros opcionales, como el ID del
+  // producto que Detail debe buscar o el modo de edición de AddItem.
   const navigate = (id, params = null) => setRoute({ id, params })
 
+  // Selecciona el componente asociado a la ruta; Home evita que una ruta
+  // desconocida deje el marco sin contenido.
   const Screen = SCREENS[route.id] ?? Home
 
   return (
@@ -72,7 +76,9 @@ function AppShell() {
           <main key={route.id} className="w-full h-full animate-screen-in">
             <Screen onNav={navigate} params={route.params} />
           </main>
-          {NAV_ROUTES.includes(route.id) && <BottomNav active={route.id} onNav={navigate} />}
+            {/* La barra inferior solo se renderiza en las rutas principales; las
+              pantallas secundarias conservan todo el alto para su contenido. */}
+            {NAV_ROUTES.includes(route.id) && <BottomNav active={route.id} onNav={navigate} />}
         </div>
       </div>
     </div>

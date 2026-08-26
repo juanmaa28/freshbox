@@ -18,6 +18,8 @@ import { hashPassword, verifyPassword } from '../utils/password'
 
 const normalizarCorreo = (correo) => correo.trim().toLowerCase()
 
+// Crea un identificador estable para la cuenta y usa un respaldo cuando el
+// navegador o el WebView no ofrecen randomUUID.
 const nuevoId = () =>
   globalThis.crypto?.randomUUID?.() ?? `u-${Date.now()}-${Math.random().toString(36).slice(2)}`
 
@@ -30,6 +32,8 @@ export const useAuthStore = create()(
 
       /** Crea una cuenta y deja la sesión iniciada. */
       register: async ({ name, email, password }) => {
+        // Normaliza el correo antes de buscar duplicados, de modo que las
+        // mayúsculas no permitan registrar dos cuentas equivalentes.
         const correo = normalizarCorreo(email)
 
         if (get().accounts.some((cuenta) => cuenta.email === correo)) {
@@ -50,6 +54,8 @@ export const useAuthStore = create()(
         // El hasheo se resuelve antes del `set`, que es síncrono.
         const registro = await hashPassword(password)
 
+        // Agrega la cuenta, sus credenciales derivadas y la sesión activa en
+        // una sola actualización del store persistido.
         set((estado) => ({
           accounts: [...estado.accounts, cuenta],
           credentials: { ...estado.credentials, [id]: registro },
@@ -61,6 +67,8 @@ export const useAuthStore = create()(
 
       /** Valida las credenciales contra la cuenta guardada. */
       login: async ({ email, password }) => {
+        // Busca la cuenta por correo normalizado y obtiene su registro de hash;
+        // si no existe, verifyPassword recibe null y devuelve false.
         const correo = normalizarCorreo(email)
         const cuenta = get().accounts.find((c) => c.email === correo)
         const registro = cuenta ? get().credentials[cuenta.id] : null
@@ -75,6 +83,8 @@ export const useAuthStore = create()(
         return { ok: true }
       },
 
+      // El cierre de sesión solo elimina el ID activo; las cuentas permanecen
+      // guardadas para permitir volver a iniciar sesión en este dispositivo.
       logout: () => set({ currentUserId: null }),
 
       /** Actualiza el perfil de la sesión activa (nombre, teléfono, avatar…). */

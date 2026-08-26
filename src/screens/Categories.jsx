@@ -11,11 +11,14 @@ export default function Categories({ onNav }) {
   const { products, settings, t } = usePantry()
   const [selected, setSelected] = useState(null)
 
+  // Calcula la cantidad máxima de una categoría para escalar las barras de
+  // progreso; Math.max(1, ...) evita dividir por cero cuando no hay productos.
   const maxCount = Math.max(1, ...CATEGORIES.map((c) => products.filter((p) => p.category === c.id).length))
 
   // La misma pantalla cambia entre resumen de categorías y detalle seleccionado.
   if (selected) {
     const cat = categoryById(selected)
+    // Filtra los productos de la categoría elegida y los ordena por vencimiento.
     const items = products
       .filter((p) => p.category === selected)
       .sort((a, b) => daysLeft(a.expiryDate) - daysLeft(b.expiryDate))

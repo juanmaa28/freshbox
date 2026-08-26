@@ -45,7 +45,9 @@ export function PantryHero({ stats }) {
 
         {/* Barra de frescura: la proporción real de la despensa en una línea. */}
         <div className="flex h-2 w-full gap-1 overflow-hidden rounded-full bg-fresh-950/40">
-          {SEGMENTS.map(({ id, field, bar }) =>
+            {/* Solo crea una franja si el grupo tiene productos; así no quedan
+              segmentos vacíos dentro de la barra proporcional. */}
+            {SEGMENTS.map(({ id, field, bar }) =>
             stats[field] > 0 ? (
               <span
                 key={id}
@@ -57,6 +59,7 @@ export function PantryHero({ stats }) {
         </div>
 
         <div className="flex flex-wrap items-center gap-x-3.5 gap-y-1">
+          {/* Muestra el conteo y la etiqueta de cada grupo junto a su color. */}
           {SEGMENTS.map(({ id, field, i18nKey, dot }) => (
             <span key={id} className="flex items-center gap-1.5">
               <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
@@ -85,6 +88,7 @@ export function PantryFilter({ stats, selected, onSelect }) {
       aria-label={t('home.allPantry')}
       className="grid grid-cols-4 gap-1 rounded-2xl bg-gray-100 p-1 dark:bg-gray-900"
     >
+      {/* Cada botón selecciona un grupo y muestra su conteo actualizado. */}
       {FILTERS.map(({ id, field, i18nKey, tone }) => {
         const isActive = selected === id
         return (

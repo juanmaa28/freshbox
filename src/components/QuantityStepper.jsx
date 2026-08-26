@@ -23,6 +23,7 @@ export default function QuantityStepper({ amount, unit, separator, onAdjust, dec
         <Minus size={14} strokeWidth={2.5} />
       </button>
 
+      {/* Conserva unidad y separador decimal mientras muestra la cantidad. */}
       {/* El ancho mínimo evita que los botones salten al cambiar de 9 a 10. */}
       <span className="tabular min-w-[4.5rem] text-center text-[13.5px] font-semibold text-gray-900 dark:text-gray-100">
         {formatQuantity(amount, unit, separator)}

@@ -7,6 +7,8 @@ import { translateCategory } from '../utils/i18n'
 
 // Compara sin distinguir mayúsculas ni tildes: "lacteos" encuentra "Lácteos".
 function normalize(text) {
+  // Convierte el texto a minúsculas y elimina marcas de acentuación para que
+  // una búsqueda como "lacteos" coincida con "Lácteos".
   return (text ?? '')
     .toLowerCase()
     .normalize('NFD')
@@ -19,10 +21,13 @@ export default function SearchScreen({ onNav }) {
   const [filter, setFilter] = useState('all')
 
   // Los filtros se generan desde las categorías disponibles en el dominio.
+  // Genera un filtro general y uno por categoría usando el idioma activo.
   const filters = [{ id: 'all', label: t('search.all') }, ...CATEGORIES.map((c) => ({ id: c.id, label: translateCategory(c.id, settings.language) }))]
   const searchTerm = normalize(query.trim())
 
   // La lista permanece vacía hasta que el usuario escribe un término.
+  // Si no hay término devuelve una lista vacía; si lo hay, conserva productos
+  // cuyo nombre, categoría o ubicación contenga el texto y respete el filtro.
   const results = searchTerm
     ? products.filter((p) => {
         const matchesFilter = filter === 'all' || p.category === filter
@@ -34,7 +39,8 @@ export default function SearchScreen({ onNav }) {
           translateCategory(p.category, settings.language),
           p.location,
         ]
-        return campos.some((campo) => normalize(campo).includes(searchTerm))
+          // some detiene el recorrido cuando encuentra coincidencia en un campo.
+          return campos.some((campo) => normalize(campo).includes(searchTerm))
       })
     : []
 

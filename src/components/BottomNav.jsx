@@ -22,6 +22,8 @@ const NAV_PADDING = '0.75rem'
  */
 export default function BottomNav({ active, onNav }) {
   const { products, t } = usePantry()
+  // Recorre la despensa y cuenta solo los productos que vencen hoy o dentro
+  // de siete días para mostrar el badge de alertas.
   // El contador usa el mismo límite de siete días que la pantalla de alertas.
   const alertCount = products.filter((p) => daysLeft(p.expiryDate) <= 7).length
 
@@ -56,6 +58,7 @@ export default function BottomNav({ active, onNav }) {
           />
         )}
 
+        {/* Genera un botón por ruta y conserva el mismo orden que el indicador. */}
         {ITEMS.map(({ id, Icon }) => {
           const isActive = active === id
           return (
@@ -73,6 +76,7 @@ export default function BottomNav({ active, onNav }) {
                     isActive ? 'text-white' : 'text-fresh-200/60'
                   }`}
                 />
+                {/* El badge solo aparece en notificaciones y cuando existen alertas. */}
                 {id === 'notifications' && alertCount > 0 && (
                   <span className="tabular absolute -right-2 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-danger-500 px-1 text-[9px] font-bold text-white ring-2 ring-fresh-900">
                     {alertCount}

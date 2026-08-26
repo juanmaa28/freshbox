@@ -33,7 +33,9 @@ export default function ProductCard({ product, onClick }) {
         </span>
 
         <div className="flex min-w-0 flex-1 items-center gap-3 py-3 pl-2.5 pr-3.5">
-          {product.photo ? (
+            {/* Usa la foto del producto; si no existe, reemplaza la imagen por el
+              icono y color de la categoría correspondiente. */}
+            {product.photo ? (
             <img
               src={product.photo}
               alt={product.name}
