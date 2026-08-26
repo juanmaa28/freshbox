@@ -42,13 +42,20 @@ npm run preview
 
 ## Sass
 
-La entrada Sass se encuentra en `src/styles/main.scss` y carga el parcial `src/styles/_layout.scss` mediante `@use`. El parcial contiene el mixin y las clases `.app-shell` y `.app-device-screen`, usadas por el marco principal de la aplicacion para controlar el area segura del dispositivo.
+La entrada Sass se encuentra en `src/styles/main.scss` y carga dos parciales mediante `@use`:
 
-Vite compila y minifica automaticamente los archivos Sass y JavaScript al ejecutar `npm run build`. El compilador Sass esta incluido como dependencia de desarrollo en `package.json`.
+- `src/styles/_layout.scss`: variable `$safe-area-bottom`, mixin `viewport-layer` y las clases `.app-shell` y `.app-device-screen`, usadas por el marco principal de la aplicacion para controlar el area segura del dispositivo.
+- `src/styles/_fonts.scss`: declaraciones `@font-face` de las tipografias empaquetadas.
+
+Vite compila y minifica automaticamente los archivos Sass y JavaScript al ejecutar `npm run build`. El compilador Sass (`sass-embedded`, requerido por Vite 8) esta incluido como dependencia de desarrollo en `package.json`.
 
 ## Funcionamiento sin internet
 
-La aplicacion no consume APIs externas durante la ejecucion: los datos iniciales, iconos e imagenes se incluyen en el bundle. Las tipografias usan las familias locales definidas como fallback, por lo que no depende de Google Fonts ni de una conexion de red.
+La aplicacion no consume APIs externas durante la ejecucion: los datos iniciales, iconos, imagenes y tipografias se incluyen en el bundle.
+
+Las fuentes Inter y Fraunces se sirven desde `src/assets/fonts/` y se declaran en el parcial `src/styles/_fonts.scss`, por lo que no se depende de Google Fonts ni de ninguna conexion de red. Son ficheros variables (`woff2-variations`): un solo archivo por subconjunto cubre los pesos 100 a 900 y conserva los ejes `opsz`, `SOFT` y `WONK` que usa la clase `.font-display`. Ambas estan bajo licencia SIL Open Font License 1.1.
+
+Verificado sobre el bundle de produccion (`npm run build && npm run preview`): el navegador solo realiza peticiones a `localhost`, ninguna a dominios externos.
 
 ## Estructura principal
 

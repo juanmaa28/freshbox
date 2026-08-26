@@ -1,1 +1,3 @@
+// Las tipografías van primero: quedan declaradas antes de que las use el resto.
+@use './fonts';
 @use './layout';
