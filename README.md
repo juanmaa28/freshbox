@@ -27,12 +27,33 @@ npm install
 npm run dev
 ```
 
-Vite mostrara la URL local en la terminal. Para revisar la aplicacion en modo produccion:
+`npm install` debe ejecutarse tambien despues de cada `git pull` que cambie `package.json` o `package-lock.json`. Esto mantiene `node_modules` sincronizado y evita errores como `zustand could not be resolved`.
+
+Vite mostrara la URL local en la terminal. Si el puerto `5173` ya esta ocupado, Vite elegira automaticamente otro, por ejemplo `http://localhost:5174/`; se debe abrir exactamente la URL que aparezca en la terminal. Para revisar la aplicacion en modo produccion:
 
 ```bash
 npm run build
 npm run preview
 ```
+
+### Solucion de problemas
+
+Si aparece un error de dependencia faltante despues de actualizar el repositorio, detener el servidor, ejecutar `npm install` y volver a iniciar con `npm run dev`:
+
+```bash
+npm install
+npm run dev
+```
+
+Si el problema continua, borrar la instalacion local y reconstruirla. En PowerShell:
+
+```powershell
+Remove-Item -Recurse -Force node_modules
+npm install
+npm run dev
+```
+
+No es necesario instalar Zustand, Sass ni otras dependencias manualmente: todas estan declaradas en `package.json` y fijadas en `package-lock.json`.
 
 ## Scripts
 
