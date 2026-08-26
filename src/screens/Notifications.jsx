@@ -2,7 +2,6 @@ import { BellOff } from 'lucide-react'
 import { usePantry } from '../context/PantryContext'
 import { daysLeft, URGENCY_META } from '../utils/dates'
 import AppHeader from '../components/AppHeader'
-import BottomNav from '../components/BottomNav'
 import ProductCard from '../components/ProductCard'
 
 const LEGEND = [
@@ -88,7 +87,6 @@ export default function Notifications({ onNav }) {
         )}
       </div>
 
-      <BottomNav active="notifications" onNav={onNav} />
     </div>
   )
 }

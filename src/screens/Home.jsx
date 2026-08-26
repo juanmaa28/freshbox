@@ -3,7 +3,6 @@ import { Search, Plus, PackageOpen } from 'lucide-react'
 import { usePantry } from '../context/PantryContext'
 import { daysLeft } from '../utils/dates'
 import { pantryStats, bucketOf } from '../utils/stats'
-import BottomNav from '../components/BottomNav'
 import { PantryHero, PantryFilter } from '../components/PantryStats'
 import ProductCard from '../components/ProductCard'
 import logoSrc from '../assets/freshbox-logo.jpeg'
@@ -144,7 +143,6 @@ export default function Home({ onNav }) {
         <Plus size={24} strokeWidth={2.4} />
       </button>
 
-      <BottomNav active="home" onNav={onNav} />
     </div>
   )
 }

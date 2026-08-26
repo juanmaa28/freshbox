@@ -4,7 +4,6 @@ import { usePantry } from '../context/PantryContext'
 import { CATEGORIES, categoryById } from '../data/categories'
 import { daysLeft } from '../utils/dates'
 import AppHeader from '../components/AppHeader'
-import BottomNav from '../components/BottomNav'
 import ProductCard from '../components/ProductCard'
 import { translateCategory } from '../utils/i18n'
 
@@ -55,7 +54,6 @@ export default function Categories({ onNav }) {
             ))
           )}
         </div>
-        <BottomNav active="categories" onNav={onNav} />
       </div>
     )
   }
@@ -112,7 +110,6 @@ export default function Categories({ onNav }) {
           })}
         </div>
       </div>
-      <BottomNav active="categories" onNav={onNav} />
     </div>
   )
 }

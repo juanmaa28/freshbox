@@ -108,7 +108,9 @@ export default function SearchScreen({ onNav }) {
         </div>
       )}
 
-      <div className="flex flex-1 flex-col gap-2.5 overflow-y-auto px-4 pb-5 pt-2 no-scrollbar">
+      {/* Buscar es una de las cinco secciones de la barra inferior, así que su
+          lista reserva el mismo espacio que el resto para no quedar tapada. */}
+      <div className="flex flex-1 flex-col gap-2.5 overflow-y-auto px-4 pb-[104px] pt-2 no-scrollbar">
         {!searchTerm ? (
           <div className="flex flex-col items-center gap-3 px-8 pt-8 text-center">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-gray-400 shadow-card ring-1 ring-gray-900/5 dark:bg-gray-900 dark:ring-white/5">

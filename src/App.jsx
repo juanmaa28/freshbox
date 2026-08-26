@@ -10,6 +10,7 @@ import SearchScreen from './screens/SearchScreen'
 import Notifications from './screens/Notifications'
 import Settings from './screens/Settings'
 import Profile from './screens/Profile'
+import BottomNav from './components/BottomNav'
 
 const SCREENS = {
   splash: Splash,
@@ -23,6 +24,12 @@ const SCREENS = {
   settings: Settings,
   profile: Profile,
 }
+
+// Rutas que muestran la navegación inferior. La barra se monta una sola vez en
+// el marco (fuera del <main> con `key`), así sobrevive a los cambios de pantalla
+// y su indicador puede viajar de una sección a otra en vez de renacer en su
+// sitio: una transición CSS necesita un elemento que permanezca y cambie.
+const NAV_ROUTES = ['home', 'categories', 'search', 'notifications', 'settings']
 
 // AppShell controla la pantalla actual y centraliza la navegación de la app.
 function AppShell() {
@@ -64,6 +71,7 @@ function AppShell() {
           <main key={route.id} className="w-full h-full animate-screen-in">
             <Screen onNav={navigate} params={route.params} />
           </main>
+          {NAV_ROUTES.includes(route.id) && <BottomNav active={route.id} onNav={navigate} />}
         </div>
       </div>
     </div>

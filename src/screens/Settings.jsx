@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Bell, Mail, Moon, Globe, User, Shield, Package, FileText, LogOut, ChevronRight, X } from 'lucide-react'
 import { usePantry } from '../context/PantryContext'
 import AppHeader from '../components/AppHeader'
-import BottomNav from '../components/BottomNav'
 import { Toggle } from '../components/FormFields'
 import ConfirmDialog from '../components/ConfirmDialog'
 
@@ -174,7 +173,6 @@ export default function Settings({ onNav }) {
         }}
       />
 
-      <BottomNav active="settings" onNav={onNav} />
     </div>
   )
 }
