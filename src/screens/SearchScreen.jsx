@@ -81,7 +81,7 @@ export default function SearchScreen({ onNav }) {
       {searchTerm && (
         <div className="px-3 py-2 shrink-0">
           <span className="text-[11px] text-gray-400">
-            {results.length} {results.length === 1 ? t('search.result') : t('search.results')} para "{query.trim()}"
+            {results.length} {results.length === 1 ? t('search.result') : t('search.results')} {t('search.for')} "{query.trim()}"
           </span>
         </div>
       )}
@@ -90,7 +90,7 @@ export default function SearchScreen({ onNav }) {
         {!searchTerm ? (
           <p className="text-sm text-gray-400 text-center mt-8">{t('search.type')}</p>
         ) : results.length === 0 ? (
-          <p className="text-sm text-gray-400 text-center mt-8">No se encontraron productos.</p>
+          <p className="text-sm text-gray-400 text-center mt-8">{t('search.none')}</p>
         ) : (
           results.map((p) => {
             const cat = categoryById(p.category)

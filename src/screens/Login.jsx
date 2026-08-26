@@ -84,7 +84,7 @@ export default function Login({ onNav }) {
           <BtnPrimary type="submit" label={mode === 'login' ? t('login.submit') : t('login.register')} />
           <div className="flex items-center gap-3">
             <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800" />
-            <span className="text-xs text-gray-400">o</span>
+            <span className="text-xs text-gray-400">{t('login.or')}</span>
             <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800" />
           </div>
           <BtnOutline

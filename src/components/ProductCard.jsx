@@ -6,7 +6,7 @@ import { translateCategory } from '../utils/i18n'
 // Tarjeta reutilizable para representar un producto en listas y búsquedas.
 export default function ProductCard({ product, onClick }) {
   const cat = categoryById(product.category)
-  const { settings } = usePantry()
+  const { settings, t } = usePantry()
   // El color y la barra visual dependen de la urgencia calculada.
   const days = daysLeft(product.expiryDate)
   const urgency = urgencyOf(days)
@@ -32,7 +32,7 @@ export default function ProductCard({ product, onClick }) {
           </div>
         </div>
         <div className="flex flex-col items-end gap-1 shrink-0">
-          <span className={`text-xs font-bold ${meta.text}`}>{days < 0 ? '¡Ya!' : `${days}d`}</span>
+          <span className={`text-xs font-bold ${meta.text}`}>{days < 0 ? t('common.overdueBadge') : `${days}d`}</span>
           <div className="w-8 h-1.5 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
             <div
               className={`h-full rounded-full ${meta.bar}`}
