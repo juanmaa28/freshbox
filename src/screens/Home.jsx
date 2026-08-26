@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Search, Plus, PackageOpen } from 'lucide-react'
 import { usePantry } from '../context/PantryContext'
 import { daysLeft } from '../utils/dates'
 import { pantryStats, bucketOf } from '../utils/stats'
 import BottomNav from '../components/BottomNav'
-import PantryStats from '../components/PantryStats'
+import { PantryHero, PantryFilter } from '../components/PantryStats'
 import ProductCard from '../components/ProductCard'
 import logoSrc from '../assets/freshbox-logo.jpeg'
 
@@ -12,6 +12,17 @@ export default function Home({ onNav }) {
   const { products, user, t } = usePantry()
   const [bucket, setBucket] = useState('all')
   const [sortBy, setSortBy] = useState('expiry')
+  // `stuck` solo sirve para encender el filo de la barra fija cuando el hero ya
+  // pasó por debajo; sin él la barra flota sin apoyo visual sobre la lista.
+  const [stuck, setStuck] = useState(false)
+  const scrollRef = useRef(null)
+  const heroRef = useRef(null)
+
+  const handleScroll = () => {
+    const top = scrollRef.current?.scrollTop ?? 0
+    const heroHeight = heroRef.current?.offsetHeight ?? 0
+    setStuck(top >= Math.max(0, heroHeight - 4))
+  }
 
   // Se ordena sin modificar el arreglo original del contexto.
   const sorted = [...products].sort((a, b) =>
@@ -56,57 +67,72 @@ export default function Home({ onNav }) {
         </button>
       </header>
 
-      {/* Resumen de la despensa; el control segmentado filtra la lista de abajo. */}
-      <div className="shrink-0 px-4">
-        <PantryStats stats={stats} selected={bucket} onSelect={setBucket} />
-      </div>
+      {/* El hero y la lista comparten un solo scroll: al bajar, el resumen se va
+          hacia arriba y deja la pantalla entera para los productos. */}
+      <div
+        ref={scrollRef}
+        onScroll={handleScroll}
+        className="flex flex-1 flex-col overflow-y-auto no-scrollbar"
+      >
+        <div ref={heroRef} className="shrink-0 px-4 pb-3">
+          <PantryHero stats={stats} />
+        </div>
 
-      <div className="mb-2 mt-5 flex shrink-0 items-center justify-between px-5">
-        <span className="eyebrow">{bucket === 'all' ? t('home.allPantry') : t(`stats.${bucket}`)}</span>
-        <select
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
-          className="select-clean -mr-1 cursor-pointer rounded-lg bg-transparent py-1 pl-2 text-[11.5px] font-medium text-gray-500 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-600 dark:text-gray-400 dark:hover:bg-gray-900"
-          aria-label={t('home.order')}
+        {/* Los filtros sí se quedan: son el control de la lista, no contexto. */}
+        <div
+          className={`sticky top-0 z-20 shrink-0 border-b bg-gray-50/90 px-4 pb-2 pt-1 backdrop-blur-xl transition-colors dark:bg-gray-950/90 ${
+            stuck ? 'border-gray-900/[0.07] dark:border-white/[0.07]' : 'border-transparent'
+          }`}
         >
-          <option value="expiry">{t('home.expiry')}</option>
-          <option value="name">{t('home.name')}</option>
-        </select>
-      </div>
-
-      <div className="flex flex-1 flex-col gap-2.5 overflow-y-auto px-4 pb-[104px] no-scrollbar">
-        {visible.length === 0 ? (
-          // Estado vacío compuesto: icono, mensaje y una salida clara.
-          <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-fresh-50 text-fresh-600 ring-1 ring-fresh-100 dark:bg-fresh-900/25 dark:text-fresh-400 dark:ring-fresh-900/50">
-              <PackageOpen size={28} strokeWidth={1.4} />
-            </div>
-            <p className="max-w-[15rem] text-[13.5px] leading-relaxed text-gray-500 dark:text-gray-400">
-              {products.length === 0
-                ? t('home.empty')
-                : bucket === 'soon'
-                  ? t('home.fresh')
-                  : t('home.noneInGroup')}
-            </p>
-            {products.length === 0 && (
-              <button
-                onClick={() => onNav('add')}
-                className="press rounded-full bg-fresh-700 px-5 py-2.5 text-[13px] font-semibold text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.16),0_2px_8px_rgb(13_60_40/0.24)] hover:bg-fresh-600"
-              >
-                {t('home.add')}
-              </button>
-            )}
+          <PantryFilter stats={stats} selected={bucket} onSelect={setBucket} />
+          <div className="mt-2 flex items-center justify-between px-1">
+            <span className="eyebrow">{bucket === 'all' ? t('home.allPantry') : t(`stats.${bucket}`)}</span>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="select-clean -mr-1 cursor-pointer rounded-lg bg-transparent py-1 pl-2 text-[11.5px] font-medium text-gray-500 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-600 dark:text-gray-400 dark:hover:bg-gray-900"
+              aria-label={t('home.order')}
+            >
+              <option value="expiry">{t('home.expiry')}</option>
+              <option value="name">{t('home.name')}</option>
+            </select>
           </div>
-        ) : (
-          groups.map((group) => (
-            <section key={group.label} className="stagger flex flex-col gap-2.5">
-              <span className="eyebrow pt-2">{group.label}</span>
-              {group.products.map((p) => (
-                <ProductCard key={p.id} product={p} onClick={() => onNav('detail', { productId: p.id })} />
-              ))}
-            </section>
-          ))
-        )}
+        </div>
+
+        <div className="flex flex-1 flex-col gap-2.5 px-4 pb-[104px] pt-2.5">
+          {visible.length === 0 ? (
+            // Estado vacío compuesto: icono, mensaje y una salida clara.
+            <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-fresh-50 text-fresh-600 ring-1 ring-fresh-100 dark:bg-fresh-900/25 dark:text-fresh-400 dark:ring-fresh-900/50">
+                <PackageOpen size={28} strokeWidth={1.4} />
+              </div>
+              <p className="max-w-[15rem] text-[13.5px] leading-relaxed text-gray-500 dark:text-gray-400">
+                {products.length === 0
+                  ? t('home.empty')
+                  : bucket === 'soon'
+                    ? t('home.fresh')
+                    : t('home.noneInGroup')}
+              </p>
+              {products.length === 0 && (
+                <button
+                  onClick={() => onNav('add')}
+                  className="press rounded-full bg-fresh-700 px-5 py-2.5 text-[13px] font-semibold text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.16),0_2px_8px_rgb(13_60_40/0.24)] hover:bg-fresh-600"
+                >
+                  {t('home.add')}
+                </button>
+              )}
+            </div>
+          ) : (
+            groups.map((group) => (
+              <section key={group.label} className="stagger flex flex-col gap-2.5">
+                <span className="eyebrow pt-1">{group.label}</span>
+                {group.products.map((p) => (
+                  <ProductCard key={p.id} product={p} onClick={() => onNav('detail', { productId: p.id })} />
+                ))}
+              </section>
+            ))
+          )}
+        </div>
       </div>
 
       {/* El botón flota justo encima de la pastilla de navegación. */}
