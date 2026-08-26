@@ -7,7 +7,8 @@ const translations = {
       expiring: '{count} {item} por vencer esta semana',
       product: 'producto', products: 'productos', allPantry: 'Toda la despensa', upcoming: 'Próximos a vencer',
       seeUpcoming: 'Ver próximos', seeAll: 'Ver todos ({count})', empty: 'Tu despensa está vacía. Agrega tu primer producto con el botón +',
-      fresh: 'Nada por vencer esta semana. ¡Todo fresco!', order: 'Ordenar productos', expiry: 'Por vencimiento', name: 'Por nombre',
+      fresh: 'Nada por vencer esta semana. ¡Todo fresco!', noneInGroup: 'No hay productos en este grupo.',
+      order: 'Ordenar productos', expiry: 'Por vencimiento', name: 'Por nombre',
       expired: 'Vencidos', urgent: 'Próximos a vencer', week: 'Esta semana', later: 'Más adelante', add: 'Agregar producto',
     },
     search: {
@@ -15,6 +16,7 @@ const translations = {
       type: 'Busca por nombre, categoría o ubicación.', none: 'No se encontraron productos.', recent: 'Búsquedas recientes',
       clear: 'Limpiar', remove: 'Eliminar búsqueda {term}', clearInput: 'Limpiar',
     },
+    stats: { total: 'Total', expired: 'Vencidos', soon: 'Por vencer', fresh: 'Frescos' },
     categories: { title: 'Categorías', product: 'producto', products: 'productos', empty: 'No hay productos en esta categoría.', back: 'Volver' },
     detail: {
       title: 'Detalle', missing: 'Este producto ya no existe.', purchase: 'Fecha de compra', expiryDate: 'Fecha de vencimiento',
@@ -49,8 +51,9 @@ const translations = {
   },
   en: {
     nav: { home: 'Home', categories: 'Categories', search: 'Search', alerts: 'Alerts', settings: 'Settings' },
-    home: { greeting: 'Hello, {name}', expiring: '{count} {item} expiring this week', product: 'product', products: 'products', allPantry: 'All pantry', upcoming: 'Expiring soon', seeUpcoming: 'See upcoming', seeAll: 'See all ({count})', empty: 'Your pantry is empty. Add your first product with the + button', fresh: 'Nothing expiring this week. Everything is fresh!', order: 'Sort products', expiry: 'By expiry', name: 'By name', expired: 'Expired', urgent: 'Expiring soon', week: 'This week', later: 'Later', add: 'Add product' },
+    home: { greeting: 'Hello, {name}', expiring: '{count} {item} expiring this week', product: 'product', products: 'products', allPantry: 'All pantry', upcoming: 'Expiring soon', seeUpcoming: 'See upcoming', seeAll: 'See all ({count})', empty: 'Your pantry is empty. Add your first product with the + button', fresh: 'Nothing expiring this week. Everything is fresh!', noneInGroup: 'No products in this group.', order: 'Sort products', expiry: 'By expiry', name: 'By name', expired: 'Expired', urgent: 'Expiring soon', week: 'This week', later: 'Later', add: 'Add product' },
     search: { placeholder: 'Search your pantry...', cancel: 'Cancel', all: 'All', result: 'result', results: 'results', for: 'for', type: 'Search by name, category or location.', none: 'No products found.', recent: 'Recent searches', clear: 'Clear', remove: 'Remove search {term}', clearInput: 'Clear' },
+    stats: { total: 'Total', expired: 'Expired', soon: 'Expiring', fresh: 'Fresh' },
     categories: { title: 'Categories', product: 'product', products: 'products', empty: 'No products in this category.', back: 'Back' },
     detail: { title: 'Details', missing: 'This product no longer exists.', purchase: 'Purchase date', expiryDate: 'Expiry date', remaining: 'Days remaining', quantity: 'Quantity', location: 'Location', notes: 'Notes', fresh: 'This product is fresh', edit: 'Edit', delete: 'Delete', consumed: 'Mark as consumed', added: 'Product added successfully', decrease: 'Decrease quantity', increase: 'Increase quantity', consumeTitle: 'Mark as consumed?', consumeMessage: '"{name}" will be removed from your pantry.', deleteTitle: 'Delete product?', deleteMessage: '"{name}" will be removed from your pantry. This action cannot be undone.' },
     add: { addTitle: 'Add product', editTitle: 'Edit product', photo: 'Add product photo', removePhoto: 'Remove photo', name: 'Product name', namePlaceholder: 'E.g. Whole milk 1L', category: 'Category', chooseCategory: 'Select a category...', purchase: 'Purchase date', expiry: 'Expiry date', quantity: 'Quantity', quantityPlaceholder: 'E.g. 1 liter / 500 g', location: 'Location (optional)', locationPlaceholder: 'E.g. Fridge · Shelf 2', notes: 'Optional notes', notesPlaceholder: 'E.g. open before the weekend', save: 'Save product', saveChanges: 'Save changes', cancel: 'Cancel', requiredName: 'Enter the product name', requiredCategory: 'Select a category', requiredPurchase: 'Enter the purchase date', requiredExpiry: 'Enter the expiry date', dateOrder: 'Must be after the purchase date' },

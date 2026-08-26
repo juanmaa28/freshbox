@@ -1,22 +1,25 @@
 import { useState } from 'react'
-import { Search, Plus, AlertCircle, PackageOpen, ChevronRight } from 'lucide-react'
+import { Search, Plus, PackageOpen } from 'lucide-react'
 import { usePantry } from '../context/PantryContext'
 import { daysLeft } from '../utils/dates'
+import { pantryStats, bucketOf } from '../utils/stats'
 import BottomNav from '../components/BottomNav'
+import PantryStats from '../components/PantryStats'
 import ProductCard from '../components/ProductCard'
 import logoSrc from '../assets/freshbox-logo.jpeg'
 
 export default function Home({ onNav }) {
   const { products, user, t } = usePantry()
-  const [showAll, setShowAll] = useState(false)
+  const [bucket, setBucket] = useState('all')
   const [sortBy, setSortBy] = useState('expiry')
 
   // Se ordena sin modificar el arreglo original del contexto.
   const sorted = [...products].sort((a, b) =>
     sortBy === 'name' ? a.name.localeCompare(b.name, 'es') : daysLeft(a.expiryDate) - daysLeft(b.expiryDate)
   )
-  const expiringThisWeek = sorted.filter((p) => daysLeft(p.expiryDate) <= 7)
-  const visible = showAll ? sorted : expiringThisWeek
+  const stats = pantryStats(products)
+  // Las casillas de estadísticas hacen de filtro de la lista.
+  const visible = sorted.filter((p) => bucket === 'all' || bucketOf(daysLeft(p.expiryDate)) === bucket)
   // Los grupos ayudan a identificar rápidamente el nivel de urgencia.
   const groups = [
     { label: t('home.expired'), products: visible.filter((p) => daysLeft(p.expiryDate) < 0) },
@@ -44,43 +47,24 @@ export default function Home({ onNav }) {
         </button>
       </header>
 
-      {expiringThisWeek.length > 0 && (
-        <button onClick={() => onNav('notifications')} className="mx-3 mt-3 shrink-0 text-left">
-          <div className="flex items-center gap-2.5 rounded-xl border border-warn-100 bg-warn-50 px-3 py-2.5 transition-colors hover:border-warn-300/60 dark:border-warn-500/30 dark:bg-warn-500/10">
-            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-warn-100 dark:bg-warn-500/20">
-              <AlertCircle size={15} className="text-warn-500 dark:text-warn-300" strokeWidth={2.2} />
-            </span>
-            <span className="flex-1 text-xs font-medium text-warn-700 dark:text-warn-300">
-              {t('home.expiring', {
-                count: expiringThisWeek.length,
-                item: expiringThisWeek.length === 1 ? t('home.product') : t('home.products'),
-              })}
-            </span>
-            <ChevronRight size={15} className="shrink-0 text-warn-500/50 dark:text-warn-300/50" />
-          </div>
-        </button>
-      )}
+      {/* Resumen de la despensa; cada casilla filtra la lista de abajo. */}
+      <div className="px-3 pt-3 shrink-0">
+        <PantryStats stats={stats} selected={bucket} onSelect={setBucket} />
+      </div>
 
       <div className="flex items-center justify-between px-3 mt-4 mb-2 shrink-0">
         <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-[0.09em]">
-          {showAll ? t('home.allPantry') : t('home.upcoming')}
+          {bucket === 'all' ? t('home.allPantry') : t(`stats.${bucket}`)}
         </span>
-        <div className="flex items-center gap-3">
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="bg-transparent text-[10px] text-gray-500 dark:text-gray-400 focus:outline-none"
-            aria-label={t('home.order')}
-          >
-            <option value="expiry">{t('home.expiry')}</option>
-            <option value="name">{t('home.name')}</option>
-          </select>
-          <button onClick={() => setShowAll(!showAll)} aria-label={showAll ? 'Ver productos próximos a vencer' : 'Ver todos los productos'}>
-            <span className="text-[10px] text-fresh-600 dark:text-fresh-400 font-semibold underline underline-offset-2">
-              {showAll ? t('home.seeUpcoming') : t('home.seeAll', { count: products.length })}
-            </span>
-          </button>
-        </div>
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          className="bg-transparent text-[10px] text-gray-500 dark:text-gray-400 focus:outline-none"
+          aria-label={t('home.order')}
+        >
+          <option value="expiry">{t('home.expiry')}</option>
+          <option value="name">{t('home.name')}</option>
+        </select>
       </div>
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-3 pb-3 flex flex-col gap-2">
@@ -90,7 +74,9 @@ export default function Home({ onNav }) {
             <p className="text-sm text-gray-400">
               {products.length === 0
                 ? t('home.empty')
-                : t('home.fresh')}
+                : bucket === 'soon'
+                  ? t('home.fresh')
+                  : t('home.noneInGroup')}
             </p>
           </div>
         ) : (

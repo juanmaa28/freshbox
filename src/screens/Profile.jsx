@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { Pencil, LogOut, User } from 'lucide-react'
 import { usePantry } from '../context/PantryContext'
-import { daysLeft } from '../utils/dates'
+import { pantryStats } from '../utils/stats'
 import AppHeader from '../components/AppHeader'
 import { Field, BtnPrimary } from '../components/FormFields'
 
@@ -15,14 +15,14 @@ export default function Profile({ onNav }) {
 
   const memberDate = new Date(user.memberSince + 'T00:00:00')
   const memberLocale = settings.language === 'English' ? 'en-US' : 'es-ES'
-  const alertCount = products.filter((p) => daysLeft(p.expiryDate) <= 3).length
-  const freshCount = products.filter((p) => daysLeft(p.expiryDate) > 5).length
 
-  // Las estadísticas se calculan a partir del inventario actual.
+  // Se usan los mismos grupos que en Inicio para que las cifras no se contradigan.
+  const counts = pantryStats(products)
   const stats = [
-    { label: t('profile.products'), val: products.length },
-    { label: t('profile.alerts'), val: alertCount },
-    { label: t('profile.fresh'), val: freshCount },
+    { label: t('stats.total'), val: counts.total, tone: 'text-gray-900 dark:text-gray-50' },
+    { label: t('stats.expired'), val: counts.expired, tone: 'text-danger-500 dark:text-danger-300' },
+    { label: t('stats.soon'), val: counts.soon, tone: 'text-warn-500 dark:text-warn-300' },
+    { label: t('stats.fresh'), val: counts.fresh, tone: 'text-fresh-600 dark:text-fresh-400' },
   ]
 
   const infoRows = [
@@ -76,10 +76,10 @@ export default function Profile({ onNav }) {
           <span className="text-sm text-gray-500 dark:text-gray-400">{user.email}</span>
         </div>
         <div className="flex divide-x divide-gray-200 dark:divide-gray-700 mt-1">
-          {stats.map(({ label, val }) => (
-            <div key={label} className="flex flex-col items-center px-5">
-              <span className="text-base font-bold text-gray-900 dark:text-gray-50">{val}</span>
-              <span className="text-[10px] text-gray-400 font-medium">{label}</span>
+          {stats.map(({ label, val, tone }) => (
+            <div key={label} className="flex flex-col items-center px-3.5">
+              <span className={`tabular text-base font-bold ${tone}`}>{val}</span>
+              <span className="text-[10px] font-medium text-gray-400 dark:text-gray-500">{label}</span>
             </div>
           ))}
         </div>
