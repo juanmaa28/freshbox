@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { Search, X, ChevronRight, Clock } from 'lucide-react'
+import { Search, X, Clock } from 'lucide-react'
 import { usePantry } from '../context/PantryContext'
-import { CATEGORIES, categoryById } from '../data/categories'
-import { daysLeft, expiryText } from '../utils/dates'
+import { CATEGORIES } from '../data/categories'
+import ProductCard from '../components/ProductCard'
 import logoSrc from '../assets/freshbox-logo.jpeg'
 import { translateCategory } from '../utils/i18n'
 
@@ -95,30 +95,8 @@ export default function SearchScreen({ onNav }) {
         ) : results.length === 0 ? (
           <p className="text-sm text-gray-400 text-center mt-8">{t('search.none')}</p>
         ) : (
-          results.map((p) => {
-            const cat = categoryById(p.category)
-            const days = daysLeft(p.expiryDate)
-            return (
-              <button key={p.id} onClick={() => openProduct(p)} className="w-full text-left shrink-0">
-                <div className="border border-gray-200 dark:border-gray-800 rounded-lg px-3 py-3 flex items-center gap-3 active:bg-gray-50 dark:active:bg-gray-900 transition-colors">
-                  {p.photo ? (
-                    <img src={p.photo} alt={p.name} className="w-11 h-11 rounded-md object-cover shrink-0" />
-                  ) : (
-                    <div className={`w-11 h-11 rounded-md flex items-center justify-center shrink-0 ${cat.color}`}>
-                      <cat.Icon size={19} strokeWidth={1.75} />
-                    </div>
-                  )}
-                  <div className="flex-1 flex flex-col gap-1 min-w-0">
-                    <span className="text-sm font-semibold text-gray-900 dark:text-gray-50 truncate">{p.name}</span>
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
-                      {translateCategory(p.category, settings.language)} · {expiryText(days, settings.language)}
-                    </span>
-                  </div>
-                  <ChevronRight size={14} className="text-gray-300 dark:text-gray-600 shrink-0" />
-                </div>
-              </button>
-            )
-          })
+          // Misma tarjeta que en Inicio y Alertas para mantener una sola lectura.
+          results.map((p) => <ProductCard key={p.id} product={p} onClick={() => openProduct(p)} />)
         )}
         {recentSearches.length > 0 && (
           <div className="mt-2 pt-2 border-t border-gray-100 dark:border-gray-800 shrink-0">

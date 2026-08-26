@@ -7,38 +7,59 @@ import { translateCategory } from '../utils/i18n'
 export default function ProductCard({ product, onClick }) {
   const cat = categoryById(product.category)
   const { settings, t } = usePantry()
-  // El color y la barra visual dependen de la urgencia calculada.
+  // El color y la franja de acento dependen de la urgencia calculada.
   const days = daysLeft(product.expiryDate)
   const urgency = urgencyOf(days)
   const meta = URGENCY_META[urgency]
+  const isExpired = days < 0
 
   return (
-    <button onClick={onClick} className="w-full text-left shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-500 focus-visible:ring-offset-2 rounded-lg">
-      <div className="border border-gray-100 bg-white dark:bg-gray-900 dark:border-gray-800 rounded-xl shadow-card px-3 py-3 flex items-center gap-3 hover:border-gray-200 active:bg-gray-50 dark:active:bg-gray-800 transition-colors">
-        {product.photo ? (
-          <img src={product.photo} alt={product.name} className="w-11 h-11 rounded-lg object-cover shrink-0" />
-        ) : (
-          <div className={`w-11 h-11 rounded-lg flex items-center justify-center shrink-0 ${cat.color}`}>
-            <cat.Icon size={19} strokeWidth={1.75} />
-          </div>
-        )}
-        <div className="flex-1 flex flex-col gap-1 min-w-0">
-          <span className="text-[15px] font-semibold text-gray-900 dark:text-gray-50 truncate tracking-[-0.01em]">{product.name}</span>
-          <div className="flex items-center gap-1.5">
-            <div className={`w-1.5 h-1.5 rounded-full ${meta.dot}`} />
-            <span className="text-[10px] text-gray-500 dark:text-gray-400">
-              {translateCategory(product.category, settings.language)} · {expiryText(days, settings.language)}
+    <button
+      onClick={onClick}
+      className="w-full text-left shrink-0 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-500 focus-visible:ring-offset-2"
+    >
+      <div className="flex items-stretch overflow-hidden rounded-xl border border-gray-100 bg-white shadow-card transition-colors hover:border-gray-200 active:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:active:bg-gray-800">
+        {/* Franja de acento: comunica la urgencia sin añadir elementos sueltos. */}
+        <div className={`w-1 shrink-0 ${meta.rail}`} />
+
+        <div className="flex min-w-0 flex-1 items-center gap-3 px-3 py-3">
+          {product.photo ? (
+            <img src={product.photo} alt={product.name} className="h-11 w-11 shrink-0 rounded-lg object-cover" />
+          ) : (
+            <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ${cat.color}`}>
+              <cat.Icon size={19} strokeWidth={1.75} />
+            </div>
+          )}
+
+          <div className="flex min-w-0 flex-1 flex-col gap-1">
+            <span className="truncate text-[15px] font-semibold tracking-[-0.01em] text-gray-900 dark:text-gray-50">
+              {product.name}
             </span>
+            {/* La categoría queda en un tono neutro para que resalte el vencimiento. */}
+            <div className="flex min-w-0 items-center gap-1.5">
+              <span className="truncate text-[11px] text-gray-400 dark:text-gray-500">
+                {translateCategory(product.category, settings.language)}
+              </span>
+              <span className="text-gray-300 dark:text-gray-700">·</span>
+              <span className={`shrink-0 text-[11px] font-medium ${meta.text}`}>
+                {expiryText(days, settings.language)}
+              </span>
+            </div>
           </div>
-        </div>
-        <div className="flex flex-col items-end gap-1 shrink-0">
-          <span className={`text-xs font-bold tabular ${meta.text}`}>{days < 0 ? t('common.overdueBadge') : `${days}d`}</span>
-          <div className="w-8 h-1.5 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
-            <div
-              className={`h-full rounded-full ${meta.bar}`}
-              style={{ width: `${Math.max(12, Math.min(100, 100 - days * 12))}%` }}
-            />
-          </div>
+
+          {/* Los vencidos usan una etiqueta sólida; el resto, la cuenta regresiva. */}
+          {isExpired ? (
+            <span className={`shrink-0 rounded-md border px-2 py-1 text-[10px] font-bold uppercase tracking-wide ${meta.chip}`}>
+              {t('common.overdueBadge')}
+            </span>
+          ) : (
+            <div className="flex shrink-0 flex-col items-center leading-none">
+              <span className={`tabular text-xl font-bold ${meta.text}`}>{days}</span>
+              <span className="mt-0.5 text-[9px] font-semibold uppercase tracking-[0.08em] text-gray-400 dark:text-gray-500">
+                {days === 1 ? t('common.day') : t('common.days')}
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </button>

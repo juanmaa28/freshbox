@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Search, Plus, AlertCircle, PackageOpen } from 'lucide-react'
+import { Search, Plus, AlertCircle, PackageOpen, ChevronRight } from 'lucide-react'
 import { usePantry } from '../context/PantryContext'
 import { daysLeft } from '../utils/dates'
 import BottomNav from '../components/BottomNav'
@@ -45,15 +45,18 @@ export default function Home({ onNav }) {
       </header>
 
       {expiringThisWeek.length > 0 && (
-        <button onClick={() => onNav('notifications')} className="text-left shrink-0">
-          <div className="mx-3 mt-3 border border-orange-200 bg-orange-50 dark:bg-orange-950/40 dark:border-orange-900 rounded-lg px-3 py-2.5 flex items-center gap-2">
-            <AlertCircle size={14} className="text-orange-500 shrink-0" strokeWidth={2} />
-              <span className="text-xs font-medium text-orange-700 dark:text-orange-300">
-                {t('home.expiring', {
-                  count: expiringThisWeek.length,
-                  item: expiringThisWeek.length === 1 ? t('home.product') : t('home.products'),
-                })}
-              </span>
+        <button onClick={() => onNav('notifications')} className="mx-3 mt-3 shrink-0 text-left">
+          <div className="flex items-center gap-2.5 rounded-xl border border-warn-100 bg-warn-50 px-3 py-2.5 transition-colors hover:border-warn-300/60 dark:border-warn-500/30 dark:bg-warn-500/10">
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-warn-100 dark:bg-warn-500/20">
+              <AlertCircle size={15} className="text-warn-500 dark:text-warn-300" strokeWidth={2.2} />
+            </span>
+            <span className="flex-1 text-xs font-medium text-warn-700 dark:text-warn-300">
+              {t('home.expiring', {
+                count: expiringThisWeek.length,
+                item: expiringThisWeek.length === 1 ? t('home.product') : t('home.products'),
+              })}
+            </span>
+            <ChevronRight size={15} className="shrink-0 text-warn-500/50 dark:text-warn-300/50" />
           </div>
         </button>
       )}

@@ -19,12 +19,43 @@ export function urgencyOf(days) {
   return 'low'
 }
 
+/**
+ * Estilos por nivel de urgencia.
+ * `rail` es la franja de acento del borde izquierdo de cada tarjeta: comunica
+ * el estado sin competir con el resto del contenido. `chip` agrupa fondo,
+ * borde y texto para etiquetas y avisos.
+ */
 export const URGENCY_META = {
-  expired: { label: 'Vencido', dot: 'bg-red-700', bar: 'bg-red-700', text: 'text-red-700 dark:text-red-400' },
-  critical: { label: 'Crítico', dot: 'bg-red-500', bar: 'bg-red-500', text: 'text-red-600 dark:text-red-400' },
-  high: { label: 'Urgente', dot: 'bg-orange-500', bar: 'bg-orange-500', text: 'text-orange-600 dark:text-orange-400' },
-  mid: { label: 'Medio', dot: 'bg-amber-400', bar: 'bg-amber-400', text: 'text-amber-600 dark:text-amber-400' },
-  low: { label: 'Bajo', dot: 'bg-fresh-500', bar: 'bg-fresh-500', text: 'text-fresh-600 dark:text-fresh-400' },
+  expired: {
+    rail: 'bg-danger-700',
+    dot: 'bg-danger-700',
+    text: 'text-danger-700 dark:text-danger-300',
+    chip: 'bg-danger-50 border-danger-100 text-danger-700 dark:bg-danger-700/15 dark:border-danger-700/40 dark:text-danger-300',
+  },
+  critical: {
+    rail: 'bg-danger-500',
+    dot: 'bg-danger-500',
+    text: 'text-danger-500 dark:text-danger-300',
+    chip: 'bg-danger-50 border-danger-100 text-danger-700 dark:bg-danger-500/15 dark:border-danger-500/40 dark:text-danger-300',
+  },
+  high: {
+    rail: 'bg-warn-500',
+    dot: 'bg-warn-500',
+    text: 'text-warn-500 dark:text-warn-300',
+    chip: 'bg-warn-50 border-warn-100 text-warn-700 dark:bg-warn-500/15 dark:border-warn-500/40 dark:text-warn-300',
+  },
+  mid: {
+    rail: 'bg-caution-500',
+    dot: 'bg-caution-500',
+    text: 'text-caution-500 dark:text-caution-300',
+    chip: 'bg-caution-50 border-caution-100 text-caution-700 dark:bg-caution-500/15 dark:border-caution-500/40 dark:text-caution-300',
+  },
+  low: {
+    rail: 'bg-fresh-500',
+    dot: 'bg-fresh-500',
+    text: 'text-fresh-600 dark:text-fresh-400',
+    chip: 'bg-fresh-50 border-fresh-100 text-fresh-700 dark:bg-fresh-500/15 dark:border-fresh-500/40 dark:text-fresh-300',
+  },
 }
 
 /** Texto corto tipo "Vence hoy", "Vence mañana", "Vence en 4 días", "Venció hace 2 días". */

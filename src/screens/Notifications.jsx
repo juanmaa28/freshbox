@@ -1,9 +1,9 @@
-import { Bell, BellOff } from 'lucide-react'
+import { BellOff } from 'lucide-react'
 import { usePantry } from '../context/PantryContext'
-import { daysLeft, urgencyOf, URGENCY_META, expiryText } from '../utils/dates'
-import { categoryById } from '../data/categories'
+import { daysLeft, URGENCY_META } from '../utils/dates'
 import AppHeader from '../components/AppHeader'
 import BottomNav from '../components/BottomNav'
+import ProductCard from '../components/ProductCard'
 
 const LEGEND = [
   { key: 'critical', i18nKey: 'alerts.critical' },
@@ -13,7 +13,7 @@ const LEGEND = [
 ]
 
 export default function Notifications({ onNav }) {
-  const { products, settings, t } = usePantry()
+  const { products, t } = usePantry()
 
   // Solo se consideran alertas los productos que vencen en siete días o menos.
   const alerts = products
@@ -25,35 +25,41 @@ export default function Notifications({ onNav }) {
   const thisWeek = alerts.filter((p) => p.days > 0 && p.days <= 7).length
 
   // Estas cifras resumen los mismos productos que aparecen en la lista inferior.
+  // Cada cifra se tiñe con su nivel de urgencia en vez de teñir todo el bloque.
   const stats = [
-    { label: t('alerts.today'), val: urgentToday },
-    { label: t('alerts.week'), val: thisWeek },
-    { label: t('alerts.total'), val: alerts.length },
+    { label: t('alerts.today'), val: urgentToday, tone: 'text-danger-500 dark:text-danger-300' },
+    { label: t('alerts.week'), val: thisWeek, tone: 'text-caution-500 dark:text-caution-300' },
+    { label: t('alerts.total'), val: alerts.length, tone: 'text-gray-900 dark:text-gray-50' },
   ]
 
   return (
     <div className="w-full h-full flex flex-col bg-gray-50 dark:bg-gray-950">
       <AppHeader title={t('alerts.title')} />
 
-      <div className="flex border-b border-orange-100 dark:border-orange-950/50 bg-orange-50/60 dark:bg-orange-950/20 shrink-0">
-        {stats.map(({ label, val }, i) => (
+      <div className="flex shrink-0 border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
+        {stats.map(({ label, val, tone }, i) => (
           <div
             key={label}
-            className={`flex-1 flex flex-col items-center py-3 ${
+            className={`flex flex-1 flex-col items-center py-3.5 ${
               i < stats.length - 1 ? 'border-r border-gray-100 dark:border-gray-800' : ''
             }`}
           >
-            <span className="text-2xl font-bold tabular text-gray-900 dark:text-gray-50">{val}</span>
-            <span className="text-[9px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-[0.07em]">{label}</span>
+            <span className={`tabular text-2xl font-bold ${tone}`}>{val}</span>
+            <span className="mt-0.5 text-[9px] font-semibold uppercase tracking-[0.07em] text-gray-400 dark:text-gray-500">
+              {label}
+            </span>
           </div>
         ))}
       </div>
 
-      <div className="flex gap-4 px-3 py-2 shrink-0">
+      {/* La leyenda usa las mismas franjas que las tarjetas, no puntos sueltos. */}
+      <div className="flex shrink-0 items-center gap-3.5 px-3 py-2.5">
         {LEGEND.map(({ key, i18nKey }) => (
-          <div key={key} className="flex items-center gap-1">
-            <div className={`w-2 h-2 rounded-full ${URGENCY_META[key].dot}`} />
-            <span className="text-[9px] text-gray-500 dark:text-gray-400">{t(i18nKey)}</span>
+          <div key={key} className="flex items-center gap-1.5">
+            <span className={`h-2.5 w-1 rounded-full ${URGENCY_META[key].rail}`} />
+            <span className="text-[9px] font-medium uppercase tracking-[0.05em] text-gray-400 dark:text-gray-500">
+              {t(i18nKey)}
+            </span>
           </div>
         ))}
       </div>
@@ -65,31 +71,10 @@ export default function Notifications({ onNav }) {
             <p className="text-sm text-gray-400">{t('alerts.none')}</p>
           </div>
         ) : (
-          alerts.map((p) => {
-            const cat = categoryById(p.category)
-            const meta = URGENCY_META[urgencyOf(p.days)]
-            return (
-              <button key={p.id} onClick={() => onNav('detail', { productId: p.id })} className="w-full text-left shrink-0">
-                <div className="border border-gray-100 bg-white dark:bg-gray-900 dark:border-gray-800 rounded-xl shadow-card px-3 py-3 flex items-center gap-3 hover:border-gray-200 active:bg-gray-50 dark:active:bg-gray-800 transition-colors">
-                  <div className="flex items-center justify-center w-5 shrink-0">
-                    <div className={`w-2.5 h-2.5 rounded-full ${meta.dot}`} />
-                  </div>
-                  {p.photo ? (
-                    <img src={p.photo} alt={p.name} className="w-11 h-11 rounded-md object-cover shrink-0" />
-                  ) : (
-                    <div className={`w-11 h-11 rounded-md flex items-center justify-center shrink-0 ${cat.color}`}>
-                      <cat.Icon size={19} strokeWidth={1.75} />
-                    </div>
-                  )}
-                  <div className="flex-1 flex flex-col gap-0.5 min-w-0">
-                    <span className="text-sm font-semibold text-gray-900 dark:text-gray-50 truncate">{p.name}</span>
-                    <span className={`text-xs font-medium ${meta.text}`}>{expiryText(p.days, settings.language)}</span>
-                  </div>
-                  <Bell size={13} className="text-gray-300 dark:text-gray-600 shrink-0" />
-                </div>
-              </button>
-            )
-          })
+          // Se reutiliza ProductCard para que la lista sea idéntica a la de Inicio.
+          alerts.map((p) => (
+            <ProductCard key={p.id} product={p} onClick={() => onNav('detail', { productId: p.id })} />
+          ))
         )}
       </div>
 

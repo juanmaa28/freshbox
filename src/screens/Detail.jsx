@@ -64,14 +64,14 @@ export default function Detail({ onNav, params }) {
       <div className="flex-1 px-5 py-4 flex flex-col gap-4 overflow-y-auto no-scrollbar">
         <div className="flex flex-col gap-1.5">
           <h2 className="text-xl font-bold text-gray-900 dark:text-gray-50">{product.name}</h2>
+          {/* La categoría es metadato (neutro) y la urgencia es la señal (con color). */}
           <div className="flex items-center gap-2">
-            <div className={`rounded-full px-2.5 py-0.5 ${cat.color}`}>
-                <span className="text-[10px] font-semibold">{translateCategory(product.category, settings.language)}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <div className={`w-2 h-2 rounded-full ${meta.dot}`} />
-              <span className={`text-[10px] font-semibold ${meta.text}`}>{urgencyLabel}</span>
-            </div>
+            <span className="rounded-md border border-gray-200 bg-gray-50 px-2 py-0.5 text-[10px] font-semibold text-gray-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
+              {translateCategory(product.category, settings.language)}
+            </span>
+            <span className={`rounded-md border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${meta.chip}`}>
+              {urgencyLabel}
+            </span>
           </div>
         </div>
 
@@ -96,19 +96,14 @@ export default function Detail({ onNav, params }) {
           </div>
         )}
 
-        <div
-          className={`flex items-center gap-2 border rounded-lg px-3 py-2.5 ${
-            isOk
-              ? 'border-fresh-200 bg-fresh-50 dark:border-fresh-900 dark:bg-fresh-900/20'
-              : 'border-orange-200 bg-orange-50 dark:border-orange-900 dark:bg-orange-950/40'
-          }`}
-        >
+        {/* El aviso reutiliza el chip del nivel de urgencia para mantener coherencia. */}
+        <div className={`flex items-center gap-2.5 rounded-xl border px-3.5 py-3 ${meta.chip}`}>
           {isOk ? (
-            <CheckCircle2 size={14} className="text-fresh-600 shrink-0" />
+            <CheckCircle2 size={16} className="shrink-0" strokeWidth={2} />
           ) : (
-            <AlertCircle size={14} className="text-orange-500 shrink-0" />
+            <AlertCircle size={16} className="shrink-0" strokeWidth={2} />
           )}
-          <span className={`text-xs ${isOk ? 'text-fresh-700 dark:text-fresh-300' : 'text-orange-700 dark:text-orange-300'}`}>
+          <span className="text-xs font-medium">
             {isOk ? t('detail.fresh') : expiryText(days, settings.language)}
           </span>
         </div>
