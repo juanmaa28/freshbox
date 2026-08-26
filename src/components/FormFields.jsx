@@ -2,6 +2,7 @@ const labelCls = 'text-[11px] font-semibold text-gray-500 dark:text-gray-400 upp
 const inputCls =
   'h-10 w-full border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 px-3 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-fresh-500 focus:border-fresh-500'
 
+// Campo de texto controlado que muestra el error debajo del input.
 export function Field({ label, error, ...inputProps }) {
   return (
     <div className="w-full flex flex-col gap-1">
@@ -68,6 +69,7 @@ export function BtnOutline({ label, icon, danger, ...props }) {
 }
 
 export function Toggle({ value, onChange }) {
+  // El switch recibe su valor desde el padre y notifica cada cambio mediante onChange.
   return (
     <button
       type="button"

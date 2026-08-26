@@ -9,6 +9,7 @@ import { Field, SelectField, TextArea, BtnPrimary } from '../components/FormFiel
 
 export default function AddItem({ onNav, params }) {
   const { products, addProduct, updateProduct, settings, t } = usePantry()
+  // Si llega un productId, el mismo formulario funciona en modo edición.
   const editing = params?.productId ? products.find((p) => p.id === params.productId) : null
 
   const [form, setForm] = useState(() =>
@@ -31,6 +32,7 @@ export default function AddItem({ onNav, params }) {
   const set = (key, value) => setForm((f) => ({ ...f, [key]: value }))
 
   const handlePhoto = (e) => {
+    // FileReader convierte la foto seleccionada en una cadena Data URL local.
     const file = e.target.files?.[0]
     if (!file) return
     const reader = new FileReader()
@@ -39,6 +41,7 @@ export default function AddItem({ onNav, params }) {
   }
 
   const validate = () => {
+    // La validación ocurre antes de modificar el estado global.
     const errs = {}
     if (!form.name.trim()) errs.name = t('add.requiredName')
     if (!form.category) errs.category = t('add.requiredCategory')
@@ -51,6 +54,7 @@ export default function AddItem({ onNav, params }) {
   }
 
   const handleSave = (e) => {
+    // El mismo evento decide si crea un producto o actualiza uno existente.
     e.preventDefault()
     if (!validate()) return
     const data = { ...form, name: form.name.trim() }

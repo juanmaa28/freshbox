@@ -11,11 +11,13 @@ export default function Home({ onNav }) {
   const [showAll, setShowAll] = useState(false)
   const [sortBy, setSortBy] = useState('expiry')
 
+  // Se ordena sin modificar el arreglo original del contexto.
   const sorted = [...products].sort((a, b) =>
     sortBy === 'name' ? a.name.localeCompare(b.name, 'es') : daysLeft(a.expiryDate) - daysLeft(b.expiryDate)
   )
   const expiringThisWeek = sorted.filter((p) => daysLeft(p.expiryDate) <= 7)
   const visible = showAll ? sorted : expiringThisWeek
+  // Los grupos ayudan a identificar rápidamente el nivel de urgencia.
   const groups = [
     { label: t('home.expired'), products: visible.filter((p) => daysLeft(p.expiryDate) < 0) },
     { label: t('home.urgent'), products: visible.filter((p) => daysLeft(p.expiryDate) >= 0 && daysLeft(p.expiryDate) <= 3) },

@@ -2,6 +2,7 @@ const MS_PER_DAY = 24 * 60 * 60 * 1000
 
 /** Días restantes hasta el vencimiento (0 = vence hoy, negativo = vencido). */
 export function daysLeft(expiryDate) {
+  // Se comparan fechas a medianoche para evitar errores por la hora actual.
   const today = new Date()
   today.setHours(0, 0, 0, 0)
   const expiry = new Date(expiryDate + 'T00:00:00')
@@ -10,6 +11,7 @@ export function daysLeft(expiryDate) {
 
 /** Nivel de urgencia según los días restantes. */
 export function urgencyOf(days) {
+  // El nivel se obtiene a partir de rangos simples de días restantes.
   if (days < 0) return 'expired'
   if (days <= 1) return 'critical'
   if (days <= 3) return 'high'
@@ -27,6 +29,7 @@ export const URGENCY_META = {
 
 /** Texto corto tipo "Vence hoy", "Vence mañana", "Vence en 4 días", "Venció hace 2 días". */
 export function expiryText(days, language = 'Español') {
+  // Genera una frase localizada para mostrar el estado del producto.
   if (language === 'English') {
     if (days < -1) return `Expired ${-days} days ago`
     if (days === -1) return 'Expired yesterday'

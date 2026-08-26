@@ -11,9 +11,11 @@ export default function SearchScreen({ onNav }) {
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState('all')
 
+  // Los filtros se generan desde las categorías disponibles en el dominio.
   const filters = [{ id: 'all', label: t('search.all') }, ...CATEGORIES.map((c) => ({ id: c.id, label: translateCategory(c.id, settings.language) }))]
   const searchTerm = query.trim().toLowerCase()
 
+  // La lista permanece vacía hasta que el usuario escribe un término.
   const results = searchTerm
     ? products.filter((p) => {
         const matchesQuery = p.name.toLowerCase().includes(searchTerm)
@@ -23,6 +25,7 @@ export default function SearchScreen({ onNav }) {
     : []
 
   const openProduct = (p) => {
+    // Solo se guarda una búsqueda cuando el usuario elige un resultado.
     if (query.trim()) addRecentSearch(query)
     onNav('detail', { productId: p.id })
   }

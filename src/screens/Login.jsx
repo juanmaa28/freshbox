@@ -5,12 +5,14 @@ import logoSrc from '../assets/freshbox-logo.jpeg'
 
 export default function Login({ onNav }) {
   const { login, t } = usePantry()
+  // mode cambia entre el formulario de acceso y el de registro.
   const [mode, setMode] = useState('login') // 'login' | 'register'
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState({})
 
+  // La validación evita crear sesiones con datos incompletos.
   const validate = () => {
     const errs = {}
     if (!/^\S+@\S+\.\S+$/.test(email)) errs.email = t('login.emailError')
@@ -21,6 +23,7 @@ export default function Login({ onNav }) {
   }
 
   const handleSubmit = (e) => {
+    // Se evita el envío tradicional y se crea la sesión dentro de React.
     e.preventDefault()
     if (!validate()) return
     login(email, mode === 'register' ? name.trim() : '')

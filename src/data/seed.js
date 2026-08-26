@@ -2,6 +2,7 @@ import { daysFromNowISO } from '../utils/dates'
 
 /** Productos de ejemplo (fechas relativas a hoy para que la demo siempre tenga alertas). */
 export function seedProducts() {
+  // Datos iniciales de demostración; las fechas se calculan relativas al día actual.
   const items = [
     { name: 'Leche entera 1L', category: 'lacteos', bought: -3, expires: 0, quantity: '1 litro', location: 'Nevera · Estante 2' },
     { name: 'Yogur natural 500g', category: 'lacteos', bought: -4, expires: 1, quantity: '500 g', location: 'Nevera · Puerta' },

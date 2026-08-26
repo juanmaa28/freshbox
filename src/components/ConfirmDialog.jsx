@@ -1,5 +1,6 @@
 import { usePantry } from '../context/PantryContext'
 
+// Diálogo genérico para confirmar acciones que no se pueden deshacer.
 export default function ConfirmDialog({ open, title, message, confirmLabel, onConfirm, onCancel }) {
   const { t } = usePantry()
   if (!open) return null

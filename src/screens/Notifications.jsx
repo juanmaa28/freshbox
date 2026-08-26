@@ -15,6 +15,7 @@ const LEGEND = [
 export default function Notifications({ onNav }) {
   const { products, settings, t } = usePantry()
 
+  // Solo se consideran alertas los productos que vencen en siete días o menos.
   const alerts = products
     .map((p) => ({ ...p, days: daysLeft(p.expiryDate) }))
     .filter((p) => p.days <= 7)
@@ -23,6 +24,7 @@ export default function Notifications({ onNav }) {
   const urgentToday = alerts.filter((p) => p.days <= 0).length
   const thisWeek = alerts.filter((p) => p.days > 0 && p.days <= 7).length
 
+  // Estas cifras resumen los mismos productos que aparecen en la lista inferior.
   const stats = [
     { label: t('alerts.today'), val: urgentToday },
     { label: t('alerts.week'), val: thisWeek },

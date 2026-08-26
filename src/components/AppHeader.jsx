@@ -2,6 +2,7 @@ import { ChevronLeft } from 'lucide-react'
 import logoSrc from '../assets/freshbox-logo.jpeg'
 import { usePantry } from '../context/PantryContext'
 
+// Encabezado compartido: puede mostrar título, regreso y contenido adicional.
 export default function AppHeader({ title = 'FreshBox', showBack = false, onBack, right }) {
   const { t } = usePantry()
   return (

@@ -14,6 +14,7 @@ export default function Detail({ onNav, params }) {
   const [consumeOpen, setConsumeOpen] = useState(false)
   const product = products.find((p) => p.id === params?.productId)
 
+  // La ruta puede apuntar a un producto eliminado; se muestra un estado seguro.
   if (!product) {
     return (
       <div className="w-full h-full flex flex-col bg-white dark:bg-gray-950">
@@ -30,6 +31,7 @@ export default function Detail({ onNav, params }) {
   const urgency = urgencyOf(days)
   const meta = URGENCY_META[urgency]
   const isOk = urgency === 'low'
+  // La misma información de urgencia se reutiliza en color, texto y alerta.
   const urgencyLabel = { expired: t('alerts.critical'), critical: t('alerts.critical'), high: t('alerts.urgent'), mid: t('alerts.medium'), low: t('alerts.low') }[urgency]
 
   const rows = [

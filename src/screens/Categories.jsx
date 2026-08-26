@@ -14,6 +14,7 @@ export default function Categories({ onNav }) {
 
   const maxCount = Math.max(1, ...CATEGORIES.map((c) => products.filter((p) => p.category === c.id).length))
 
+  // La misma pantalla cambia entre resumen de categorías y detalle seleccionado.
   if (selected) {
     const cat = categoryById(selected)
     const items = products

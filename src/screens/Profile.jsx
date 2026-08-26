@@ -18,6 +18,7 @@ export default function Profile({ onNav }) {
   const alertCount = products.filter((p) => daysLeft(p.expiryDate) <= 3).length
   const freshCount = products.filter((p) => daysLeft(p.expiryDate) > 5).length
 
+  // Las estadísticas se calculan a partir del inventario actual.
   const stats = [
     { label: t('profile.products'), val: products.length },
     { label: t('profile.alerts'), val: alertCount },
@@ -33,6 +34,7 @@ export default function Profile({ onNav }) {
   ]
 
   const handleAvatar = (e) => {
+    // La imagen se guarda localmente como Data URL dentro del perfil.
     const file = e.target.files?.[0]
     if (!file) return
     const reader = new FileReader()
@@ -41,6 +43,7 @@ export default function Profile({ onNav }) {
   }
 
   const saveEdit = (e) => {
+    // Se conservan los datos anteriores cuando un campo se deja vacío.
     e.preventDefault()
     updateUser({ name: form.name.trim() || user.name, email: form.email.trim() || user.email, phone: form.phone.trim() })
     setEditing(false)

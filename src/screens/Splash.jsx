@@ -2,6 +2,7 @@ import logoSrc from '../assets/freshbox-logo.jpeg'
 
 import { usePantry } from '../context/PantryContext'
 
+// Pantalla breve que presenta la marca mientras se carga la sesión local.
 export default function Splash() {
   const { t } = usePantry()
   return (

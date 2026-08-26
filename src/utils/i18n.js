@@ -1,3 +1,4 @@
+// Diccionario local: no depende de Internet ni de un servicio de traducción externo.
 const translations = {
   es: {
     nav: { home: 'Inicio', categories: 'Categorías', search: 'Buscar', alerts: 'Alertas', settings: 'Ajustes' },
@@ -62,6 +63,7 @@ const translations = {
 }
 
 export function createTranslator(language) {
+  // Convierte la preferencia visible del usuario en la clave interna del diccionario.
   const locale = language === 'English' ? 'en' : 'es'
   return (path, values = {}) => {
     const value = path.split('.').reduce((current, key) => current?.[key], translations[locale]) ?? path
@@ -70,6 +72,7 @@ export function createTranslator(language) {
 }
 
 export function translateCategory(id, language) {
+  // Las categorías son datos del dominio, por eso se traducen mediante su ID estable.
   const names = {
     lacteos: ['Lácteos', 'Dairy'], verdudas: ['Verduras', 'Vegetables'], verduras: ['Verduras', 'Vegetables'], frutas: ['Frutas', 'Fruits'],
     carnes: ['Carnes', 'Meat'], enlatados: ['Enlatados', 'Canned'], bebidas: ['Bebidas', 'Drinks'], cereales: ['Cereales', 'Cereals'], congelados: ['Congelados', 'Frozen'],

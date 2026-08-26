@@ -10,8 +10,10 @@ const ITEMS = [
   { id: 'settings', Icon: Settings, label: 'Ajustes' },
 ]
 
+// Navegación principal reutilizada en las pantallas del teléfono.
 export default function BottomNav({ active, onNav }) {
   const { products, t } = usePantry()
+  // El contador usa el mismo límite de siete días que la pantalla de alertas.
   const alertCount = products.filter((p) => daysLeft(p.expiryDate) <= 7).length
 
   const labels = { home: t('nav.home'), categories: t('nav.categories'), search: t('nav.search'), notifications: t('nav.alerts'), settings: t('nav.settings') }

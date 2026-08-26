@@ -3,9 +3,11 @@ import { daysLeft, urgencyOf, URGENCY_META, expiryText } from '../utils/dates'
 import { usePantry } from '../context/PantryContext'
 import { translateCategory } from '../utils/i18n'
 
+// Tarjeta reutilizable para representar un producto en listas y búsquedas.
 export default function ProductCard({ product, onClick }) {
   const cat = categoryById(product.category)
   const { settings } = usePantry()
+  // El color y la barra visual dependen de la urgencia calculada.
   const days = daysLeft(product.expiryDate)
   const urgency = urgencyOf(days)
   const meta = URGENCY_META[urgency]

@@ -24,11 +24,12 @@ const SCREENS = {
   profile: Profile,
 }
 
+// AppShell controla la pantalla actual y centraliza la navegación de la app.
 function AppShell() {
   const { user } = usePantry()
   const [route, setRoute] = useState({ id: 'splash', params: null })
 
-  // Splash → Login u Home según sesión guardada
+  // Después del Splash, una sesión guardada lleva al usuario a Home.
   useEffect(() => {
     if (route.id !== 'splash') return
     const t = setTimeout(() => {
@@ -38,6 +39,7 @@ function AppShell() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route.id])
 
+  // params permite enviar datos entre pantallas, por ejemplo el ID de un producto.
   const navigate = (id, params = null) => setRoute({ id, params })
 
   const Screen = SCREENS[route.id] ?? Home
@@ -55,6 +57,7 @@ function AppShell() {
 }
 
 export default function App() {
+  // El provider hace disponibles los datos globales para todas las pantallas.
   return (
     <PantryProvider>
       <AppShell />

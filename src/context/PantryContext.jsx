@@ -4,6 +4,7 @@ import { createTranslator } from '../utils/i18n'
 
 const PantryContext = createContext(null)
 
+// Claves usadas por localStorage para mantener la información sin servidor.
 const LS_KEYS = {
   products: 'freshbox_products',
   user: 'freshbox_user',
@@ -18,6 +19,7 @@ const DEFAULT_SETTINGS = {
   language: 'Español',
 }
 
+// Lee datos guardados y usa un valor alternativo si no existen o están dañados.
 function load(key, fallback) {
   try {
     const raw = localStorage.getItem(key)
@@ -28,12 +30,15 @@ function load(key, fallback) {
 }
 
 export function PantryProvider({ children }) {
+  // Estos estados representan la información compartida por toda la aplicación.
   const [products, setProducts] = useState(() => load(LS_KEYS.products, null) ?? seedProducts())
   const [user, setUser] = useState(() => load(LS_KEYS.user, null))
   const [settings, setSettings] = useState(() => ({ ...DEFAULT_SETTINGS, ...load(LS_KEYS.settings, {}) }))
   const [recentSearches, setRecentSearches] = useState(() => load(LS_KEYS.searches, []))
+  // El traductor se reconstruye cuando cambia el idioma seleccionado.
   const t = createTranslator(settings.language)
 
+  // Cada efecto sincroniza un estado con el almacenamiento local.
   useEffect(() => {
     localStorage.setItem(LS_KEYS.products, JSON.stringify(products))
   }, [products])
@@ -56,6 +61,7 @@ export function PantryProvider({ children }) {
   }, [settings.darkMode])
 
   const addProduct = (data) => {
+    // randomUUID evita colisiones si se agregan productos muy rápidamente.
     const id = globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`
     const product = { ...data, id: `p-${id}` }
     setProducts((prev) => [...prev, product])
@@ -94,6 +100,7 @@ export function PantryProvider({ children }) {
   const logout = () => setUser(null)
 
   const addRecentSearch = (term) => {
+    // Se normaliza el texto, se quitan duplicados y se conservan solo cinco búsquedas.
     const clean = term.trim()
     if (!clean) return
     setRecentSearches((prev) => [clean, ...prev.filter((t) => t.toLowerCase() !== clean.toLowerCase())].slice(0, 5))

@@ -7,6 +7,7 @@ import { Toggle } from '../components/FormFields'
 import ConfirmDialog from '../components/ConfirmDialog'
 
 function InfoModal({ open, title, children, onClose }) {
+  // Modal reutilizable para mostrar información sin cambiar de pantalla.
   if (!open) return null
   return (
     <div className="absolute inset-0 z-50 flex items-center justify-center px-6 bg-black/40">
@@ -28,6 +29,7 @@ export default function Settings({ onNav }) {
   const [modal, setModal] = useState(null)
   const [clearOpen, setClearOpen] = useState(false)
 
+  // Las filas se describen como datos para reutilizar la misma estructura visual.
   const sections = [
     {
       title: t('settings.preferences'),
