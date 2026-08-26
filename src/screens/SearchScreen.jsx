@@ -6,6 +6,14 @@ import ProductCard from '../components/ProductCard'
 import logoSrc from '../assets/freshbox-logo.jpeg'
 import { translateCategory } from '../utils/i18n'
 
+// Compara sin distinguir mayúsculas ni tildes: "lacteos" encuentra "Lácteos".
+function normalize(text) {
+  return (text ?? '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+}
+
 export default function SearchScreen({ onNav }) {
   const { products, recentSearches, addRecentSearch, clearRecentSearches, removeRecentSearch, t, settings } = usePantry()
   const [query, setQuery] = useState('')
@@ -13,14 +21,21 @@ export default function SearchScreen({ onNav }) {
 
   // Los filtros se generan desde las categorías disponibles en el dominio.
   const filters = [{ id: 'all', label: t('search.all') }, ...CATEGORIES.map((c) => ({ id: c.id, label: translateCategory(c.id, settings.language) }))]
-  const searchTerm = query.trim().toLowerCase()
+  const searchTerm = normalize(query.trim())
 
   // La lista permanece vacía hasta que el usuario escribe un término.
   const results = searchTerm
     ? products.filter((p) => {
-        const matchesQuery = p.name.toLowerCase().includes(searchTerm)
         const matchesFilter = filter === 'all' || p.category === filter
-        return matchesQuery && matchesFilter
+        if (!matchesFilter) return false
+        // Se busca por nombre, categoría (id y nombre traducido) y ubicación.
+        const campos = [
+          p.name,
+          p.category,
+          translateCategory(p.category, settings.language),
+          p.location,
+        ]
+        return campos.some((campo) => normalize(campo).includes(searchTerm))
       })
     : []
 
