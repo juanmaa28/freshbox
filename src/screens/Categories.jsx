@@ -52,13 +52,13 @@ export default function Categories({ onNav }) {
             const count = products.filter((p) => p.category === cat.id).length
             return (
               <button key={cat.id} onClick={() => setSelected(cat.id)} className="text-left">
-                <div className="border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800 rounded-xl p-4 flex flex-col gap-3 active:bg-gray-50 dark:active:bg-gray-800 transition-colors">
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${cat.color}`}>
-                    <cat.Icon size={18} strokeWidth={1.75} />
+                <div className="border border-gray-100 bg-white dark:bg-gray-900 dark:border-gray-800 rounded-2xl shadow-card p-4 flex flex-col gap-3 hover:border-gray-200 active:bg-gray-50 dark:active:bg-gray-800 transition-colors">
+                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${cat.color}`}>
+                    <cat.Icon size={19} strokeWidth={1.75} />
                   </div>
                   <div className="flex flex-col gap-0.5">
-                    <span className="text-sm font-bold text-gray-900 dark:text-gray-50">{translateCategory(cat.id, settings.language)}</span>
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                    <span className="text-sm font-bold text-gray-900 dark:text-gray-50 tracking-[-0.01em]">{translateCategory(cat.id, settings.language)}</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400 tabular">
                       {count} {count === 1 ? t('categories.product') : t('categories.products')}
                     </span>
                   </div>

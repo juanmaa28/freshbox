@@ -59,7 +59,7 @@ export default function Home({ onNav }) {
       )}
 
       <div className="flex items-center justify-between px-3 mt-4 mb-2 shrink-0">
-        <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">
+        <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-[0.09em]">
           {showAll ? t('home.allPantry') : t('home.upcoming')}
         </span>
         <div className="flex items-center gap-3">
@@ -104,7 +104,7 @@ export default function Home({ onNav }) {
 
       <button
         onClick={() => onNav('add')}
-        className="absolute w-13 h-13 bg-fresh-600 hover:bg-fresh-700 hover:scale-105 active:scale-95 rounded-full flex items-center justify-center shadow-lg shadow-fresh-600/30 transition-transform duration-150 bottom-[84px] right-4 z-10"
+        className="absolute w-14 h-14 bg-fresh-600 hover:bg-fresh-700 hover:scale-105 active:scale-95 rounded-full flex items-center justify-center shadow-float transition-transform duration-150 bottom-[84px] right-4 z-10"
         aria-label={t('home.add')}
       >
         <Plus size={24} className="text-white" strokeWidth={2.5} />

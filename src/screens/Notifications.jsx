@@ -43,8 +43,8 @@ export default function Notifications({ onNav }) {
               i < stats.length - 1 ? 'border-r border-gray-100 dark:border-gray-800' : ''
             }`}
           >
-            <span className="text-xl font-bold text-gray-900 dark:text-gray-50">{val}</span>
-            <span className="text-[9px] font-medium text-gray-400 uppercase tracking-wide">{label}</span>
+            <span className="text-2xl font-bold tabular text-gray-900 dark:text-gray-50">{val}</span>
+            <span className="text-[9px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-[0.07em]">{label}</span>
           </div>
         ))}
       </div>
@@ -70,7 +70,7 @@ export default function Notifications({ onNav }) {
             const meta = URGENCY_META[urgencyOf(p.days)]
             return (
               <button key={p.id} onClick={() => onNav('detail', { productId: p.id })} className="w-full text-left shrink-0">
-                <div className="border border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800 rounded-lg px-3 py-3 flex items-center gap-3 active:bg-gray-50 dark:active:bg-gray-800 transition-colors">
+                <div className="border border-gray-100 bg-white dark:bg-gray-900 dark:border-gray-800 rounded-xl shadow-card px-3 py-3 flex items-center gap-3 hover:border-gray-200 active:bg-gray-50 dark:active:bg-gray-800 transition-colors">
                   <div className="flex items-center justify-center w-5 shrink-0">
                     <div className={`w-2.5 h-2.5 rounded-full ${meta.dot}`} />
                   </div>

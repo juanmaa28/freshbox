@@ -1,6 +1,7 @@
-const labelCls = 'text-[11px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide'
+const labelCls =
+  'text-[11px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-[0.06em]'
 const inputCls =
-  'h-10 w-full border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 px-3 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-fresh-500 focus:border-fresh-500'
+  'h-11 w-full border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 px-3.5 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-fresh-500/40 focus:border-fresh-500'
 
 // Campo de texto controlado que muestra el error debajo del input.
 export function Field({ label, error, ...inputProps }) {
@@ -33,7 +34,7 @@ export function TextArea({ label, ...props }) {
     <div className="w-full flex flex-col gap-1">
       {label && <label className={labelCls}>{label}</label>}
       <textarea
-        className="w-full border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-fresh-500 focus:border-fresh-500 resize-none"
+        className="w-full border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 px-3.5 py-2.5 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-fresh-500/40 focus:border-fresh-500 resize-none"
         rows={2}
         {...props}
       />
@@ -44,10 +45,10 @@ export function TextArea({ label, ...props }) {
 export function BtnPrimary({ label, ...props }) {
   return (
     <button
-      className="w-full h-11 bg-fresh-600 hover:bg-fresh-700 active:bg-fresh-800 flex items-center justify-center rounded-lg transition-colors disabled:opacity-50"
+      className="w-full h-11 bg-fresh-600 hover:bg-fresh-700 active:bg-fresh-800 flex items-center justify-center rounded-xl shadow-card transition-colors disabled:opacity-50 disabled:shadow-none"
       {...props}
     >
-      <span className="text-sm font-semibold text-white tracking-wide">{label}</span>
+      <span className="text-sm font-semibold text-white tracking-[-0.01em]">{label}</span>
     </button>
   )
 }
@@ -55,15 +56,15 @@ export function BtnPrimary({ label, ...props }) {
 export function BtnOutline({ label, icon, danger, ...props }) {
   return (
     <button
-      className={`w-full h-11 border-2 flex items-center justify-center gap-1.5 rounded-lg transition-colors ${
+      className={`w-full h-11 border flex items-center justify-center gap-1.5 rounded-xl transition-colors ${
         danger
-          ? 'border-red-200 text-red-500 hover:bg-red-50 dark:border-red-900 dark:hover:bg-red-950/40'
-          : 'border-fresh-600 text-fresh-700 hover:bg-fresh-50 dark:text-fresh-400 dark:hover:bg-fresh-900/20'
+          ? 'border-red-200 text-red-600 hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950/40'
+          : 'border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800'
       }`}
       {...props}
     >
       {icon}
-      <span className="text-sm font-semibold">{label}</span>
+      <span className="text-sm font-semibold tracking-[-0.01em]">{label}</span>
     </button>
   )
 }
