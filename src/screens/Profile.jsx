@@ -1,12 +1,16 @@
 import { useRef, useState } from 'react'
 import { Pencil, LogOut, User } from 'lucide-react'
 import { usePantry } from '../context/PantryContext'
+import { useAuthStore, useCurrentUser } from '../store/authStore'
 import { pantryStats } from '../utils/stats'
 import AppHeader from '../components/AppHeader'
 import { Field, BtnPrimary } from '../components/FormFields'
 
 export default function Profile({ onNav }) {
-  const { user, updateUser, logout, products, settings, t } = usePantry()
+  const { products, settings, t } = usePantry()
+  const user = useCurrentUser()
+  const updateUser = useAuthStore((estado) => estado.updateProfile)
+  const logout = useAuthStore((estado) => estado.logout)
   const [editing, setEditing] = useState(false)
   const [form, setForm] = useState({ name: user?.name ?? '', email: user?.email ?? '', phone: user?.phone ?? '' })
   const fileRef = useRef(null)

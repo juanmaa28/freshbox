@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { PantryProvider, usePantry } from './context/PantryContext'
+import { PantryProvider } from './context/PantryContext'
+import { useCurrentUser } from './store/authStore'
 import Splash from './screens/Splash'
 import Login from './screens/Login'
 import Home from './screens/Home'
@@ -33,7 +34,7 @@ const NAV_ROUTES = ['home', 'categories', 'search', 'notifications', 'settings']
 
 // AppShell controla la pantalla actual y centraliza la navegación de la app.
 function AppShell() {
-  const { user } = usePantry()
+  const user = useCurrentUser()
   const [route, setRoute] = useState({ id: 'splash', params: null })
 
   // Después del Splash, una sesión guardada lleva al usuario a Home.

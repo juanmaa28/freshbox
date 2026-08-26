@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Bell, Mail, Moon, Globe, User, Shield, Package, FileText, LogOut, ChevronRight, X } from 'lucide-react'
 import { usePantry } from '../context/PantryContext'
+import { useAuthStore } from '../store/authStore'
 import AppHeader from '../components/AppHeader'
 import { Toggle } from '../components/FormFields'
 import ConfirmDialog from '../components/ConfirmDialog'
@@ -37,7 +38,8 @@ function InfoModal({ open, title, children, onClose }) {
 }
 
 export default function Settings({ onNav }) {
-  const { products, settings, updateSetting, logout, clearProducts, t } = usePantry()
+  const { products, settings, updateSetting, clearProducts, t } = usePantry()
+  const logout = useAuthStore((estado) => estado.logout)
   const [modal, setModal] = useState(null)
   const [clearOpen, setClearOpen] = useState(false)
 

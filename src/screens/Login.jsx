@@ -1,18 +1,28 @@
 import { useState } from 'react'
+import { AlertCircle } from 'lucide-react'
 import { usePantry } from '../context/PantryContext'
+import { useAuthStore } from '../store/authStore'
 import { Field, BtnPrimary } from '../components/FormFields'
 import logoSrc from '../assets/freshbox-logo.jpeg'
 
 const MODES = ['login', 'register']
 
 export default function Login({ onNav }) {
-  const { login, t } = usePantry()
+  const { t } = usePantry()
+  // Las acciones se toman una a una: así el componente no se vuelve a
+  // renderizar cada vez que cambia cualquier otra parte del store.
+  const login = useAuthStore((estado) => estado.login)
+  const register = useAuthStore((estado) => estado.register)
+
   // mode cambia entre el formulario de acceso y el de registro.
   const [mode, setMode] = useState('login') // 'login' | 'register'
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState({})
+  // Error general del store (credenciales incorrectas, correo ya registrado).
+  const [formError, setFormError] = useState(null)
+  const [pending, setPending] = useState(false)
 
   // La validación evita crear sesiones con datos incompletos.
   const validate = () => {
@@ -24,12 +34,31 @@ export default function Login({ onNav }) {
     return Object.keys(errs).length === 0
   }
 
-  const handleSubmit = (e) => {
-    // Se evita el envío tradicional y se crea la sesión dentro de React.
+  const cambiarModo = (m) => {
+    setMode(m)
+    setErrors({})
+    setFormError(null)
+  }
+
+  const handleSubmit = async (e) => {
+    // Se evita el envío tradicional y se resuelve la sesión dentro de React.
     e.preventDefault()
-    if (!validate()) return
-    login(email, mode === 'register' ? name.trim() : '')
-    onNav('home')
+    setFormError(null)
+    if (!validate() || pending) return
+
+    setPending(true)
+    // Derivar la contraseña tarda unos milisegundos: por eso es asíncrono.
+    const resultado =
+      mode === 'login'
+        ? await login({ email, password })
+        : await register({ name, email, password })
+    setPending(false)
+
+    if (resultado.ok) {
+      onNav('home')
+      return
+    }
+    setFormError(t(`login.${resultado.error}`))
   }
 
   return (
@@ -60,10 +89,7 @@ export default function Login({ onNav }) {
             <button
               key={m}
               type="button"
-              onClick={() => {
-                setMode(m)
-                setErrors({})
-              }}
+              onClick={() => cambiarModo(m)}
               aria-pressed={mode === m}
               className={`press h-10 rounded-xl text-[13.5px] font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-fresh-600 ${
                 mode === m
@@ -117,7 +143,28 @@ export default function Login({ onNav }) {
         </div>
 
         <div className="mt-8 flex flex-col gap-5">
-          <BtnPrimary type="submit" label={mode === 'login' ? t('login.submit') : t('login.register')} />
+          {/* Aviso de credenciales: va junto al botón, no sobre un campo
+              concreto, porque el fallo es de la combinación correo+contraseña. */}
+          {formError && (
+            <div
+              role="alert"
+              className="flex items-center gap-2.5 rounded-xl border border-danger-100 bg-danger-50 px-3.5 py-3 dark:border-danger-500/40 dark:bg-danger-500/15"
+            >
+              <AlertCircle size={16} strokeWidth={2} className="shrink-0 text-danger-500 dark:text-danger-300" />
+              <span className="text-[12.5px] font-medium text-danger-700 dark:text-danger-300">{formError}</span>
+            </div>
+          )}
+          <BtnPrimary
+            type="submit"
+            disabled={pending}
+            label={
+              pending
+                ? t('login.working')
+                : mode === 'login'
+                  ? t('login.submit')
+                  : t('login.register')
+            }
+          />
           <p className="text-center text-[11px] leading-relaxed text-gray-400">
             {t('login.accept')}{' '}
             <span className="font-medium text-gray-600 underline underline-offset-2 dark:text-gray-300">

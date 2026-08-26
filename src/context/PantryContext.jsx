@@ -1,14 +1,14 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { seedProducts } from '../data/seed'
+import { useAuthStore } from '../store/authStore'
 import { createTranslator } from '../utils/i18n'
 import { parseQuantity, formatQuantity } from '../utils/quantity'
 
 const PantryContext = createContext(null)
 
 // Claves usadas por localStorage para mantener la información sin servidor.
+// La sesión y las cuentas viven en `src/store/authStore.js` (Zustand).
 const LS_KEYS = {
   products: 'freshbox_products',
-  user: 'freshbox_user',
   settings: 'freshbox_settings',
   searches: 'freshbox_recent_searches',
 }
@@ -30,24 +30,52 @@ function load(key, fallback) {
   }
 }
 
+/**
+ * La despensa se guarda como { idDeUsuario: productos[] }: cada cuenta tiene la
+ * suya, así que al registrarse se empieza con la despensa vacía y nadie ve los
+ * productos de otra persona.
+ */
+function cargarDespensas() {
+  const guardado = load(LS_KEYS.products, {})
+  // El formato anterior era un único array compartido por todas las cuentas.
+  if (!guardado || typeof guardado !== 'object' || Array.isArray(guardado)) return {}
+  return guardado
+}
+
+// Referencia estable: evita re-renderizar a los consumidores en cada pasada.
+const DESPENSA_VACIA = []
+
 export function PantryProvider({ children }) {
-  // Estos estados representan la información compartida por toda la aplicación.
-  const [products, setProducts] = useState(() => load(LS_KEYS.products, null) ?? seedProducts())
-  const [user, setUser] = useState(() => load(LS_KEYS.user, null))
+  // La despensa depende de quién tenga la sesión abierta.
+  const userId = useAuthStore((estado) => estado.currentUserId)
+  const [despensas, setDespensas] = useState(cargarDespensas)
   const [settings, setSettings] = useState(() => ({ ...DEFAULT_SETTINGS, ...load(LS_KEYS.settings, {}) }))
   const [recentSearches, setRecentSearches] = useState(() => load(LS_KEYS.searches, []))
   // El traductor se reconstruye cuando cambia el idioma seleccionado.
   const t = createTranslator(settings.language)
 
+  // Una cuenta sin entrada todavía (recién registrada) no tiene productos.
+  const products = (userId && despensas[userId]) || DESPENSA_VACIA
+
+  /**
+   * Aplica un cambio solo sobre la despensa de la sesión activa.
+   * Mantiene la firma de un `setState`, así que el resto de acciones no cambia.
+   */
+  const setProducts = (updater) => {
+    if (!userId) return
+    setDespensas((prev) => {
+      const actuales = prev[userId] ?? DESPENSA_VACIA
+      return {
+        ...prev,
+        [userId]: typeof updater === 'function' ? updater(actuales) : updater,
+      }
+    })
+  }
+
   // Cada efecto sincroniza un estado con el almacenamiento local.
   useEffect(() => {
-    localStorage.setItem(LS_KEYS.products, JSON.stringify(products))
-  }, [products])
-
-  useEffect(() => {
-    if (user) localStorage.setItem(LS_KEYS.user, JSON.stringify(user))
-    else localStorage.removeItem(LS_KEYS.user)
-  }, [user])
+    localStorage.setItem(LS_KEYS.products, JSON.stringify(despensas))
+  }, [despensas])
 
   useEffect(() => {
     localStorage.setItem(LS_KEYS.settings, JSON.stringify(settings))
@@ -97,23 +125,6 @@ export function PantryProvider({ children }) {
     setSettings((prev) => ({ ...prev, [key]: value }))
   }
 
-  const login = (email, name) => {
-    setUser({
-      name: name || email.split('@')[0],
-      email,
-      phone: '',
-      memberSince: new Date().toISOString().slice(0, 10),
-      plan: 'Free',
-      avatar: null,
-    })
-  }
-
-  const updateUser = (data) => {
-    setUser((prev) => (prev ? { ...prev, ...data } : prev))
-  }
-
-  const logout = () => setUser(null)
-
   const addRecentSearch = (term) => {
     // Se normaliza el texto, se quitan duplicados y se conservan solo cinco búsquedas.
     const clean = term.trim()
@@ -137,10 +148,6 @@ export function PantryProvider({ children }) {
     adjustQuantity,
     deleteProduct,
     clearProducts,
-    user,
-    login,
-    logout,
-    updateUser,
     settings,
     updateSetting,
     t,

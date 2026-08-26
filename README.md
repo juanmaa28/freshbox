@@ -12,6 +12,7 @@ Aplicacion movil hibrida para registrar productos de la despensa, consultar sus 
 - Vite 8 como bundler
 - Tailwind CSS 4 para utilidades de interfaz
 - Sass para estilos reutilizables y clases parciales
+- Zustand para la sesion y las cuentas de usuario
 - Lucide React para iconos
 
 ## Requisitos
@@ -49,6 +50,18 @@ La entrada Sass se encuentra en `src/styles/main.scss` y carga dos parciales med
 
 Vite compila y minifica automaticamente los archivos Sass y JavaScript al ejecutar `npm run build`. El compilador Sass (`sass-embedded`, requerido por Vite 8) esta incluido como dependencia de desarrollo en `package.json`.
 
+## Inicio de sesion
+
+El registro y el inicio de sesion se resuelven en el dispositivo, sin servidor, mediante un store de Zustand con el middleware `persist` (`src/store/authStore.js`). Las cuentas quedan en `localStorage` bajo la clave `freshbox_auth`.
+
+La contraseña nunca se guarda en texto plano. Al registrarse se genera una sal aleatoria por cuenta y se almacena la derivacion PBKDF2-SHA256 con 150000 iteraciones (`src/utils/password.js`), usando la API Web Crypto del navegador: no requiere librerias externas ni conexion. Al iniciar sesion se vuelve a derivar la contraseña recibida y se compara en tiempo constante contra el valor guardado.
+
+El store separa los datos en dos bloques: `accounts` guarda el perfil visible (nombre, correo, telefono, plan) y `credentials` guarda la sal y el hash. Gracias a esa separacion, el objeto de usuario que reciben las pantallas no contiene ningun dato sensible.
+
+Para probar la aplicacion hay que crear una cuenta desde la pestaña **Crear cuenta**; despues se puede iniciar sesion con ese correo y contraseña. El correo no distingue mayusculas.
+
+Cada cuenta tiene su propia despensa: los productos se guardan como `{ idDeUsuario: productos[] }`, de modo que una cuenta recien registrada empieza vacia y ninguna cuenta ve los productos de otra. La aplicacion no trae productos de ejemplo.
+
 ## Funcionamiento sin internet
 
 La aplicacion no consume APIs externas durante la ejecucion: los datos iniciales, iconos, imagenes y tipografias se incluyen en el bundle.
@@ -62,6 +75,7 @@ Verificado sobre el bundle de produccion (`npm run build && npm run preview`): e
 - `src/screens/`: pantallas de inicio, busqueda, categorias, alertas, configuracion y perfil.
 - `src/components/`: componentes reutilizables de la interfaz.
 - `src/context/`: estado global de la despensa y preferencias.
+- `src/store/`: store de Zustand con la sesion y las cuentas.
 - `src/data/`: categorias y datos iniciales.
 - `src/utils/`: fechas, traducciones, cantidades y estadisticas.
 - `src/styles/`: entrada Sass y clases parciales.

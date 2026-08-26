@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { Search, Plus, PackageOpen } from 'lucide-react'
 import { usePantry } from '../context/PantryContext'
+import { useCurrentUser } from '../store/authStore'
 import { daysLeft } from '../utils/dates'
 import { pantryStats, bucketOf } from '../utils/stats'
 import { PantryHero, PantryFilter } from '../components/PantryStats'
@@ -8,7 +9,8 @@ import ProductCard from '../components/ProductCard'
 import logoSrc from '../assets/freshbox-logo.jpeg'
 
 export default function Home({ onNav }) {
-  const { products, user, t } = usePantry()
+  const { products, t } = usePantry()
+  const user = useCurrentUser()
   const [bucket, setBucket] = useState('all')
   const [sortBy, setSortBy] = useState('expiry')
   // `stuck` solo sirve para encender el filo de la barra fija cuando el hero ya
