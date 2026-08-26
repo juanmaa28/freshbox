@@ -4,12 +4,14 @@ import { usePantry } from '../context/PantryContext'
 import { categoryById } from '../data/categories'
 import { translateCategory } from '../utils/i18n'
 import { daysLeft, urgencyOf, URGENCY_META, expiryText, formatDate } from '../utils/dates'
+import { parseQuantity } from '../utils/quantity'
 import AppHeader from '../components/AppHeader'
 import ConfirmDialog from '../components/ConfirmDialog'
+import QuantityStepper from '../components/QuantityStepper'
 import { BtnOutline } from '../components/FormFields'
 
 export default function Detail({ onNav, params }) {
-  const { products, deleteProduct, settings, t } = usePantry()
+  const { products, deleteProduct, adjustQuantity, settings, t } = usePantry()
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [consumeOpen, setConsumeOpen] = useState(false)
   const product = products.find((p) => p.id === params?.productId)
@@ -34,12 +36,15 @@ export default function Detail({ onNav, params }) {
   // La misma información de urgencia se reutiliza en color, texto y alerta.
   const urgencyLabel = { expired: t('alerts.critical'), critical: t('alerts.critical'), high: t('alerts.urgent'), mid: t('alerts.medium'), low: t('alerts.low') }[urgency]
 
+  // Solo se ofrece el control +/− cuando la cantidad empieza por un número.
+  const quantity = parseQuantity(product.quantity)
+
   const rows = [
-    { label: t('detail.purchase'), value: formatDate(product.purchaseDate, settings.language) },
-    { label: t('detail.expiryDate'), value: formatDate(product.expiryDate, settings.language) },
-    { label: t('detail.remaining'), value: days < 0 ? t('common.expired') : `${days} ${days === 1 ? t('common.day') : t('common.days')}` },
-    { label: t('detail.quantity'), value: product.quantity || t('common.dash') },
-    { label: t('detail.location'), value: product.location || t('common.dash') },
+    { id: 'purchase', label: t('detail.purchase'), value: formatDate(product.purchaseDate, settings.language) },
+    { id: 'expiry', label: t('detail.expiryDate'), value: formatDate(product.expiryDate, settings.language) },
+    { id: 'remaining', label: t('detail.remaining'), value: days < 0 ? t('common.expired') : `${days} ${days === 1 ? t('common.day') : t('common.days')}` },
+    { id: 'quantity', label: t('detail.quantity'), value: product.quantity || t('common.dash') },
+    { id: 'location', label: t('detail.location'), value: product.location || t('common.dash') },
   ]
 
   return (
@@ -76,15 +81,26 @@ export default function Detail({ onNav, params }) {
         </div>
 
         <div>
-          {rows.map(({ label, value }, i) => (
+          {rows.map(({ id, label, value }, i) => (
             <div
-              key={label}
-              className={`flex justify-between py-3 ${
+              key={id}
+              className={`flex items-center justify-between gap-3 py-3 ${
                 i < rows.length - 1 ? 'border-b border-gray-100 dark:border-gray-800' : ''
               }`}
             >
               <span className="text-sm text-gray-500 dark:text-gray-400">{label}</span>
-              <span className="text-sm font-semibold text-gray-900 dark:text-gray-100 text-right">{value}</span>
+              {id === 'quantity' && quantity ? (
+                <QuantityStepper
+                  amount={quantity.amount}
+                  unit={quantity.unit}
+                  separator={quantity.separator}
+                  onAdjust={(delta) => adjustQuantity(product.id, delta)}
+                  decreaseLabel={t('detail.decrease')}
+                  increaseLabel={t('detail.increase')}
+                />
+              ) : (
+                <span className="text-sm font-semibold text-gray-900 dark:text-gray-100 text-right">{value}</span>
+              )}
             </div>
           ))}
         </div>

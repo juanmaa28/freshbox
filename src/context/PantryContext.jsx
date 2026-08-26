@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { seedProducts } from '../data/seed'
 import { createTranslator } from '../utils/i18n'
+import { parseQuantity, formatQuantity } from '../utils/quantity'
 
 const PantryContext = createContext(null)
 
@@ -76,6 +77,20 @@ export function PantryProvider({ children }) {
     setProducts((prev) => prev.filter((p) => p.id !== id))
   }
 
+  // El nuevo valor se calcula dentro del actualizador para no perder toques
+  // rápidos seguidos: cada ajuste parte de la cantidad más reciente.
+  const adjustQuantity = (id, delta) => {
+    setProducts((prev) =>
+      prev.map((p) => {
+        if (p.id !== id) return p
+        const parsed = parseQuantity(p.quantity)
+        if (!parsed) return p
+        const amount = Math.max(1, parsed.amount + delta)
+        return { ...p, quantity: formatQuantity(amount, parsed.unit, parsed.separator) }
+      })
+    )
+  }
+
   const clearProducts = () => setProducts([])
 
   const updateSetting = (key, value) => {
@@ -119,6 +134,7 @@ export function PantryProvider({ children }) {
     products,
     addProduct,
     updateProduct,
+    adjustQuantity,
     deleteProduct,
     clearProducts,
     user,
