@@ -6,10 +6,10 @@ import AppHeader from '../components/AppHeader'
 import BottomNav from '../components/BottomNav'
 
 const LEGEND = [
-  { key: 'critical', es: 'Crítico', en: 'Critical' },
-  { key: 'high', es: 'Urgente', en: 'Urgent' },
-  { key: 'mid', es: 'Medio', en: 'Medium' },
-  { key: 'low', es: 'Bajo', en: 'Low' },
+  { key: 'critical', i18nKey: 'alerts.critical' },
+  { key: 'high', i18nKey: 'alerts.urgent' },
+  { key: 'mid', i18nKey: 'alerts.medium' },
+  { key: 'low', i18nKey: 'alerts.low' },
 ]
 
 export default function Notifications({ onNav }) {
@@ -50,10 +50,10 @@ export default function Notifications({ onNav }) {
       </div>
 
       <div className="flex gap-4 px-3 py-2 shrink-0">
-        {LEGEND.map(({ key, label }) => (
+        {LEGEND.map(({ key, i18nKey }) => (
           <div key={key} className="flex items-center gap-1">
             <div className={`w-2 h-2 rounded-full ${URGENCY_META[key].dot}`} />
-            <span className="text-[9px] text-gray-500 dark:text-gray-400">{settings.language === 'English' ? LEGEND.find((item) => item.key === key).en : label}</span>
+            <span className="text-[9px] text-gray-500 dark:text-gray-400">{t(i18nKey)}</span>
           </div>
         ))}
       </div>
