@@ -44,7 +44,7 @@ export default function Login({ onNav }) {
             className="h-12 w-12 rounded-[15px] object-contain mix-blend-multiply dark:bg-white/90 dark:mix-blend-normal"
           />
           <div className="flex flex-col gap-2">
-            <h1 className="font-display text-[30px] font-semibold leading-[1.08] tracking-[-0.03em] text-gray-900 dark:text-gray-50">
+            <h1 className="font-display text-[30px] font-semibold leading-[1.15] tracking-[-0.03em] text-gray-900 dark:text-gray-50">
               {mode === 'login' ? t('login.title') : t('login.registerTitle')}
             </h1>
             <p className="max-w-[17rem] text-[13.5px] leading-relaxed text-gray-500 dark:text-gray-400">

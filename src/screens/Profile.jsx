@@ -80,7 +80,7 @@ export default function Profile({ onNav }) {
           </div>
 
           <div className="flex flex-col items-center gap-1 text-center">
-            <h2 className="font-display text-[21px] font-semibold leading-tight tracking-[-0.025em] text-gray-900 dark:text-gray-50">
+            <h2 className="font-display text-[21px] font-semibold leading-[1.3] tracking-[-0.025em] text-gray-900 dark:text-gray-50">
               {user.name}
             </h2>
             <span className="text-[13px] text-gray-500 dark:text-gray-400">{user.email}</span>

@@ -83,7 +83,7 @@ export default function Detail({ onNav, params }) {
         )}
 
         <div className="flex shrink-0 flex-col gap-2.5">
-          <h2 className="font-display text-[26px] font-semibold leading-[1.1] tracking-[-0.03em] text-gray-900 dark:text-gray-50">
+          <h2 className="font-display text-[26px] font-semibold leading-[1.2] tracking-[-0.03em] text-gray-900 dark:text-gray-50">
             {product.name}
           </h2>
           {/* La categoría es metadato (neutro) y la urgencia es la señal (con color). */}

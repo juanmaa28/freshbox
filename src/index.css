@@ -115,7 +115,20 @@ body {
 }
 
 /* Fraunces se sirve con eje óptico: los tamaños grandes piden un corte más
-   estrecho y contrastado, los pequeños uno más abierto. */
+   estrecho y contrastado, los pequeños uno más abierto.
+
+   REGLA DE INTERLINEADO. Medido sobre los ficheros reales de las fuentes, el
+   interlineado mínimo para que la tinta no se recorte es 1.474 en Fraunces y
+   1.430 en Inter (usWinAscent + tinta más profunda de head.yMin/yMax).
+
+   - `leading-none` solo para cifras y etiquetas en mayúsculas, que no tienen
+     descendentes ni acentos altos.
+   - Donde haya `truncate` u `overflow-hidden` sobre texto corriente, el recorte
+     va al borde de relleno: hace falta interlineado holgado MÁS relleno
+     vertical. El relleno aporta margen 1:1 y el interlineado solo 1:2, así que
+     `leading-[1.35]` + `py-1` sale más barato en altura que subir a 1.5.
+   - Sin recorte (sin overflow) el interlineado corto solo aprieta el texto; es
+     una decisión estética, no un fallo. */
 .font-display {
   font-optical-sizing: auto;
   font-variation-settings: "SOFT" 24, "WONK" 1;

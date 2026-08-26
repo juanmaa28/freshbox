@@ -42,7 +42,7 @@ export default function Home({ onNav }) {
     <div className="relative flex h-full w-full flex-col bg-gray-50 dark:bg-gray-950">
       {/* Cabecera abierta, sin barra ni línea divisoria: el saludo es el título
           de la pantalla y el hero de abajo aporta el contraste. */}
-      <header className="flex shrink-0 items-center justify-between gap-3 px-5 pb-3 pt-5">
+      <header className="flex shrink-0 items-center justify-between gap-3 px-5 pb-2 pt-4">
         <div className="flex min-w-0 items-center gap-3">
           <img
             src={logoSrc}
@@ -50,9 +50,15 @@ export default function Home({ onNav }) {
             aria-hidden="true"
             className="h-10 w-10 shrink-0 rounded-[13px] object-contain mix-blend-multiply dark:bg-white/90 dark:mix-blend-normal"
           />
-          <div className="flex min-w-0 flex-col gap-1">
+          <div className="flex min-w-0 flex-col">
             <span className="eyebrow">FreshBox</span>
-            <h1 className="truncate font-display text-[21px] font-semibold leading-none tracking-[-0.025em] text-gray-900 dark:text-gray-50">
+            {/* El saludo lleva un nombre que escribe el usuario: puede traer
+                descendentes (j, g, p, q, y) y mayúsculas acentuadas. `truncate`
+                recorta al borde de relleno, y Fraunces necesita 1.474 de
+                interlineado para que su tinta quepa. En vez de un interlineado
+                enorme, va 1.35 más `py-1`: el relleno aporta margen 1:1 y el
+                interlineado solo 1:2. Deja ~2.7 px libres abajo y ~3.5 arriba. */}
+            <h1 className="truncate py-1 font-display text-[21px] font-semibold leading-[1.35] tracking-[-0.025em] text-gray-900 dark:text-gray-50">
               {user ? t('home.greeting', { name: user.name }) : t('home.heroTitle')}
             </h1>
           </div>

@@ -47,8 +47,12 @@ export default function ProductCard({ product, onClick }) {
             </div>
           )}
 
-          <div className="flex min-w-0 flex-1 flex-col gap-1">
-            <span className="truncate text-[15px] font-semibold leading-tight tracking-[-0.015em] text-gray-900 dark:text-gray-50">
+          <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+            {/* Mismo caso que el saludo de Inicio: nombre escrito por el usuario
+                con `truncate`. Inter necesita 1.430 de interlineado; con 1.35 y
+                `py-1` quedan ~3.4 px libres arriba y abajo. La tarjeta no crece:
+                su altura la marca el icono de 48 px, no el texto. */}
+            <span className="truncate py-1 text-[15px] font-semibold leading-[1.35] tracking-[-0.015em] text-gray-900 dark:text-gray-50">
               {product.name}
             </span>
             {/* La categoría queda en un tono neutro para que resalte el vencimiento. */}
