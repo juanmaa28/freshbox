@@ -1,0 +1,15 @@
+$safe-area-bottom: env(safe-area-inset-bottom, 0px);
+
+@mixin viewport-layer {
+  isolation: isolate;
+  min-height: 100%;
+}
+
+.app-shell {
+  @include viewport-layer;
+}
+
+.app-device-screen {
+  @include viewport-layer;
+  padding-bottom: $safe-area-bottom;
+}

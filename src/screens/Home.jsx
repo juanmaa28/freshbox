@@ -42,7 +42,7 @@ export default function Home({ onNav }) {
     <div className="relative flex h-full w-full flex-col bg-gray-50 dark:bg-gray-950">
       {/* Cabecera abierta, sin barra ni línea divisoria: el saludo es el título
           de la pantalla y el hero de abajo aporta el contraste. */}
-      <header className="flex shrink-0 items-center justify-between gap-3 px-5 pb-2 pt-4">
+      <header className="flex shrink-0 items-center justify-between gap-3 px-5 pb-2 pt-4 md:pt-10">
         <div className="flex min-w-0 items-center gap-3">
           <img
             src={logoSrc}

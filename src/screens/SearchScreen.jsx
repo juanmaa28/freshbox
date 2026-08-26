@@ -48,7 +48,7 @@ export default function SearchScreen({ onNav }) {
     <div className="flex h-full w-full flex-col bg-gray-50 dark:bg-gray-950">
       {/* El campo de búsqueda es el protagonista de la pantalla, no un añadido
           debajo de una cabecera de marca. */}
-      <div className="shrink-0 border-b border-gray-900/[0.06] bg-white px-4 pb-3 pt-5 dark:border-white/[0.06] dark:bg-gray-900">
+      <div className="shrink-0 border-b border-gray-900/[0.06] bg-white px-4 pb-3 pt-5 dark:border-white/[0.06] dark:bg-gray-900 md:pt-10">
         <div className="mb-3 flex items-center justify-between gap-3">
           <h1 className="font-display text-[21px] font-semibold leading-[1.3] tracking-[-0.025em] text-gray-900 dark:text-gray-50">
             {t('nav.search')}

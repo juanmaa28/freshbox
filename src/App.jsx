@@ -52,7 +52,7 @@ function AppShell() {
   const Screen = SCREENS[route.id] ?? Home
 
   return (
-    <div className="relative min-h-dvh w-full flex items-center justify-center overflow-hidden md:py-10">
+    <div className="app-shell relative min-h-dvh w-full flex items-center justify-center overflow-hidden md:py-10">
       {/* Ambiente de escritorio: dos halos verdes muy tenues sobre el lienzo hueso.
           En móvil queda oculto detrás de la pantalla, así que no cuesta nada. */}
       <div
@@ -62,7 +62,7 @@ function AppShell() {
 
       {/* Móvil: pantalla completa · Escritorio: chasis de teléfono 375×812 */}
       <div className="relative w-full h-dvh md:w-[375px] md:h-[812px] md:max-h-[92dvh] md:rounded-[52px] md:bg-gray-900 md:p-[9px] md:shadow-frame md:ring-1 md:ring-white/10 dark:md:bg-gray-800">
-        <div className="relative w-full h-full bg-white dark:bg-gray-950 overflow-hidden md:rounded-[44px]">
+        <div className="app-device-screen relative w-full h-full bg-white dark:bg-gray-950 overflow-hidden md:rounded-[44px]">
           {/* Isla dinámica: solo un detalle de realismo en el marco de escritorio. */}
           <div
             aria-hidden="true"

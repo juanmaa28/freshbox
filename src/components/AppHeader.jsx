@@ -8,7 +8,7 @@ import { usePantry } from '../context/PantryContext'
 export default function AppHeader({ title = 'FreshBox', showBack = false, onBack, right }) {
   const { t } = usePantry()
   return (
-    <header className="flex h-[60px] shrink-0 items-center gap-2.5 border-b border-gray-900/[0.07] bg-white/85 px-4 backdrop-blur-xl dark:border-white/[0.06] dark:bg-gray-900/85">
+    <header className="flex h-[60px] shrink-0 items-center gap-2.5 border-b border-gray-900/[0.07] bg-white/85 px-4 backdrop-blur-xl md:h-[92px] md:pt-8 dark:border-white/[0.06] dark:bg-gray-900/85">
       {showBack && (
         <button
           onClick={onBack}

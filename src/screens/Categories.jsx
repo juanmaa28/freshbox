@@ -21,7 +21,7 @@ export default function Categories({ onNav }) {
       .sort((a, b) => daysLeft(a.expiryDate) - daysLeft(b.expiryDate))
     return (
       <div className="relative flex h-full w-full flex-col bg-gray-50 dark:bg-gray-950">
-        <header className="flex h-[60px] shrink-0 items-center gap-2.5 border-b border-gray-900/[0.07] bg-white/85 px-4 backdrop-blur-xl dark:border-white/[0.06] dark:bg-gray-900/85">
+        <header className="flex h-[60px] shrink-0 items-center gap-2.5 border-b border-gray-900/[0.07] bg-white/85 px-4 backdrop-blur-xl md:h-[92px] md:pt-8 dark:border-white/[0.06] dark:bg-gray-900/85">
           <button
             onClick={() => setSelected(null)}
             className="press -ml-1.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
