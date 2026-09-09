@@ -103,4 +103,28 @@ Verificado sobre el bundle de produccion (`npm run build && npm run preview`): e
 
 ## Estado de publicacion
 
-El proyecto web esta preparado para generar el bundle con Vite. La integracion con Capacitor, Android Studio, firma y publicacion en Google Play debe configurarse antes de crear el instalador Android.
+El proyecto web esta preparado para generar el bundle con Vite y Capacitor ya esta configurado en `capacitor.config.json`:
+
+- `appId`: `co.edu.upb.freshbox`
+- `appName`: `FreshBox`
+- `webDir`: `dist` (la carpeta que produce `npm run build`)
+
+Para crear el proyecto Android hay que ejecutar, despues de compilar:
+
+```bash
+npm run build
+npx cap add android
+npx cap sync
+npx cap open android
+```
+
+Falta configurar la firma de la aplicacion y la publicacion en Google Play antes de generar el instalador final.
+
+### Dependencias de Capacitor
+
+Solo se usan los paquetes oficiales, que llevan el prefijo `@capacitor/`:
+
+- `@capacitor/core` (dependencia)
+- `@capacitor/cli` (dependencia de desarrollo)
+
+No debe instalarse el paquete `capacitor` sin prefijo: es una libreria de Flux distinta y sin relacion con Ionic, que ademas arrastra vulnerabilidades. El campo `overrides` de `package.json` fija `uuid` en una version corregida para una dependencia transitiva del CLI, de modo que `npm audit` no reporta vulnerabilidades.

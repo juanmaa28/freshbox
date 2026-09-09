@@ -1,5 +1,5 @@
 {
-  "appId": "com.example.app",
-  "appName": "freshbox",
+  "appId": "co.edu.upb.freshbox",
+  "appName": "FreshBox",
   "webDir": "dist"
 }
